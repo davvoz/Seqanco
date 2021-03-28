@@ -1,0 +1,168 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+.instrumentContainer {
+    min-width: 99%;
+    /* height: 650px; */
+    position: absolute;
+    width: 100%;
+    position: relative;
+    background: white;
+    left: 3px;
+    top: 30px;
+}
+.controllContainer {
+    min-width: 100%;
+    min-height: 75px;
+    background-color: cadetblue;
+    position: fixed;
+    z-index: 9;
+    top: -0px;
+}
+
+.close {
+    background-color: red;
+    left: 100px;
+}
+.instrumentToolbar {
+    width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-left: 1px;
+    border: 1px solid white;
+}
+.example-spacer {
+    flex: 1 3 auto;
+}
+.example-spacerz {
+    flex: 10 13 auto;
+}
+.mixerTrack {
+    float: left;
+    background-color: rgba(60, 60, 60, 0.7);
+    height: 600px;
+    border: 1px solid;
+    margin-left: 5px;
+    width: 150px;
+    max-width: 150px;
+    top: 70px;
+    position: relative;
+}
+.mixerContainer {
+    border: 1px solid black;
+}
+.DOUBLEOOSC {
+    background-color: rgba(200, 90, 90, 0.4);
+    max-height: 20px;
+    top: 20px;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.MONOOSC {
+    background-color: rgba(90, 200, 90, 0.4);
+    max-height: 20px;
+    top: 20px;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.SAMPLER {
+    background-color: rgba(90, 90, 200, 0.4);
+    max-height: 20px;
+    top: 20px;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.MASTER {
+    float: left;
+    background-color: rgba(60, 60, 60, 0.7);
+    max-height: 20px;
+    top: 20px;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+.mixerTrackMstr {
+    height: 221px;
+    border: 1px solid;
+    margin-left: 5px;
+    width: 197px;
+    /* max-width: 150px; */
+    top: 70px;
+    position: absolute;
+    right: 3px;
+}
+mat-toolbar {
+    position: fixed;
+    z-index: 99999;
+}
+.instrument {
+    top: 66px;
+    position: relative;
+    float: left;
+    left: 1px;
+}
+.buttons {
+    float: left;
+}
+.masterGainIn {
+    top: 130px;
+    position: relative;
+}
+.instrumentPanel {
+    position: absolute;
+    top: 517px;
+}
+.titl {
+    font-family: "Press Start 2P", cursive;
+}
+.trakTitle {
+    width: 150px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.clip {
+    border-top: 1px solid white;
+}
+.stage {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    height: 100%;
+}
+
+.toolbar {
+    position: fixed;
+    background-color: black;
+    color: white;
+    width: 100%;
+}
+.clipsContiner {
+    border-top: 3px solid white;
+    left: 1px;
+}
+.trakTitleSecondLine {
+    text-align: end;
+}
+.instHeader {
+    width: 200px;
+}
+.example-card {
+    max-width: 500px;
+    float: left;
+}
+h3 {
+    font-family: "Press Start 2P";
+}
+.daw {
+    background-color: red;
+    width: 100%;
+}

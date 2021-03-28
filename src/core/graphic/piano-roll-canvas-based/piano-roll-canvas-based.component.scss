@@ -1,0 +1,61 @@
+canvas {
+    position: absolute;
+}
+.ui-layer {
+    z-index: 3;
+}
+.game-layer {
+    z-index: 2;
+}
+.background-layer {
+    z-index: 1;
+}
+.cnvsContainer {   
+ 
+    width: 100%;
+    height: 239px;
+    position: absolute;
+    overflow: auto;
+    left: 0px;
+
+
+}
+.velocity-layer {
+    float: left;
+    align-content: center;
+    background-color: burlywood;
+    overflow: auto;
+    top: 279px;
+
+}
+.titleContainer {
+    position: relative;
+    background-color: grey;
+    text-overflow: ellipsis;
+    height: 20px;
+}
+.esterna {
+    position: absolute;
+    left: 206px;
+    top: 4px;
+    width: 100%;
+    top: -251px;
+}
+
+.form{
+    background-color: black;
+}
+.pianoRollToolbar{
+    position: relative;
+    background-color: lightgray;
+    height: 38px;
+    line-height: 38px;
+}
+.looper-layer{
+   
+    z-index: 2;
+}
+.example-spacer {
+    flex: 1 3 auto;
+}
+

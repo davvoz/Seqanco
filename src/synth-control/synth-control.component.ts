@@ -1,0 +1,141 @@
+import { AfterViewInit, Component, EventEmitter, Input,  Output } from '@angular/core';
+import { Adsr, SyntControl } from '../interfaces/interfaces';
+
+@Component({
+  selector: 'app-synth-control',
+  templateUrl: './synth-control.component.html',
+  styleUrls: ['./synth-control.component.scss']
+})
+export class SynthControlComponent implements AfterViewInit {
+
+  @Output() parametriSynth = new EventEmitter<SyntControl>();
+  @Input()
+  typeIn!: string;
+  @Input()
+  name!: string;
+
+  syntControl: SyntControl = {
+    isMuted: 0,
+    gain: 0,
+    adsr: { attack: 0, decay: 0, sustain: 0, sustainVal: 0, release: 0 },
+    adsrPitch: { attack: 0, decay: 0, sustain: 0, sustainVal: 0, release: 0 },
+    waveSelected: 'square',
+    filterSelected: 'allpass',
+    filterCutoff: 0,
+    filterReso: 0,
+    lfoWaveSelected: 'square',
+    lfoAmplitude: 0,
+    lfoRate: 0,
+    libIndex: 0,
+    duration: 0,
+    type: '',
+    pitchEnvelope: { frequency: 0, end: 0 },
+    isDistorted: false
+  };
+
+  waveSelected = 'square';
+  filterSelected = 'allpass';
+  
+  waveforms = ['square', 'sine', 'sawtooth', 'triangle'];
+  filterType = [
+    'lowpass',
+    'highpass',
+    'bandpass',
+    'lowshelf',
+    'peaking',
+    'notch',
+    'allpass'
+  ];
+  isMuted: number = 0;
+  gain: number = 0;
+  attack: number = 0;
+  decay: number = 0;
+  sustain: number = 0;
+  sustainVal: number = 0;
+  release: number = 0;
+  filterCutoff: number = 0;
+  filterReso: number = 0;
+  lfoWaveSelected = 'square';
+  lfoAmplitude: number = 0;
+  lfoRate: number = 0;
+  libIndex: number = 1;
+  duration: number = 1;
+  type: string = '';
+  pitchEnvFreq: number = 0;
+  pitchEnvEnd: number = 0;
+  velocity!: number;
+  adsrVolume: Adsr = { attack: 0, decay: 0, sustain: 0, sustainVal: 0, release: 0 };
+  adsrPitch: Adsr = { attack: 0, decay: 0, sustain: 0, sustainVal: 0, release: 0 };
+  adsrPitchDisplay = false;
+  distorsion :boolean =false;
+
+  constructor() { }
+  distorsionGestione() {
+    this.distorsion ? this.distorsion = false : this.distorsion = true;
+    this.changed();
+  }
+  ngAfterViewInit() {
+    this.syntControl = {
+      isMuted: 0,
+      gain: 0,
+      adsr:this.adsrVolume,
+      waveSelected: this.waveSelected,
+      filterSelected: this.filterSelected,
+      filterCutoff: 0,
+      filterReso: 0,
+      lfoWaveSelected: this.lfoWaveSelected,
+      lfoAmplitude: 0,
+      lfoRate: 0,
+      libIndex: 0,
+      duration: 0,
+      type: '',
+      adsrPitch:this.adsrPitch,
+      pitchEnvelope: { frequency: this.pitchEnvFreq, end: this.pitchEnvEnd },
+      isDistorted:false
+
+    };
+  }
+  getBgDistorsion() {
+    if (this.distorsion) {
+      return 'red';
+    } else {
+      return 'green';
+    }
+  }
+  
+  changed() {
+    this.syntControl = {
+      isMuted: this.isMuted,
+      gain: this.gain,
+      adsr: this.adsrVolume,
+      adsrPitch: this.adsrPitch,
+      waveSelected: this.waveSelected,
+      filterSelected: this.filterSelected,
+      filterCutoff: this.filterCutoff,
+      filterReso: this.filterReso,
+      lfoWaveSelected: this.lfoWaveSelected,
+      lfoAmplitude: this.lfoAmplitude,
+      lfoRate: this.lfoRate,
+      libIndex: this.libIndex,
+      duration: this.duration,
+      type: this.type,
+      pitchEnvelope: { frequency: this.pitchEnvFreq, end: this.pitchEnvEnd },
+      isDistorted: this.distorsion
+    };
+    this.parametriSynth.emit(this.syntControl);
+  }
+  changeAdsr(adsr: Adsr) {
+    this.syntControl.adsr = adsr;
+    this.changed();
+  }
+
+  getColor() {
+    if (this.isMuted) {
+      return 'red';
+    } else {
+      return 'green';
+    }
+  }
+
+ 
+}

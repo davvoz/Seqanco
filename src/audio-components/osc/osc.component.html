@@ -1,0 +1,33 @@
+
+   {{nome}}
+    <table>
+        <tr>
+            <th>OscillatorType</th>
+            <th>frequency</th>    
+        </tr>
+        <tr>
+            <td> 
+                <select [(ngModel)]="selectedWaveView" (change)="changeWave()">
+                    <option *ngFor="let wave of waveforms" [value]="wave"> {{wave}}</option>
+                </select>
+            </td>
+            <td>
+                <input type="number" [(ngModel)]="frequency" (change)="changeFrequency()" min="0" max="100" step="0.01"/>
+            </td>
+            <td>
+               
+            </td>
+        </tr>
+        <!-- <tr>
+            <th >Phase</th><th >Duty</th>
+        </tr>
+        <tr>
+            <td >
+                <input type="number" [(ngModel)]="phase" (change)="changePhase()" min="0" max="1" step="0.01"/>
+            </td>
+            <td >
+                <input type="number" [(ngModel)]="duty" (change)="changeDuty()" min="0" max="1" step="0.01"/>
+            </td>
+
+        </tr> -->
+    </table>

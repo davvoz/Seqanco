@@ -1,0 +1,44 @@
+<table>
+    <tr>
+        <th>A</th>
+        <th>D</th>
+        <th>S</th>
+        <th>SV</th>
+        <th>R</th>
+    </tr>
+    <tr>
+
+        <td>
+            <input type="number" [(ngModel)]="adsr.attack" min="-100" max="100" step="0.01" (change)="changed()">
+        </td>
+        <td>
+            <input type="number" [(ngModel)]="adsr.decay" min="-100" max="100" step="0.01" (change)="changed()">
+        </td>
+        <td>
+            <input type="number" [(ngModel)]="adsr.sustain" min="-100" max="100" step="0.01" (change)="changed()">
+        </td>
+        <td>
+            <input type="number" [(ngModel)]="adsr.sustainVal" min="-100" max="100" step="0.01" (change)="changed()">
+        </td>
+        <td>
+            <input type="number" [(ngModel)]="adsr.release" min="-100" max="100" step="0.1" (change)="changed()">
+        </td>
+    </tr>
+    <!-- <tr>
+    <td>
+        <app-knob></app-knob>
+    </td>
+    <td>
+        <app-knob></app-knob>
+    </td>
+    <td>
+        <app-knob></app-knob>
+    </td>
+    <td>
+        <app-knob></app-knob>
+    </td>
+    <td>
+        <app-knob></app-knob>
+    </td>
+    </tr> -->
+</table>

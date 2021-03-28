@@ -1,0 +1,27 @@
+<div class="esterna" [style.width.px]="getExternalDimension()">
+    <div class="pianoRollToolbar" [style.background-color]="getInstrumentColor()">
+        <span>
+            Loop start :<input type="number" [(ngModel)]="startLoop" min="0" (change)="setStartLopper()" />
+            Loop length :<input type="number" [(ngModel)]="endLoop" (change)="setStartLopper()" />
+            Loop ends at : {{startLoop+endLoop}}
+        </span>
+        <span style="float:right">
+            <button mat-stroked-button (click)="clear()">
+                <mat-icon>delete</mat-icon>
+            </button>
+            <button mat-stroked-button (click)="random()">random</button>
+        </span>
+
+    </div>
+    <canvas #canvasLooper width="{{pianoRollDimensionIn}}" height="239" class="looper-layer"></canvas>
+    <div class="cnvsContainer" [style.width.px]="getExternalDimension()">
+        <!-- <canvas #canvasEnemiesNew width="{{pianoRollDimensionIn}}" height="960" [style.display]="fakeMode ? none : block"></canvas> -->
+
+        <canvas #canvasGui width="{{pianoRollDimensionIn}}" height="960"></canvas>
+        <canvas #canvas width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)" class="game-layer" ></canvas>
+        <canvas #canvasLine width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)"
+            class="game-layer"></canvas>
+        <!-- <canvas #pianoLabelCanvas width="20" height="960" (click)="handleChange($event)" class="pianoLabel-layer"></canvas>  -->
+    </div><canvas #canvasVelo width="{{pianoRollDimensionIn}}" height="60" (click)="handleChangeVelo($event)"
+        class="velocity-layer"></canvas>
+</div>
