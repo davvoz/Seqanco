@@ -173,7 +173,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
       }
     }
   }
-
   runClip1(clipIndex: number) {
     if (this.selectedClipIndex !== clipIndex) {
       this.selectedClipIndex = clipIndex;
