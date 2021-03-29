@@ -1,2 +1,18 @@
+<div id="container">
+    <jqxKnob #myKnob (onChange)="onChange($event)" [value]="valoreIn" [min]="min" [max]="max" [startAngle]="160"
+        [endAngle]="380" [snapToStep]="true" [rotation]="'clockwise'" [progressBar]="progressBar" [height]="height"
+        [width]="width" [pointer]="pointer" >
+    </jqxKnob>
+    <div class="label">
+        {{label}}
+    </div>
 
-A
+</div>
+
+
+<div id="inputField">
+    <jqxNumberInput #myNumberInput [style.display]="'none'" (mousedown)="onMouseDown($event)" (keyup)="onKeyup()"
+        (onValueChanged)="onValueChanged()" [width]="60" [height]="40" [decimal]="60" [min]="0" [max]="100"
+        [textAlign]="'center'" [decimalDigits]="1" [inputMode]="'simple'">
+    </jqxNumberInput>
+</div>

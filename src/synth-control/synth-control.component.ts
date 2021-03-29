@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input,  Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Adsr, SyntControl } from '../interfaces/interfaces';
 
 @Component({
@@ -35,7 +35,7 @@ export class SynthControlComponent implements AfterViewInit {
 
   waveSelected = 'square';
   filterSelected = 'allpass';
-  
+
   waveforms = ['square', 'sine', 'sawtooth', 'triangle'];
   filterType = [
     'lowpass',
@@ -64,12 +64,20 @@ export class SynthControlComponent implements AfterViewInit {
   pitchEnvFreq: number = 0;
   pitchEnvEnd: number = 0;
   velocity!: number;
-  adsrVolume: Adsr = { attack: 0, decay: 0, sustain: 0, sustainVal: 0, release: 0 };
-  adsrPitch: Adsr = { attack: 0, decay: 0, sustain: 0, sustainVal: 0, release: 0 };
+  adsrVolume: Adsr = { attack: 0.1, decay: 0.3, sustain: 0.3, sustainVal: 0.3, release: 0.3 };
+  adsrPitch: Adsr = { attack: 0.1, decay: 0.3, sustain: 0.3, sustainVal: 0.3, release: 0.3 };
   adsrPitchDisplay = false;
-  distorsion :boolean =false;
+  distorsion: boolean = false;
 
   constructor() { }
+  changedZ($event: number, el: string) {
+    if (el === 'gain') {
+      this.gain = $event/100;
+    }if (el === 'cutoff') {
+      this.filterCutoff = $event/100;
+    }
+    this.changed();
+  }
   distorsionGestione() {
     this.distorsion ? this.distorsion = false : this.distorsion = true;
     this.changed();
@@ -78,7 +86,7 @@ export class SynthControlComponent implements AfterViewInit {
     this.syntControl = {
       isMuted: 0,
       gain: 0,
-      adsr:this.adsrVolume,
+      adsr: this.adsrVolume,
       waveSelected: this.waveSelected,
       filterSelected: this.filterSelected,
       filterCutoff: 0,
@@ -89,9 +97,9 @@ export class SynthControlComponent implements AfterViewInit {
       libIndex: 0,
       duration: 0,
       type: '',
-      adsrPitch:this.adsrPitch,
+      adsrPitch: this.adsrPitch,
       pitchEnvelope: { frequency: this.pitchEnvFreq, end: this.pitchEnvEnd },
-      isDistorted:false
+      isDistorted: false
 
     };
   }
@@ -102,7 +110,7 @@ export class SynthControlComponent implements AfterViewInit {
       return 'green';
     }
   }
-  
+
   changed() {
     this.syntControl = {
       isMuted: this.isMuted,
@@ -137,5 +145,5 @@ export class SynthControlComponent implements AfterViewInit {
     }
   }
 
- 
+
 }

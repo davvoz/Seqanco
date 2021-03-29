@@ -45,7 +45,9 @@ export class GainComponent implements AfterViewInit {
   fonzion(knob: any, value: any) {
     return value;
   }
-
+  onChangeMaster($event: number) {
+    this.gainNode.gain.setValueAtTime($event / 100, this.myTimer.audioContext.currentTime);
+  }
   changed($event: any) {
     console.log($event, 'diopo');
   }

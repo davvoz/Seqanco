@@ -1,23 +1,23 @@
-input-knob {
-    width: 150px;
-    padding: 10px;
-    border: 2px dashed green;
-    background: lightgreen;
-  }
+#container {
+  position: relative;
+}
+.inputField {
+  position: absolute;
+  background: transparent;
+  border: none;
+}
+text.jqx-knob-label {
+  font-size: 20px;
+}
+.inputField .jqx-input-content {
+  background: transparent;
+  font-size: 20px;
+  color: grey;
+}
+.label {
+  position: absolute;
+  /* font-size: 69%; */
+  top: 36%;
+  right: 26%;
+}
 
-  input-knob::part(rotator) {
-    box-sizing: border-box;
-    background: lightblue;
-    border: 2px dashed blue;
-    border-radius: 100%;
-    width: 150px;
-    height: 150px;
-  }
-
-  .mark {
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-    font: bold 200% monospace;
-    color: blue;
-  }

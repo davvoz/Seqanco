@@ -63,13 +63,20 @@ export class AppComponent implements AfterViewInit {
   samplerClipColor: string = 'rgba(90, 90, 200, 0.2)';
   bianco: string = 'rgb(245, 245, 245)';
   verde: string = '#00d600';
-  clipsMaster: Clip[] = [{ color: this.bianco, index: 0, isActive: false, trakNumber: 0,fakeMode:false },//
-  { color: this.bianco, index: 0, isActive: false, trakNumber: 0 ,fakeMode:false},//
-  { color: this.bianco, index: 0, isActive: false, trakNumber: 0 ,fakeMode:false},//
-  { color: this.bianco, index: 0, isActive: false, trakNumber: 0 ,fakeMode:false}];
-  
+  clipsMaster: Clip[] = [{ color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//
+  { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//
+  { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//
+  { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false }];
+
   constructor(public myTimer: TimerService) {
     this.connectMaster = this.myTimer.merger;
+  }
+  onChangeMaster($event: number) {
+    this.masterGain = $event / 100;
+    this.myTimer.merger.gain.setValueAtTime(
+      this.masterGain,
+      this.myTimer.audioContext.currentTime
+    );
   }
   activeKeyboardControl() {
     this.isActiveKeyboardControl ? this.isActiveKeyboardControl = false : this.isActiveKeyboardControl = true;
@@ -211,7 +218,7 @@ export class AppComponent implements AfterViewInit {
         index: i,
         isActive: false,
         trakNumber: this.instruments.length,
-        fakeMode:false
+        fakeMode: false
       });
     }
     return clips
@@ -266,7 +273,7 @@ export class AppComponent implements AfterViewInit {
         return 'rgba(200, 90, 90, 0.4)';
       case 'NEWSYNTH':
         return 'rgba(100, 200, 200, 0.4)';
-      default: return 'rgba(200, 200, 200, 0.4)';break;
+      default: return 'rgba(200, 200, 200, 0.4)'; break;
     }
     return null;
   }

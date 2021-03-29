@@ -47,9 +47,11 @@ export class MonoSampObj extends AbstractMonoosc {
         (freq / 100 + this.getAllSynthControl()[synthControlIndex].pitchEnvelope.frequency, this.audioContext.currentTime +//
           this.getAllSynthControl()[synthControlIndex].pitchEnvelope.end);
       source.start(this.audioContext.currentTime);
-      // @ts-ignore*
-      source = null;
+     
+      
       source.disconnect();
+       // @ts-ignore*
+      source = null;
     }
   }
 

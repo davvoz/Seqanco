@@ -33,7 +33,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatGridListModule } from '@angular/material/grid-list';
-
+import { jqxKnobModule } from 'jqwidgets-ng/jqxknob';
+import { jqxNumberInputModule } from 'jqwidgets-ng/jqxnumberinput';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatMenuModule,
     MatCardModule,
     MatTooltipModule,
-    MatListModule
+    MatListModule,
+    jqxKnobModule,
+    jqxNumberInputModule,
+    MatTabsModule
   ],
   providers: [TimerService, AudioContext, SamplesLibraryService],
   bootstrap: [AppComponent],

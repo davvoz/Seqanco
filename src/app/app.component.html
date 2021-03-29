@@ -1,6 +1,7 @@
 <mat-toolbar color="secondary">
 	<h3>Eazy Drop </h3>
 	<span class="example-spacer"></span>
+	<app-knob #master (valore)="onChangeMaster($event)" [isCollapsed]="true" [height]="50" [width]="50"></app-knob>
 	<app-start-stop></app-start-stop>
 	<button mat-icon-button (click)="activeKeyboardControl()" matTooltip="Enable keyboard control click or press CTRL"
 		[style.background-color]="getActiveColor(isActiveKeyboardControl)">
@@ -67,7 +68,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="instrumentPanel">
+			<div class="instrumentPanel"> 
 				<!-- <button mat-icon-button (click)="collapse(instrument)" class="closeButton"
 					[style.display]="getDisplay(instrument.isCollapsed ,i)">
 					<mat-icon>close</mat-icon>
