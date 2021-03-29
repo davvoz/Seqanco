@@ -1,3 +1,4 @@
+import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 import { AfterViewInit, EventEmitter, Input, Output } from '@angular/core';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { jqxKnobComponent } from 'jqwidgets-ng/jqxknob';
@@ -30,18 +31,18 @@ export class KnobComponent implements OnInit, AfterViewInit {
     
     progressBar: any =
     {
-        style: { fill: '#00a4e1', stroke: 'grey' },
-        size: '9%',
+        style: { fill: '#00a4e1', stroke: 'none' },
+        size: '29%',
         offset: '60%',
         background: { fill: 'grey', stroke: 'grey' }
     };
     marks:any ={
-        colorRemaining: { color: 'grey', border: 'grey' },
+        colorRemaining: { color: 'grey', border: 'none' },
         colorProgress: { color: '#00a4e1', border: '#00a4e1' },
         type: 'line',
-        offset: '71%',
-        thickness: 3,
-        size: '6%',
+        offset: '1%',
+        thickness: 1,
+        size: '36%',
         majorSize: '9%',
         majorInterval: 10,
         minorInterval: 2
@@ -52,7 +53,7 @@ export class KnobComponent implements OnInit, AfterViewInit {
         visible: false
     };
     pointer: any =
-    { type: 'arrow', style: { fill: '#00a4e1', stroke: 'none' }, size: '59%', offset: '1%', thickness: 10 };
+    { type: 'arrow', style: { fill: '#00a4e1', stroke: 'none' }, size: '179%', offset: '1%', thickness: 10 };
 
     dial: any =
     {

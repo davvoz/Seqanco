@@ -18,7 +18,7 @@ export interface ClipState {
   selector: 'app-piano-roll-canvas-based',
   templateUrl: './piano-roll-canvas-based.component.html',
   styleUrls: ['./piano-roll-canvas-based.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PianoRollCanvasBasedComponent implements AfterViewInit {
 

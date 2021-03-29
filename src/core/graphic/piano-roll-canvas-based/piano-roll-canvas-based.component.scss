@@ -26,7 +26,7 @@ canvas {
     background-color: burlywood;
     overflow: auto;
     top: 279px;
-
+    border:1px solid grey;
 }
 .titleContainer {
     position: relative;
@@ -36,8 +36,8 @@ canvas {
 }
 .esterna {
     position: absolute;
-    left: 206px;
-    top: 4px;
+    
+   
     width: 100%;
     top: -251px;
 }

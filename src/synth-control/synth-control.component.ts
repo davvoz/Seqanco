@@ -72,10 +72,25 @@ export class SynthControlComponent implements AfterViewInit {
   constructor() { }
   changedZ($event: number, el: string) {
     if (el === 'gain') {
-      this.gain = $event/100;
-    }if (el === 'cutoff') {
-      this.filterCutoff = $event/100;
+      this.gain = $event / 100;
     }
+    if (el === 'cutoff') {
+      this.filterCutoff = $event / 100;
+    }
+    if (el = 'wave') {
+      switch ($event) {
+        case 0:
+          this.waveSelected = 'square'
+          break;
+        case 1: this.waveSelected = 'sine'; break;
+        case 3: this.waveSelected = 'sawtooth'; break;
+        case 2: this.waveSelected = 'triangle'; break
+      }
+    }
+    if (el = 'filterReso') {
+      this.filterReso = $event;
+    }
+
     this.changed();
   }
   distorsionGestione() {

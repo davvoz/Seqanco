@@ -1,50 +1,120 @@
-<mat-toolbar color="secondary">
-	<h3>Eazy Drop </h3>
-	<span class="example-spacer"></span>
-	<app-knob #master (valore)="onChangeMaster($event)" [isCollapsed]="true" [height]="50" [width]="50"></app-knob>
-	<app-start-stop></app-start-stop>
-	<button mat-icon-button (click)="activeKeyboardControl()" matTooltip="Enable keyboard control click or press CTRL"
-		[style.background-color]="getActiveColor(isActiveKeyboardControl)">
-		<mat-icon>keyboard</mat-icon>
-	</button>
-	<button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add instrument">
-		<mat-icon>add_circle_outline</mat-icon>
-	</button>
-	GAIN&nbsp;<input type="number" [(ngModel)]="masterGain" (change)="onSearchChange()" min="0" max="1"
-		step="0.01" />&nbsp;&nbsp;
-	<app-timer-control></app-timer-control>
-
-	<mat-menu #menu="matMenu">
-
-		<button mat-menu-item color="basic" (click)="addSampler()">Add sampler</button>
-
-		<button mat-menu-item color="basic" (click)="addSynth()">Add Synth</button>
-
-		<button mat-menu-item color="basic" (click)="addMonoosc()">Add Monoosc</button>
-	</mat-menu>
-</mat-toolbar>
 <!-- <div class="mixerContainer" [style.display]="getDisplay(showMixer)">
 	<div *ngFor="let instrument of instruments;let i =index;" class="mixerTrack"
 		[style.display]="getDisplay(showMixer)">
 		<div class="{{instrument.type}}">{{instrument.name}}-{{instrument.type}}</div>
 	</div>
 </div> -->
-<div class="daw" [style.display]="getDisplay(!showMixer)">
-	<div class="stage">
-		<div *ngFor="let instrument of instruments;let i =index;">
-			<div class="instrument">
-				<div class="instrumentToolbar" [style.border]="getSelectedTrakBorderStyle(instrument.isCollapsed)">
-					<div [style.background-color]="getInstrumentColor(instrument.type)" class="instHeader">
+<mat-drawer-container class="example-container" autosize>
+	<mat-drawer #drawer class="example-sidenav" mode="side" opened>
+		<mat-list>
+			<mat-list-item>
+				<app-timer-control></app-timer-control>
+			</mat-list-item>
+			<mat-list-item>
+				Add instrument<button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add instrument">
+								<mat-icon>add_circle_outline</mat-icon>
+							</button>
+			</mat-list-item>
+			<mat-list-item>Keyboard control <button mat-icon-button (click)="activeKeyboardControl()"
+					matTooltip="Enable keyboard control click or press CTRL"
+					[style.background-color]="getActiveColor(isActiveKeyboardControl)">
+					<mat-icon>keyboard</mat-icon>
+				</button></mat-list-item>
+			<mat-list-item>
+				Master <app-knob #master (valore)="onChangeMaster($event)" [isCollapsed]="true" [height]="50"
+					[width]="50"></app-knob>
+			</mat-list-item>
+		</mat-list>
+	</mat-drawer>
+
+	<div class="example-sidenav-content">
+
+		<mat-toolbar color="primary">
+			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle();">
+				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+			</button>
+			<h3>Eazy Drop </h3>
+			<span class="example-spacer"></span>
+			<app-start-stop></app-start-stop>
+			<span class="example-spacer"></span>
+
+
+
+			<mat-menu #menu="matMenu">
+
+				<button mat-menu-item color="basic" (click)="addSampler()">Add sampler</button>
+
+				<button mat-menu-item color="basic" (click)="addSynth()">Add Synth</button>
+
+				<button mat-menu-item color="basic" (click)="addMonoosc()">Add Monoosc</button>
+			</mat-menu>
+		</mat-toolbar>
+		<div class="daw" [style.display]="getDisplay(!showMixer)">
+			<div class="stage">
+				<div *ngFor="let instrument of instruments;let i =index;">
+					<div class="instrument">
+						<div class="instrumentToolbar"
+							[style.border]="getSelectedTrakBorderStyle(instrument.isCollapsed)">
+							<div [style.background-color]="getInstrumentColor(instrument.type)" class="instHeader">
+								<div>
+									<button mat-icon-button (click)="collassaInstrument(i)">
+										<mat-icon>settings</mat-icon>
+									</button>
+									<button mat-icon-button (click)="remove(i)">
+										<mat-icon>delete</mat-icon>
+									</button>
+									<button mat-icon-button
+										(click)="instrument.isMuted ? instrument.isMuted = false: instrument.isMuted=true"
+										[style.background-color]="getActiveColor(instrument.isMuted)">
+										<mat-icon>volume_off</mat-icon>
+									</button>
+									<button mat-icon-button>
+										<span style="font-size: 145%;">
+											<strong>S</strong></span>
+									</button>
+								</div>
+								<div class="trakTitle">{{ (instrument.name.length>5) ? (instrument.name
+									|slice:0:5)+'..':(instrument.name) | uppercase}} TRACK N° {{i+1}} </div>
+							</div>
+							<div class="clipsContiner">
+								<div *ngFor="let clip of instrument.clips" class="clip"
+									[style.background-color]="clip.color">
+									<button mat-icon-button (click)="setClip(i,clip.index)">
+										<mat-icon>play_arrow</mat-icon>
+									</button>
+									<!-- <button mat-icon-button
+									(click)="instrument.fakeMode ? instrument.fakeMode= false :instrument.fakeMode = true ">
+									<mat-icon>edit</mat-icon>
+								</button>{{clip.fakeMode}} -->
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="instrumentPanel">
+						<!-- <button mat-icon-button (click)="collapse(instrument)" class="closeButton"
+						[style.display]="getDisplay(instrument.isCollapsed ,i)">
+						<mat-icon>close</mat-icon>
+					</button> -->
+						<div class="instrumentContainer" [style.display]="getDisplay(instrument.isCollapsed)">
+							<app-instrument #instrumentsViews [clipIndex]="instrument.clipPlaying"
+								[name]="instrument.name" [type]="instrument.type" [index]="i"
+								[pianoRollDimension]="instrument.pianoRollDimension" [muted]="instrument.isMuted">
+							</app-instrument>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="instrument" [style.display]="getDisplay(!showMixer)">
+					<div class="instHeader">
 						<div>
-							<button mat-icon-button (click)="collassaInstrument(i)">
+							<button mat-icon-button>
 								<mat-icon>settings</mat-icon>
 							</button>
-							<button mat-icon-button (click)="remove(i)">
-								<mat-icon>delete</mat-icon>
+							<button mat-icon-button>
+								<mat-icon>play_arrow</mat-icon>
 							</button>
-							<button mat-icon-button
-								(click)="instrument.isMuted ? instrument.isMuted = false: instrument.isMuted=true"
-								[style.background-color]="getActiveColor(instrument.isMuted)">
+							<button mat-icon-button>
 								<mat-icon>volume_off</mat-icon>
 							</button>
 							<button mat-icon-button>
@@ -52,64 +122,20 @@
 									<strong>S</strong></span>
 							</button>
 						</div>
-						<div class="trakTitle">{{ (instrument.name.length>5) ? (instrument.name
-							|slice:0:5)+'..':(instrument.name) | uppercase}} TRACK N° {{i+1}} </div>
+						<div class="trakTitle">MASTER </div>
 					</div>
+					<!-- <app-analizer [connectHere]="connectMaster"></app-analizer> -->
 					<div class="clipsContiner">
-						<div *ngFor="let clip of instrument.clips" class="clip" [style.background-color]="clip.color">
-							<button mat-icon-button (click)="setClip(i,clip.index)">
+						<div *ngFor="let clip of clipsMaster;let i=index" class="clip"
+							[style.background-color]="clip.color">
+							<button mat-icon-button (click)="setClipMassive(i)">
 								<mat-icon>play_arrow</mat-icon>
 							</button>
-							<!-- <button mat-icon-button
-								(click)="instrument.fakeMode ? instrument.fakeMode= false :instrument.fakeMode = true ">
-								<mat-icon>edit</mat-icon>
-							</button>{{clip.fakeMode}} -->
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="instrumentPanel"> 
-				<!-- <button mat-icon-button (click)="collapse(instrument)" class="closeButton"
-					[style.display]="getDisplay(instrument.isCollapsed ,i)">
-					<mat-icon>close</mat-icon>
-				</button> -->
-				<div class="instrumentContainer" [style.display]="getDisplay(instrument.isCollapsed)">
-					<app-instrument #instrumentsViews [clipIndex]="instrument.clipPlaying" [name]="instrument.name"
-						[type]="instrument.type" [index]="i" [pianoRollDimension]="instrument.pianoRollDimension"
-						[muted]="instrument.isMuted">
-					</app-instrument>
-				</div>
-			</div>
-		</div>
-
-		
-		<div class="instrument" [style.display]="getDisplay(!showMixer)">
-			<div class="instHeader">
-				<div>
-					<button mat-icon-button >
-						<mat-icon>settings</mat-icon>
-					</button>
-					<button mat-icon-button >
-						<mat-icon>play_arrow</mat-icon>
-					</button>
-					<button mat-icon-button >
-						<mat-icon>volume_off</mat-icon>
-					</button>
-					<button mat-icon-button>
-						<span style="font-size: 145%;">
-							<strong>S</strong></span>
-					</button>
-				</div>
-				<div class="trakTitle">MASTER </div>
-			</div>
-			<!-- <app-analizer [connectHere]="connectMaster"></app-analizer> -->
-			<div class="clipsContiner">
-				<div *ngFor="let clip of clipsMaster;let i=index" class="clip" [style.background-color]="clip.color">
-					<button mat-icon-button (click)="setClipMassive(i)">
-						<mat-icon>play_arrow</mat-icon>
-					</button>
-				</div>
-			</div>
 		</div>
 	</div>
-</div>
+
+</mat-drawer-container>

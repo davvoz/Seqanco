@@ -1,6 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
-
+mat-sidenav-content {
+    overflow: hidden;
+}
+.example-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
 .instrumentContainer {
     min-width: 99%;
     /* height: 650px; */
@@ -118,7 +127,8 @@ mat-toolbar {
 }
 .instrumentPanel {
     position: absolute;
-    top: 517px;
+    bottom: 47%;
+    width: 99%;
 }
 .titl {
     font-family: "Press Start 2P", cursive;
@@ -163,6 +173,5 @@ h3 {
     font-family: "Press Start 2P";
 }
 .daw {
-    background-color: red;
     width: 100%;
 }

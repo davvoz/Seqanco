@@ -69,13 +69,18 @@
 </div>
 
 <div class="chainFxContainer" *ngIf="type !== 'NEWSYNTH'">
-    <div class="autopan">
-        <button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button>
-        rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
-        drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />
-    </div>
-    <div class="waveshaper">
-        <button (click)="setWaveshaper()"
+   <table>
+       <tr>
+           <td> <button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button></td>
+           <td> rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" /></td>
+           <td>  drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" /></td>
+       </tr>
+       <tr>
+           <td colspan="3">
+            <button (click)="setWaveshaper()"
             [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button>
-    </div>
+           </td>
+       </tr>
+   </table>
+
 </div>

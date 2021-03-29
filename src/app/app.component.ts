@@ -1,5 +1,8 @@
+import { Breakpoints } from '@angular/cdk/layout';
+import { ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { HostListener } from '@angular/core';
 import { AfterViewInit, Component, QueryList, ViewChildren, } from '@angular/core';
+import { MatSidenav } from '@angular/material/sidenav';
 import { InstrumentComponent } from '../instrument/instrument.component';
 import { Clip, Instrument } from '../interfaces/interfaces';
 import { TimerService } from '../services/timer.service';
@@ -7,11 +10,12 @@ import { TimerService } from '../services/timer.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements AfterViewInit {
   isActiveKeyboardControl = false;
-
+  showFiller = false;
   @HostListener('document:keyup', ['$event'])
   onKeyUp(ev: KeyboardEvent) {
     if (ev.key === 'Control') {
@@ -61,7 +65,7 @@ export class AppComponent implements AfterViewInit {
   monooscClipColor: string = 'rgba(90, 200, 90, 0.2)';
   newsynthClipColor: string = 'rgba(100, 200, 200, 0.2)';
   samplerClipColor: string = 'rgba(90, 90, 200, 0.2)';
-  bianco: string = 'rgb(245, 245, 245)';
+  bianco: string = 'rgb(215, 215, 215)';
   verde: string = '#00d600';
   clipsMaster: Clip[] = [{ color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//
   { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//
@@ -71,6 +75,20 @@ export class AppComponent implements AfterViewInit {
   constructor(public myTimer: TimerService) {
     this.connectMaster = this.myTimer.merger;
   }
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+
+  
+
+  close() {
+    console.log(this.sidenav.opened);
+    if(this.sidenav.opened){
+      this.sidenav.close();
+    }else{
+      this.sidenav.open()
+    }
+    
+  }
+  
   onChangeMaster($event: number) {
     this.masterGain = $event / 100;
     this.myTimer.merger.gain.setValueAtTime(
