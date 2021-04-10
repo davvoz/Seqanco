@@ -1,8 +1,13 @@
 <div class="{{type}}">
-   <div class="intestazioneNEWSYNTH" *ngIf="type === 'NEWSYNTH'">{{name}}-{{index}}</div> 
-   <div class="intestazioneSAMPLER" *ngIf="type === 'SAMPLER'">{{name}}-{{index}}</div> 
-   <div class="intestazioneMONOOSC" *ngIf="type === 'MONOOSC'">{{name}}-{{index}}</div> 
+    <app-piano-roll-canvas-based #pianoRoll [clipIndex]="clipIndex" (notaDaSuonare)="play($event,type)"
+    [instrumentType]="type" [la]="selectedHrtz" [pianoRollDimensionIn]="pianoRollDimension">
+</app-piano-roll-canvas-based>
+   
+    
     <div class="esternaInstrument">
+        <div class="intestazioneNEWSYNTH" *ngIf="type === 'NEWSYNTH'">{{name}}-{{index}}</div>
+        <div class="intestazioneSAMPLER" *ngIf="type === 'SAMPLER'">{{name}}-{{index}}</div>
+        <div class="intestazioneMONOOSC" *ngIf="type === 'MONOOSC'">{{name}}-{{index}}</div>
         <app-synth-control *ngIf="type !== 'NEWSYNTH'" (parametriSynth)="onSetSoundParams($event,type)" [typeIn]="type"
             [name]="name"></app-synth-control>
         <div *ngIf="type === 'NEWSYNTH'" class="NEWSYNTH">
@@ -50,7 +55,8 @@
                             </tr>
                             <tr>
                                 <td>
-                                    enable osc2 <input type="checkbox" [(ngModel)]="lfoConOsc2"  (change)="changeConnection2()" />
+                                    enable osc2 <input type="checkbox" [(ngModel)]="lfoConOsc2"
+                                        (change)="changeConnection2()" />
                                 </td>
                                 <td>
                                 </td>
@@ -63,24 +69,25 @@
             <app-stereo-panner #pan></app-stereo-panner>
         </div>
     </div>
-    <app-piano-roll-canvas-based #pianoRoll [clipIndex]="clipIndex" (notaDaSuonare)="play($event,type)" [instrumentType]="type"
-        [la]="selectedHrtz" [pianoRollDimensionIn]="pianoRollDimension" >
-    </app-piano-roll-canvas-based>
+   
 </div>
 
 <div class="chainFxContainer" *ngIf="type !== 'NEWSYNTH'">
-   <table>
-       <tr>
-           <td> <button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button></td>
-           <td> rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" /></td>
-           <td>  drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" /></td>
-       </tr>
-       <tr>
-           <td colspan="3">
-            <button (click)="setWaveshaper()"
-            [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button>
-           </td>
-       </tr>
-   </table>
+    <table>
+        <tr>
+            <td> <button (click)="setAutopan()"
+                    [style.background-color]="getActiveButton(autopanSpenta)">autopan</button></td>
+            <td> rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
+            </td>
+            <td> drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01"
+                    (change)="setAdrywet()" /></td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <button (click)="setWaveshaper()"
+                    [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button>
+            </td>
+        </tr>
+    </table>
 
 </div>

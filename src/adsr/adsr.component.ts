@@ -17,30 +17,8 @@ export class AdsrComponent implements AfterViewInit {
   ngAfterViewInit(): void {
   }
 
-  changedZ($event: number, type: string) {
-    console.log($event, type);
-    switch (type) {
-      case 'A':
-        this.adsr.attack = $event /100;
-        this.adsrEmitter.emit(this.adsr);
-        break;
-      case 'D':
-        this.adsr.decay = $event/100;
-        this.adsrEmitter.emit(this.adsr);
-        break;
-      case 'S':
-        this.adsr.sustain = $event/100;
-        this.adsrEmitter.emit(this.adsr);
-        break;
-      case 'SV':
-        this.adsr.sustainVal = $event;
-        this.adsrEmitter.emit(this.adsr);
-        break;
-      case 'R':
-        this.adsr.release = $event/100;
-        this.adsrEmitter.emit(this.adsr);
-        break;
-    }
+  changedZ() {
+    this.adsrEmitter.emit(this.adsr);
 
   }
 }

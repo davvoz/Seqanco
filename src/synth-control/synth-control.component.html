@@ -1,21 +1,26 @@
 <mat-grid-list [cols]="4" rowHeight="300px">
 
     <mat-grid-tile colspan="1">
-     
-       <span style="position: absolute;
+
+        <span style="position: absolute;
        right: 64%;
-       top: 17%;">
-        {{waveSelected}}
-       </span> 
+       top: 17%;" *ngIf="typeIn ==='MONOOSC' ">
+            {{waveSelected}}
+        </span>
 
-       <table>
-           <tr>
-               <td> <app-knob *ngIf="typeIn ==='MONOOSC' " [height]="170" (valore)="changedZ($event,'wave')" [isCollapsed]="false" [width]="170" [min]="0" [max]="3"></app-knob>
 
-                <mat-form-field *ngIf="typeIn ==='SAMPLER' ">
-                    <mat-label>Sample</mat-label>
-                    <mat-select [(ngModel)]="libIndex" (ngModelChange)="changed()">
-                        <mat-option *ngFor="let el of [
+        <button *ngIf="typeIn === 'MONOOSC'" (click)="distorsionGestione()"
+        [style.background-color]="getBgDistorsion()">
+        waveshaper
+    </button>
+
+        <app-knob *ngIf="typeIn ==='MONOOSC' " [height]="100" (valore)="changedZ($event,'wave')" [isCollapsed]="false"
+            [width]="100" [min]="0" [max]="3"></app-knob>
+
+        <mat-form-field *ngIf="typeIn ==='SAMPLER' ">
+            <mat-label>Sample</mat-label>
+            <mat-select [(ngModel)]="libIndex" (ngModelChange)="changed()">
+                <mat-option *ngFor="let el of [
                   {valore:0,descrizione:'kick'},
                   {valore:1,descrizione:'hat'},
                   {valore:2,descrizione:'snare'},
@@ -23,93 +28,52 @@
                   {valore:4,descrizione:'vox2'},
                   {valore:5,descrizione:'per'},
                   {valore:6,descrizione:'crash'}]" value="{{el.valore}}">{{el.descrizione}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field></td>
-               <td>        <app-knob [height]="170" (valore)="changedZ($event,'gain')" [isCollapsed]="true" [width]="170" [min]="0" [max]="100"></app-knob>
-               </td>
-           </tr>
-       </table>
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
 
-       
-       
-        </mat-grid-tile>
-        <mat-grid-tile colspan="3">
-           
 
-    
-                    <table>
-                        <tr>
-                            <td> <app-adsr [slave]="'volume'" (adsrEmitter)="changeAdsr($event)" [adsr]="adsrVolume"></app-adsr></td>
-                        </tr>
-                        <tr>
-                            <td>  <app-adsr  *ngIf="typeIn === 'MONOOSC'||typeIn === 'SAMPLER'" [slave]="'pitch'" (adsrEmitter)="changeAdsr($event)" [adsr]="adsrPitch">
-                            </app-adsr></td>
-                        </tr>
-                    </table>
-                  
-<table>
-    <tr>
-        <td colspan="2"> 
-            <mat-form-field>
+        <app-knob [height]="100" (valore)="changedZ($event,'gain')" [isCollapsed]="true" [width]="100" [min]="0"
+            [max]="100"></app-knob>
+
+    </mat-grid-tile>
+    <mat-grid-tile colspan="3">
+
+        <app-adsr [slave]="'volume'" (adsrEmitter)="changeAdsr($event)" [adsr]="adsrVolume"></app-adsr>
+        <app-adsr *ngIf="typeIn === 'MONOOSC'||typeIn === 'SAMPLER'" [slave]="'pitch'"
+            (adsrEmitter)="changeAdsr($event)" [adsr]="adsrPitch">
+        </app-adsr>
+        <mat-form-field>
             <mat-label>Filter type</mat-label>
-            <mat-select [(ngModel)]="filterSelected"  (ngModelChange)="changed()">
+            <mat-select [(ngModel)]="filterSelected" (ngModelChange)="changed()">
                 <mat-option *ngFor="let ft of filterType" [value]="ft">{{ ft }}</mat-option>
             </mat-select>
-        </mat-form-field></td>
-    </tr>
-    <tr>
-        <td> reso 
-            <app-knob [height]="70" (valore)="changedZ($event,'filterReso')" [isCollapsed]="true" [width]="70" [min]="0" [max]="1000"></app-knob></td>
-        <td>  cutoff  <app-knob [height]="70" (valore)="changedZ($event,'cutoff')" [isCollapsed]="true" [width]="70" [min]="0" [max]="10000"></app-knob>
-        </td>
-    </tr>
-</table>
-           
-               
-                   
-                       <table>
-                           <tr>
-                               <td>
-                                   LFO
-                               </td>
-                               <td ><mat-form-field>
-                                <mat-label>waveform</mat-label>
-                                <mat-select [(ngModel)]="lfoWaveSelected"
-                                    (ngModelChange)="changed()">
-                                    <mat-option *ngFor="let wave of waveforms" [value]="wave">{{ wave }}</mat-option>
-                                </mat-select>
-                            </mat-form-field></td>
-                           
-                           </tr>
-                           <tr>
-                               <td> amp <input type="range" [(ngModel)]="lfoAmplitude" min="0" max="1000" step="1"
-                                (change)="changed()" /></td>
-                               <td>rate <input type="number" [(ngModel)]="lfoRate" min="1" max="16" step="0.01"
-                                (change)="changed()" /></td>
-                           </tr>
-                       </table>
-                   
-                     
-                        <mat-list *ngIf="typeIn === 'DOUBLEOOSC' || typeIn === 'SAMPLER'">
-                            <mat-list-item>
-                                pitch time <input type="number" [(ngModel)]="pitchEnvEnd" min="0.01" max="1000" step="0.01"
-                                    (change)="changed()" />
-                            </mat-list-item>
-                            <mat-list-item> end time <input type="number" [(ngModel)]="pitchEnvFreq" min="0.01" max="1000" step="0.01"
-                                    (change)="changed()" />
-                            </mat-list-item>
-                        </mat-list>
-                        <button *ngIf="typeIn === 'MONOOSC'" (click)="distorsionGestione()"
-                        [style.background-color]="getBgDistorsion()">
-                        waveshaper
-                        </button>
-             
-             
-        </mat-grid-tile>
+        </mat-form-field>
+        reso
+        <app-knob [height]="70" (valore)="changedZ($event,'filterReso')" [isCollapsed]="true" [width]="70" [min]="0"
+            [max]="1000"></app-knob>
 
- 
+        cutoff <app-knob [height]="70" (valore)="changedZ($event,'cutoff')" [isCollapsed]="true" [width]="70" [min]="0"
+            [max]="10000"></app-knob>
 
+        LFO
+        <mat-form-field>
+            <mat-label>waveform</mat-label>
+            <mat-select [(ngModel)]="lfoWaveSelected" (ngModelChange)="changed()">
+                <mat-option *ngFor="let wave of waveforms" [value]="wave">{{ wave }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        amp <input type="range" [(ngModel)]="lfoAmplitude" min="0" max="1000" step="1" (change)="changed()" />
+        rate <input type="number" [(ngModel)]="lfoRate" min="1" max="16" step="0.01" (change)="changed()" />
 
-
-
+        <mat-list *ngIf="typeIn === 'DOUBLEOOSC' || typeIn === 'SAMPLER'">
+            <mat-list-item>
+                pitch time <input type="number" [(ngModel)]="pitchEnvEnd" min="0.01" max="1000" step="0.01"
+                    (change)="changed()" />
+            </mat-list-item>
+            <mat-list-item> end time <input type="number" [(ngModel)]="pitchEnvFreq" min="0.01" max="1000" step="0.01"
+                    (change)="changed()" />
+            </mat-list-item>
+        </mat-list>
+        
+    </mat-grid-tile>

@@ -13,15 +13,19 @@
         </span>
 
     </div>
-    <canvas #canvasLooper width="{{pianoRollDimensionIn}}" height="239" class="looper-layer"></canvas>
-    <div class="cnvsContainer" [style.width.px]="getExternalDimension()">
-        <!-- <canvas #canvasEnemiesNew width="{{pianoRollDimensionIn}}" height="960" [style.display]="fakeMode ? none : block"></canvas> -->
+    <div class="allCanvas">
+        <div class="cnvsContainer" [style.width.px]="getExternalDimension()">
+            <!-- <canvas #canvasEnemiesNew width="{{pianoRollDimensionIn}}" height="960" [style.display]="fakeMode ? none : block"></canvas> -->
+    
+            <canvas #canvasGui width="{{pianoRollDimensionIn}}" height="960"></canvas>
+            <canvas #canvas width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)" class="game-layer" ></canvas>
+            <canvas #canvasLine width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)"
+                class="game-layer"></canvas>
+            <!-- <canvas #pianoLabelCanvas width="20" height="960" (click)="handleChange($event)" class="pianoLabel-layer"></canvas>  -->
+        </div><canvas #canvasVelo width="{{pianoRollDimensionIn}}" height="60" (click)="handleChangeVelo($event)"
+            class="velocity-layer" ></canvas>
 
-        <canvas #canvasGui width="{{pianoRollDimensionIn}}" height="960"></canvas>
-        <canvas #canvas width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)" class="game-layer" ></canvas>
-        <canvas #canvasLine width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)"
-            class="game-layer"></canvas>
-        <!-- <canvas #pianoLabelCanvas width="20" height="960" (click)="handleChange($event)" class="pianoLabel-layer"></canvas>  -->
-    </div><canvas #canvasVelo width="{{pianoRollDimensionIn}}" height="60" (click)="handleChangeVelo($event)"
-        class="velocity-layer" ></canvas>
+    </div>
+    <canvas #canvasLooper width="{{pianoRollDimensionIn}}" height="239" class="looper-layer"></canvas>
+    
 </div>

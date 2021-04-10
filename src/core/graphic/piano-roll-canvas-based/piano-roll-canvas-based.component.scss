@@ -17,7 +17,7 @@ canvas {
     position: absolute;
     overflow: auto;
     left: 0px;
-
+    z-index: 999;
 
 }
 .velocity-layer {
@@ -34,13 +34,7 @@ canvas {
     text-overflow: ellipsis;
     height: 20px;
 }
-.esterna {
-    position: absolute;
-    
-   
-    width: 100%;
-    top: -251px;
-}
+
 
 .form{
     background-color: black;
@@ -58,4 +52,6 @@ canvas {
 .example-spacer {
     flex: 1 3 auto;
 }
-
+.allCanvas{
+    border: 3px solid mediumvioletred;
+}

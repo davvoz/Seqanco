@@ -1,16 +1,27 @@
-<span class="inCon">
-    <app-knob [height]="70"  (valore)="changedZ($event,'A')" [isCollapsed]="true" [width]="70" [valoreIn]="adsr.attack*100"></app-knob>
-</span>
-<span class="inCon">
-    <app-knob [height]="70" (valore)="changedZ($event,'D')" [isCollapsed]="true" [width]="70" [valoreIn]="adsr.decay*100"></app-knob>
-</span>
-<span class="inCon">
-    <app-knob [height]="70" (valore)="changedZ($event,'S')" [isCollapsed]="true" [width]="70" [valoreIn]="adsr.sustain*100"></app-knob>
-</span>
-<!-- <span class="inCon">
-    <app-knob [height]="70" (valore)="changedZ($event,'SV')" [isCollapsed]="true" [width]="70" [valoreIn]="adsr.sustainVal"></app-knob>
-</span> -->
-<span class="inCon">
-    <app-knob [height]="70" (valore)="changedZ($event,'R')"  [isCollapsed]="true" [width]="70" [valoreIn]="adsr.release*100"></app-knob>
-</span>
-
+<table>
+    <tr>
+        <td>
+            <input type="number" (change)="changedZ()" [(ngModel)]="adsr.attack" min="0" step="0.1" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="number" (change)="changedZ()" [(ngModel)]="adsr.decay" min="0" step="0.1" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="number" (change)="changedZ()" [(ngModel)]="adsr.sustain" min="0" step="0.1" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="number" (change)="changedZ()" [(ngModel)]="adsr.sustainVal" min="0" step="0.1" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="number" (change)="changedZ()" [(ngModel)]="adsr.release" min="0" step="0.1" />
+        </td>
+    </tr>
+</table>

@@ -67,6 +67,8 @@ export class AppComponent implements AfterViewInit {
   samplerClipColor: string = 'rgba(90, 90, 200, 0.2)';
   bianco: string = 'rgb(215, 215, 215)';
   verde: string = '#00d600';
+  panelOpenState = false;
+
   clipsMaster: Clip[] = [{ color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//
   { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//
   { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//

@@ -37,6 +37,8 @@ import { jqxKnobModule } from 'jqwidgets-ng/jqxknob';
 import { jqxNumberInputModule } from 'jqwidgets-ng/jqxnumberinput';
 import { MatTabsModule } from '@angular/material/tabs';
 import{MatSidenavModule}from '@angular/material/sidenav';
+import {MatExpansionModule} from '@angular/material/expansion';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -73,7 +75,8 @@ import{MatSidenavModule}from '@angular/material/sidenav';
     jqxKnobModule,
     jqxNumberInputModule,
     MatTabsModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatExpansionModule
     
   ],
   providers: [TimerService, AudioContext, SamplesLibraryService],

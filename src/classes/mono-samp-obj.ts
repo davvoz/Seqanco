@@ -49,9 +49,9 @@ export class MonoSampObj extends AbstractMonoosc {
       source.start(this.audioContext.currentTime);
      
       
-      source.disconnect();
+     // source.disconnect();
        // @ts-ignore*
-      source = null;
+     // source = null;
     }
   }
 
