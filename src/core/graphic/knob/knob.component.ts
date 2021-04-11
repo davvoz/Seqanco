@@ -22,7 +22,9 @@ export class KnobComponent implements OnInit, AfterViewInit {
     @Input()min:number=0;
     @Input()max:number=100;
     label :number=0;
-    constructor() { }
+    constructor() {
+        
+     }
 
     ngOnInit() {}
     

@@ -1,4 +1,3 @@
-import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LineOfSquares } from '../../../classes/line-of-squares';
@@ -10,10 +9,7 @@ import { VelocityGui } from '../../../classes/velocity-gui';
 import { Collision, Coordinates, Nota } from '../../../interfaces/interfaces';
 import { TimerService } from '../../../services/timer.service';
 
-export interface ClipState {
-  clipIndex: number;
 
-}
 @Component({
   selector: 'app-piano-roll-canvas-based',
   templateUrl: './piano-roll-canvas-based.component.html',
@@ -31,12 +27,10 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   @Input() clipIndex: number = 0;
   @Input()
   instrumentType!: string;
-  
+  @ViewChild('container') container! : ElementRef ;
 
   @ViewChild("canvas", { static: false })
   canvas!: ElementRef<HTMLCanvasElement>;
-  // @ViewChild("canvas", { static: false })
-  // canvasEnemiesNew!: ElementRef<HTMLCanvasElement>;
   @ViewChild("canvasGui", { static: false })
   canvasGui!: ElementRef<HTMLCanvasElement>;
   @ViewChild("canvasLine", { static: false })
@@ -63,7 +57,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   userGui!: UserGui;
   enemies: Square[] = [];
   enemiesNew: Square[] = [];
-
   myLine!: LineOfSquares;
   freq: number[] = [];
   coord: Coordinates = { x: 0, y: 0 };
@@ -74,10 +67,15 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   endLoop: number = 16;
   clips: Square[][] = [[]];
   selectedClipIndex: number = 0;
+  worker = new Worker('./helper.worker', { type: 'module' });
 
   block = 'block';
   none = 'none';
-  constructor(public myTimer: TimerService) { }
+  tappo = -999;
+  constructor(public myTimer: TimerService) {
+
+
+  }
 
   getInstrumentColor() {
 
@@ -98,6 +96,8 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     return null;
   }
   ngAfterViewInit(): void {
+    // @ts-ignore*/
+    this.lato = this.canvasGui.nativeElement.getContext("2d")?.canvas.clientWidth /64;
     this.createScale(this.la);
     // @ts-ignore*/
     this.ctxGui = this.canvasGui.nativeElement.getContext("2d");
@@ -217,13 +217,23 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     );
     this.coord = { x: this.myLine.getX(), y: 0 };
     this.myLine.setColor("200,200,0");
-    const col: Collision = this.collisionsArrayControl(this.myLine);
-
+    let col: Collision = { esito: false, indice: 0 };
+    let enemyNumber: number[] = [];
+    for (let i = 0; i < this.enemies.length; i++) {
+      enemyNumber.push(this.enemies[i].getX());
+    }
+    this.worker.postMessage({ squareDimensioneX: this.myLine.getX(), enemiesDimensioneX: enemyNumber, enemiesDimensioneLato: this.lato });
+    if (typeof Worker !== 'undefined') {
+      // Create a new
+      this.worker.onmessage = ({ data }) => {
+        col = data;
+      };
+    } else { }
     let range = this.startLoop + this.endLoop;
     if (this.myLine.getX() == (range - 1) || this.myLine.getX() == (this.pianoRollDimensionIn / this.lato - 1)) {
       this.myLine.setX(this.startLoop);
       if (!col.esito) {
-        if (this.enemies[this.myLine.getX()].isStanding()) {
+        if (this.enemies[this.myLine.getX()].isStanding()) { 
           this.playStep(this.myLine.getX());
         }
       }
@@ -231,12 +241,13 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
       this.myLine.moveRight();
       if (this.enemies.length > 0) {
         if (!col.esito) {
-          if (this.enemies[this.myLine.getX()].isStanding()) {
+          if (typeof this.enemies[this.myLine.getX()] !=='undefined' && this.enemies[this.myLine.getX()].isStanding()) {
             this.playStep(this.myLine.getX());
           }
         }
       }
     }
+
   }
   createScale(la: number) {
     //const A4 = 220;
@@ -266,7 +277,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
       );
       enemies[i].velocity = 1;
       enemies[i].standUp();
-     enemies[i].kill();
+      enemies[i].kill();
     }
 
     return enemies

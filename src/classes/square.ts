@@ -5,7 +5,7 @@ export class Square extends Shape {
   indice:number;
   velocity!: number;
   ctx;
-  constructor(lato: number, x: number, y: number, color: String, ctx: CanvasRenderingContext2D, tune: number,indice:number) {
+  constructor(lato: number, x: number, y: number, color: String, ctx: any, tune: number,indice:number) {
     super(x, y, color);
     this.dimensioneLato = lato;
     this.tune = tune;

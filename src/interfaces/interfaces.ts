@@ -117,14 +117,7 @@ export interface DialogDataNewTrack {
 }
 
 
-export interface SwitcherInput {
-  action:string;
-  adding: boolean;
-  audioNode: AudioNode;
-  audioNodePropertyChange: AudioNode;
-  connetedTo: AudioNode;
-  fxState: boolean;
-}
+
 export interface Clip{
   index:number,
   isActive:boolean;
@@ -143,6 +136,6 @@ export interface AudioWorkletProcessor {
 
 declare var AudioWorkletProcessor: {
   prototype: AudioWorkletProcessor;
-  new (options?: AudioWorkletNodeOptions): AudioWorkletProcessor;
+  new (options?: any): AudioWorkletProcessor;
 };
 

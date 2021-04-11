@@ -32,7 +32,14 @@ export class SynthControlComponent implements AfterViewInit {
     pitchEnvelope: { frequency: 0, end: 0 },
     isDistorted: false
   };
-
+  library = [
+    { valore: 0, descrizione: 'kick' },
+    { valore: 1, descrizione: 'hat' },
+    { valore: 2, descrizione: 'snare' },
+    { valore: 3, descrizione: 'vox' },
+    { valore: 4, descrizione: 'vox2' },
+    { valore: 5, descrizione: 'per' },
+    { valore: 6, descrizione: 'crash' }];
   waveSelected = 'square';
   filterSelected = 'allpass';
 
@@ -70,26 +77,26 @@ export class SynthControlComponent implements AfterViewInit {
   distorsion: boolean = false;
 
   constructor() { }
-  changedZ($event: number, el: string) {
-    if (el === 'gain') {
-      this.gain = $event / 100;
-    }
-    if (el === 'cutoff') {
-      this.filterCutoff = $event / 100;
-    }
-    if (el = 'wave') {
-      switch ($event) {
-        case 0:
-          this.waveSelected = 'square'
-          break;
-        case 1: this.waveSelected = 'sine'; break;
-        case 3: this.waveSelected = 'sawtooth'; break;
-        case 2: this.waveSelected = 'triangle'; break
-      }
-    }
-    if (el = 'filterReso') {
-      this.filterReso = $event;
-    }
+  changedZ(event: number, el: string) {
+    // if (el === 'gain') {
+    //   this.gain = $event / 100;
+    // }
+    // if (el === 'cutoff') {
+    //   this.filterCutoff = $event / 100;
+    // }
+    // if (el = 'wave') {
+    //   switch ($event) {
+    //     case 0:
+    //       this.waveSelected = 'square'
+    //       break;
+    //     case 1: this.waveSelected = 'sine'; break;
+    //     case 3: this.waveSelected = 'sawtooth'; break;
+    //     case 2: this.waveSelected = 'triangle'; break
+    //   }
+    // }
+    // if (el = 'filterReso') {
+    //   this.filterReso = $event;
+    // }
 
     this.changed();
   }

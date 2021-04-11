@@ -1,93 +1,37 @@
 <div class="{{type}}">
     <app-piano-roll-canvas-based #pianoRoll [clipIndex]="clipIndex" (notaDaSuonare)="play($event,type)"
-    [instrumentType]="type" [la]="selectedHrtz" [pianoRollDimensionIn]="pianoRollDimension">
-</app-piano-roll-canvas-based>
-   
-    
+        [instrumentType]="type" [la]="selectedHrtz" [pianoRollDimensionIn]="pianoRollDimension">
+    </app-piano-roll-canvas-based>
+
+
     <div class="esternaInstrument">
         <div class="intestazioneNEWSYNTH" *ngIf="type === 'NEWSYNTH'">{{name}}-{{index}}</div>
         <div class="intestazioneSAMPLER" *ngIf="type === 'SAMPLER'">{{name}}-{{index}}</div>
         <div class="intestazioneMONOOSC" *ngIf="type === 'MONOOSC'">{{name}}-{{index}}</div>
+        
         <app-synth-control *ngIf="type !== 'NEWSYNTH'" (parametriSynth)="onSetSoundParams($event,type)" [typeIn]="type"
             [name]="name"></app-synth-control>
-        <div *ngIf="type === 'NEWSYNTH'" class="NEWSYNTH">
-            <table>
-                <tr>
-                    <td>
-                        <app-osc #osc [nome]="'oscillator 1'"></app-osc>
-                    </td>
-                    <td>
-                        <app-osc #oscillator2 [nome]="'oscillator 2'"></app-osc>
-                    </td>
-                </tr>
-            </table>
-            <hr>
-            <app-gain [envelope]="true" [nome]="'GAIN'" #gain></app-gain>
-            <hr>
-            <app-filter [envelope]="true" [nome]="'FILTER'" #filter></app-filter>
-            <hr>
-            <table>
-                <tr>
-                    <td>
-                        <app-osc [nome]="'LFO to frequency filter'" #osc2></app-osc>
-                    </td>
-                    <td colspan="2">
-                        <app-osc [nome]="'LFO to frequency oscillators'" #lfo></app-osc>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <app-gain [envelope]="false" [nome]="'LFO filter amplitude'" #gainOsc2></app-gain>
-                    </td>
-                    <td>
-                        <app-gain [envelope]="false" [nome]="'LFO ocs amplitude'" #gainLfo></app-gain>
-                    </td>
-                    <td>
-                        <table>
-                            <tr>
-                                <td>
-                                    enable osc1 <input type="checkbox" [(ngModel)]="lfoConOsc1"
-                                        (change)="changeConnection()" />
-                                </td>
-                                <td>
 
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    enable osc2 <input type="checkbox" [(ngModel)]="lfoConOsc2"
-                                        (change)="changeConnection2()" />
-                                </td>
-                                <td>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-            <hr>
+
+        <div *ngIf="type === 'NEWSYNTH'" class="NEWSYNTH">
+            <app-osc #osc [nome]="'oscillator 1'"></app-osc>
+            <app-osc #oscillator2 [nome]="'oscillator 2'"></app-osc>
+            <app-gain [envelope]="true" [nome]="'GAIN'" #gain></app-gain>
+            <app-filter [envelope]="true" [nome]="'FILTER'" #filter></app-filter>
+            <app-osc [nome]="'LFO to frequency filter'" #osc2></app-osc>
+            <app-osc [nome]="'LFO to frequency oscillators'" #lfo></app-osc>
+            <app-gain [envelope]="false" [nome]="'LFO filter amplitude'" #gainOsc2></app-gain>
+            <app-gain [envelope]="false" [nome]="'LFO ocs amplitude'" #gainLfo></app-gain>
+            enable osc1 <input type="checkbox" [(ngModel)]="lfoConOsc1" (change)="changeConnection()" />
+            enable osc2 <input type="checkbox" [(ngModel)]="lfoConOsc2" (change)="changeConnection2()" />
             <app-stereo-panner #pan></app-stereo-panner>
         </div>
     </div>
-   
 </div>
 
 <div class="chainFxContainer" *ngIf="type !== 'NEWSYNTH'">
-    <table>
-        <tr>
-            <td> <button (click)="setAutopan()"
-                    [style.background-color]="getActiveButton(autopanSpenta)">autopan</button></td>
-            <td> rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
-            </td>
-            <td> drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01"
-                    (change)="setAdrywet()" /></td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                <button (click)="setWaveshaper()"
-                    [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button>
-            </td>
-        </tr>
-    </table>
-
+    <button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button>
+    rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
+    drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />
+    <button (click)="setWaveshaper()" [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button>
 </div>

@@ -265,8 +265,8 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
           break;
         case 'NEWSYNTH':
           this.gainLfo.play(1);
-          this.lfo.play(-100);
-          this.osc2.play(-100);
+          this.lfo.play(1);
+          this.osc2.play(1);
           this.gainOsc2.play(1);
           this.osc.play($event.notaDaSuonare);
           this.oscillator2.play($event.notaDaSuonare);

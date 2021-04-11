@@ -1,4 +1,3 @@
-import { Breakpoints } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { HostListener } from '@angular/core';
 import { AfterViewInit, Component, QueryList, ViewChildren, } from '@angular/core';
@@ -14,6 +13,7 @@ import { TimerService } from '../services/timer.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements AfterViewInit {
+  
   isActiveKeyboardControl = false;
   showFiller = false;
   @HostListener('document:keyup', ['$event'])
@@ -75,12 +75,12 @@ export class AppComponent implements AfterViewInit {
   { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false }];
 
   constructor(public myTimer: TimerService) {
+    
     this.connectMaster = this.myTimer.merger;
   }
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   
-
   close() {
     console.log(this.sidenav.opened);
     if(this.sidenav.opened){
@@ -123,7 +123,7 @@ export class AppComponent implements AfterViewInit {
 
   }
 
-  private changeColorClipRoutine(clipArray: Clip[], clipIndex: number, focusColor: string, unfocusColor: string) {
+  private changeColorClipRoutine(clipArray: Clip[], clipIndex: number, focusColor: string, unfocusColor: string):Clip[] {
     //se non è lei non faccio nulla
     if (!clipArray[clipIndex].isActive) {
       //se è lei
@@ -166,7 +166,7 @@ export class AppComponent implements AfterViewInit {
         this.changeColorClipRoutine(this.instruments[instrumenIndex].clips, clipIndex, this.verde, this.newsynthClipColor); break;
     }
     if (this.instruments[instrumenIndex].isCollapsed) {
-      this.collassaInstrument(instrumenIndex);
+     // this.collassaInstrument(instrumenIndex);
     }
     this.instrumentsViews.toArray()[instrumenIndex].setClip(clipIndex);
 

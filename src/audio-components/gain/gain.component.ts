@@ -29,7 +29,6 @@ export class GainComponent implements AfterViewInit {
   gainAdsr!: GainNode;
   htmlToAdd!: string;
   valore: any = 0;
-  knob:any;
 
   constructor(public myTimer: TimerService, public renderer: Renderer2) {
 
@@ -49,7 +48,6 @@ export class GainComponent implements AfterViewInit {
     this.gainNode.gain.setValueAtTime($event / 100, this.myTimer.audioContext.currentTime);
   }
   changed($event: any) {
-    console.log($event, 'diopo');
   }
 
   changeFromListener(value: number) {
@@ -61,7 +59,6 @@ export class GainComponent implements AfterViewInit {
     this.adsrVolume = adsr;
   }
   play(veloGain: number): void {
-    console.log(veloGain);
     if (!this.isStarted) {
       this.isStarted = true;
     }

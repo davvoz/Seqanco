@@ -17,7 +17,7 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
 
   selectedWaveView: string = 'sine';
   frequency: number;
-  oscWk!: AudioWorkletNode;
+  oscWk!: OscillatorNode;
   isStarted: boolean = false;
   waveforms = ['square', 'sine', 'sawtooth', 'triangle', 'noise'];
   detune!: number;
@@ -55,8 +55,8 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (freq !== null) {
       // @ts-ignore*/
-      const freqW = this.oscWk.parameters.get('frequency');
-      freqW.setValueAtTime(freq + this.frequency, this.myTimer.audioContext.currentTime);
+     // const freqW = this.oscWk.frequency;
+     this.oscWk.frequency.setValueAtTime(freq + this.frequency, this.myTimer.audioContext.currentTime);
     }
   }
 
@@ -66,19 +66,30 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
 
   changeWave() {
     // @ts-ignore*/
-    const par = this.oscWk.parameters.get('wave');
+    // const par = this.oscWk.parwameters.get('wave');
+    // switch (this.selectedWaveView) {
+    //   case 'sine': par.setValueAtTime(3, this.myTimer.audioContext.currentTime); break;
+    //   case 'square': par.setValueAtTime(1, this.myTimer.audioContext.currentTime); break;
+    //   case 'noise': par.setValueAtTime(4, this.myTimer.audioContext.currentTime); break;
+    //   case 'triangle': par.setValueAtTime(0, this.myTimer.audioContext.currentTime); break;
+    //   case 'sawtooth': par.setValueAtTime(2, this.myTimer.audioContext.currentTime); break;
+    // }
+
+    
     switch (this.selectedWaveView) {
-      case 'sine': par.setValueAtTime(3, this.myTimer.audioContext.currentTime); break;
-      case 'square': par.setValueAtTime(1, this.myTimer.audioContext.currentTime); break;
-      case 'noise': par.setValueAtTime(4, this.myTimer.audioContext.currentTime); break;
-      case 'triangle': par.setValueAtTime(0, this.myTimer.audioContext.currentTime); break;
-      case 'sawtooth': par.setValueAtTime(2, this.myTimer.audioContext.currentTime); break;
+      case 'sine': this.oscWk. type ='sine'; break;
+      case 'square':this.oscWk. type ='square'; break;
+      case 'noise': this.oscWk. type ='custom'; break;
+      case 'triangle':this.oscWk. type ='triangle'; break;
+      case 'sawtooth':this.oscWk. type ='sawtooth'; break;
     }
+
+
   }
   changeFrequency() {
     // @ts-ignore*/
-    const freq = this.oscWk.parameters.get('frequency');
-    freq.setValueAtTime(this.frequency, this.myTimer.audioContext.currentTime);
+    //const freq = this.oscWk.frequency;
+    this.oscWk.frequency.setValueAtTime(this.frequency, this.myTimer.audioContext.currentTime);
 
   }
   changePhase() {
@@ -116,10 +127,11 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     const tempUrl = URL.createObjectURL(blob);
     return await this.myTimer.audioContext.audioWorklet.addModule(tempUrl).then(() => {
-      this.oscWk = new AudioWorkletNode(this.myTimer.audioContext, nomeProcesso);
+      this.oscWk =this.myTimer.audioContext.createOscillator(); //new AudioWorkletNode(this.myTimer.audioContext, nomeProcesso);
+      this.oscWk.start();
       if (typeof this.modulatoreDiFrequenza !== 'undefined' && !this.modulatoreDioFrequenzaJustCon) {
         // @ts-ignore*/
-        this.modulatoreDiFrequenza.connect(this.oscWk.parameters.get('frequency'));
+        this.modulatoreDiFrequenza.connect(this.oscWk.frequency);
       }
     });
 
@@ -128,13 +140,13 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
     if (typeof this.oscWk !== 'undefined' && !this.modulatoreDioFrequenzaJustCon) {
       this.modulatoreDiFrequenza = modulatore;
       // @ts-ignore*/
-      this.modulatoreDiFrequenza.connect(this.oscWk.parameters.get('frequency'));
+      this.modulatoreDiFrequenza.connect(this.oscWk.frequency);
     }
 
   }
   disconnectModulatoreDiFrequenza() {
     // @ts-ignore*/
-    this.modulatoreDiFrequenza.disconnect(this.oscWk.parameters.get('frequency'));
+    this.modulatoreDiFrequenza.disconnect(this.oscWk.frequency);
   }
   start() {
     if (!this.isActive) {

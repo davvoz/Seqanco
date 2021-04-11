@@ -1,9 +1,9 @@
 import { Drowable } from '../interfaces/interfaces';
 export class Shape implements Drowable {
-  private posX: number;
-  private posY: number;
-  private color: String;
-  private _isStanding: boolean;
+  posX: number;
+  posY: number;
+  color: String;
+  _isStanding: boolean;
   isUcciso: boolean = false;
   constructor(x: number, y: number, color: String) {
     this.posX = x;
@@ -48,7 +48,7 @@ export class Shape implements Drowable {
     this.posY--;
     this.draw();
   }
-  standUp() { 
+  standUp() {
     this.isUcciso = false;
     this._isStanding = true;
     this.posX = this.getX();

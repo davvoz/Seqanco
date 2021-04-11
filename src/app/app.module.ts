@@ -43,7 +43,6 @@ import {MatExpansionModule} from '@angular/material/expansion';
   declarations: [
     AppComponent,
     StartStopComponent,
-    PianoRollCanvasBasedComponent,
     TimerControlComponent,
     SynthControlComponent,
     InstrumentComponent,
@@ -53,7 +52,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     GainComponent,
     StereoPannerComponent,
     FilterComponent,
-    KnobComponent
+    KnobComponent,
+    PianoRollCanvasBasedComponent
   ],
   imports: [
     BrowserModule,
