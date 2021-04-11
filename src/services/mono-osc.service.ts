@@ -7,14 +7,14 @@ import { TimerService } from './timer.service';
 })
 export class MonoOscService extends AbstractInstrument {
 
-  gainVelo: GainNode;
-  gainNode: GainNode;
-  osc: OscillatorNode;
-  biquadFilter:BiquadFilterNode;
-  volume: GainNode;
-  lfoOsc: OscillatorNode;
-  lfoGain: GainNode;
-  lista:any[];
+  gainVelo!: GainNode;
+  gainNode!: GainNode;
+  osc!: OscillatorNode;
+  biquadFilter!: BiquadFilterNode;
+  volume!: GainNode;
+  lfoOsc!: OscillatorNode;
+  lfoGain!: GainNode;
+  lista!: any[];
 
   constructor(public ts: TimerService) {
     super(ts);

@@ -13,7 +13,7 @@ import { TimerService } from '../services/timer.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements AfterViewInit {
-  
+
   isActiveKeyboardControl = false;
   showFiller = false;
   @HostListener('document:keyup', ['$event'])
@@ -69,28 +69,27 @@ export class AppComponent implements AfterViewInit {
   verde: string = '#00d600';
   panelOpenState = false;
 
-  clipsMaster: Clip[] = [{ color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//
-  { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//
-  { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },//
-  { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false }];
+  clipsMaster: Clip[] = [
+    { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },
+    { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },
+    { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },
+    { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false }];
 
   constructor(public myTimer: TimerService) {
-    
+
     this.connectMaster = this.myTimer.merger;
   }
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
-  
+
   close() {
-    console.log(this.sidenav.opened);
-    if(this.sidenav.opened){
+    if (this.sidenav.opened) {
       this.sidenav.close();
-    }else{
+    } else {
       this.sidenav.open()
     }
-    
   }
-  
+
   onChangeMaster($event: number) {
     this.masterGain = $event / 100;
     this.myTimer.merger.gain.setValueAtTime(
@@ -98,12 +97,15 @@ export class AppComponent implements AfterViewInit {
       this.myTimer.audioContext.currentTime
     );
   }
+
   activeKeyboardControl() {
     this.isActiveKeyboardControl ? this.isActiveKeyboardControl = false : this.isActiveKeyboardControl = true;
   }
+
   getActiveColor(boolProp: boolean) {
     return boolProp ? '#dfff2d' : null;
   }
+  
   ngAfterViewInit(): void { }
 
   getSelectedTrakBorderStyle(isCollapsed: boolean): string {
@@ -123,7 +125,7 @@ export class AppComponent implements AfterViewInit {
 
   }
 
-  private changeColorClipRoutine(clipArray: Clip[], clipIndex: number, focusColor: string, unfocusColor: string):Clip[] {
+  private changeColorClipRoutine(clipArray: Clip[], clipIndex: number, focusColor: string, unfocusColor: string): Clip[] {
     //se non è lei non faccio nulla
     if (!clipArray[clipIndex].isActive) {
       //se è lei
@@ -166,7 +168,7 @@ export class AppComponent implements AfterViewInit {
         this.changeColorClipRoutine(this.instruments[instrumenIndex].clips, clipIndex, this.verde, this.newsynthClipColor); break;
     }
     if (this.instruments[instrumenIndex].isCollapsed) {
-     // this.collassaInstrument(instrumenIndex);
+      // this.collassaInstrument(instrumenIndex);
     }
     this.instrumentsViews.toArray()[instrumenIndex].setClip(clipIndex);
 

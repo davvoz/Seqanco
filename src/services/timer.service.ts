@@ -20,6 +20,13 @@ export class TimerService {
   private numberOfTraksSource = new BehaviorSubject<number>(0);
 
 
+  timeInterval: number = 0;
+  start: any;
+  expected: any;
+  timeout: any;
+  round: any;
+  accurateStop: any;
+
   private trackStateModel: TickResponse = {
     traksAreOn: [],
     timePosition: 0,
@@ -35,10 +42,11 @@ export class TimerService {
   playingStateItem$ = this.playingStateSource.asObservable();
   trackStateItem$ = this.trackStateSource.asObservable();
   public audioContext!: AudioContext;
+
   constructor(private _ngZone: NgZone) {
-   
+
     this.loadWorklet();
-   
+
   }
   addTrack() {
     this.numberOfTraks++;
@@ -54,8 +62,16 @@ export class TimerService {
   play() {
     this.isPlayed = true;
     this.audioContext.resume();
-    this.scheduleNote();
+    //this.scheduleNote();
     this.playingStateSource.next(true);
+
+
+    this._ngZone.runOutsideAngular(() => {
+      //this.timer = setTimeout(this.scheduleNote.bind(this), 0);
+      this.accurateTimer(() => { this.changeStateTrack(this.audioContext.currentTime) }, this.speed, console.log('error'));
+      this.start();
+    });
+
   }
   stop() {
     this.audioContext.suspend();
@@ -63,26 +79,29 @@ export class TimerService {
     this.isPlayed = false;
     clearTimeout(this.timer);
     this.playingStateSource.next(false);
+    this.accurateStop();
   }
   pause() {
     this.audioContext.suspend();
     this.isPlayed = false;
+    this.accurateStop();
     clearTimeout(this.timer);
   }
   private scheduleNote() {
-    let contextPlayTime;
-    let currentTime: number;
-    if (typeof this.audioContext !== 'undefined') {
-      currentTime = this.audioContext.currentTime
-      currentTime -= this.startTime;
-      while (this.noteTime < currentTime + 0.2) {
-        contextPlayTime = this.noteTime + this.startTime;
-        this.changeStateTrack(contextPlayTime);
-        this.nextNote();
-      }
-    }
+    // let contextPlayTime;
+    // let currentTime: number;
+    // if (typeof this.audioContext !== 'undefined') {
+    //   currentTime = this.audioContext.currentTime
+    //   currentTime -= this.startTime;
+    //   while (this.noteTime < currentTime + 0.2) {
+    //     contextPlayTime = this.noteTime + this.startTime;
+    //     this.changeStateTrack(contextPlayTime);
+    //     this.nextNote();
+    //   }
+    // }
     this._ngZone.runOutsideAngular(() => {
-     this.timer = setTimeout(this.scheduleNote.bind(this), 0);
+      //this.timer = setTimeout(this.scheduleNote.bind(this), 0);
+      this.accurateTimer(() => { console.log('it runs') }, 500, console.log('error'));
     });
   }
   private nextNote() {
@@ -103,6 +122,7 @@ export class TimerService {
       : ((this.step = true), this.steps++);
   }
 
+
   async loadWorklet() {
 
 
@@ -115,7 +135,7 @@ export class TimerService {
       type: "application/javascript"
     });
     const tempUrl = URL.createObjectURL(blob);
-    
+
     this.audioContext = new AudioContext();
     return await this.audioContext.audioWorklet.addModule(tempUrl).then(() => {
       this.startTime = this.audioContext.currentTime + 0.005;
@@ -138,31 +158,56 @@ export class TimerService {
         this.isPlaying = true;
         this.port.onmessage = this.onmessage.bind(this)
       }
-  
+
       onmessage(event: { data: any; }) {
         const { data } = event;
         this.isPlaying = data;
       }
-    
+
       process(inputs: any[], outputs: any[]) {
-        if(!this.isPlaying) {
+        if (!this.isPlaying) {
           return;
         }
 
         const input = inputs[0];
         const output = outputs[0];
-    
+
         for (let channel = 0; channel < output.length; ++channel) {
           output[channel].set(input[channel]);
         }
-    
+
         return this.isPlaying;
       }
     }
-    
+
     registerProcessor('bypass-processor', BypassProcessor);
   }
+  accurateTimer(callback: any, timeInterval: number, errorCallback: any) {
+    this.speed = timeInterval;
+
+    this.start = () => {
+      this.expected = Date.now() + this.speed;
+      this.timeout = setTimeout(this.round, this.speed)
+      console.log('started');
+    }
+    this.accurateStop = () => {
+      clearTimeout(this.timeout);
+      console.log('started');
+    }
+    this.round = () => {
+      let drift = Date.now() - this.expected;
+      if (drift > this.speed) {
+        if (errorCallback) {
+          errorCallback();
+        }
+      }
+      callback();
+      this.expected += this.speed;
+      this.timeout = setTimeout(this.round, this.speed - drift);
+    }
+  }
 }
+
 class Fake {
 
 }

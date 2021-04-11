@@ -42,6 +42,7 @@ export class SynthControlComponent implements AfterViewInit {
     { valore: 6, descrizione: 'crash' }];
   waveSelected = 'square';
   filterSelected = 'allpass';
+  libDescrizione = { valore: 0, descrizione: 'kick' };
 
   waveforms = ['square', 'sine', 'sawtooth', 'triangle'];
   filterType = [
@@ -77,29 +78,7 @@ export class SynthControlComponent implements AfterViewInit {
   distorsion: boolean = false;
 
   constructor() { }
-  changedZ(event: number, el: string) {
-    // if (el === 'gain') {
-    //   this.gain = $event / 100;
-    // }
-    // if (el === 'cutoff') {
-    //   this.filterCutoff = $event / 100;
-    // }
-    // if (el = 'wave') {
-    //   switch ($event) {
-    //     case 0:
-    //       this.waveSelected = 'square'
-    //       break;
-    //     case 1: this.waveSelected = 'sine'; break;
-    //     case 3: this.waveSelected = 'sawtooth'; break;
-    //     case 2: this.waveSelected = 'triangle'; break
-    //   }
-    // }
-    // if (el = 'filterReso') {
-    //   this.filterReso = $event;
-    // }
-
-    this.changed();
-  }
+  
   distorsionGestione() {
     this.distorsion ? this.distorsion = false : this.distorsion = true;
     this.changed();
@@ -134,6 +113,7 @@ export class SynthControlComponent implements AfterViewInit {
   }
 
   changed() {
+
     this.syntControl = {
       isMuted: this.isMuted,
       gain: this.gain,

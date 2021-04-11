@@ -8,37 +8,72 @@
     <select [(ngModel)]="libIndex" *ngIf="typeIn ==='SAMPLER'" (change)="changed()">
         <option *ngFor="let el of library">{{el.valore}} </option>
     </select>
+
+
     <table>
         <tr>
             <td>gain<input type="number" [(ngModel)]="gain" (change)="changed()" min="0" max="1" step="0.01" />
             </td>
             <td>adsr-gain<app-adsr [slave]="'volume'" (adsrEmitter)="changeAdsr($event)" [adsr]="adsrVolume"></app-adsr>
             </td>
-            <td>
-               adsr-filter<app-adsr [slave]="'pitch'" (adsrEmitter)="changeAdsr($event)" [adsr]="adsrPitch"></app-adsr>
+ 
+        </tr>
+        <tr>
+            
+        </tr>
+        <tr>
+            <td colspan="3"> 
+                <table >
+                    <tr>
+                        <td colspan="3" >
+                            <table>
+                                <tr>
+                                    <td> FILTER <select [(ngModel)]="filterSelected" (change)="changed()">
+                                        <option *ngFor="let ft of filterType">{{ft}} </option>
+                                    </select></td>
+                                <td>
+                                    reso
+                                    <input type="number" [(ngModel)]="filterReso" (change)="changed()" min="0" max="1000">
+                                </td>
+                                <td> cutoff
+                                    <input type="number" [(ngModel)]="filterCutoff" (change)="changed()" min="0" max="10000" />
+                                </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"  >
+                            adsr-filter<app-adsr [slave]="'pitch'" (adsrEmitter)="changeAdsr($event)" [adsr]="adsrPitch"></app-adsr>
+
+                        </td>
+                    </tr>
+                    <tr  >
+                        <td>LFO to frequency filter
+                            <select [(ngModel)]="lfoWaveSelected" (change)="changed()">
+                                <option *ngFor="let ft of waveforms">{{ft}} </option>
+                            </select>
+                        </td>
+                        <td>
+                            amp
+                            <input type="range" [(ngModel)]="lfoAmplitude" min="0" max="1000" step="1"
+                                (change)="changed()" />
+                        </td>
+                        <td>
+                            rate
+                            <input type="number" [(ngModel)]="lfoRate" min="1" max="16" step="0.01"
+                                (change)="changed()" />
+                        </td>
+                    </tr>
+                    
+                </table>
             </td>
         </tr>
     </table>
-    
-    
- FILTER   <select [(ngModel)]="filterSelected" (change)="changed()">
-        <option *ngFor="let ft of filterType">{{ft}} </option>
-    </select>
-    reso
-    <input type="number" [(ngModel)]="filterReso" (change)="changed()" min="0" max="1000">
-    cutoff
-    <input type="number" [(ngModel)]="filterCutoff" (change)="changed()" min="0" max="10000" />
-    LFO
-    <select [(ngModel)]="lfoWaveSelected" (change)="changed()">
-        <option *ngFor="let ft of waveforms">{{ft}} </option>
-    </select>
-    amp
-    <input type="range" [(ngModel)]="lfoAmplitude" min="0" max="1000" step="1" (change)="changed()" />
-    rate
-    <input type="number" [(ngModel)]="lfoRate" min="1" max="16" step="0.01" (change)="changed()" />
+
     pitch time
     <input type="number" [(ngModel)]="pitchEnvEnd" min="0.01" max="1000" step="0.01" (change)="changed()" />
     end time
     <input type="number" [(ngModel)]="pitchEnvFreq" min="0.01" max="1000" step="0.01" (change)="changed()" />
 </div>
-

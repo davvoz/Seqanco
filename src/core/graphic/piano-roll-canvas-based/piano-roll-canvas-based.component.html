@@ -2,8 +2,7 @@
     <div class="pianoRollToolbar" [style.background-color]="getInstrumentColor()">
         <span>
             Loop start :<input type="number" [(ngModel)]="startLoop" min="0" (change)="setStartLopper()" />
-            Loop length :<input type="number" [(ngModel)]="endLoop" (change)="setStartLopper()" />
-            Loop ends at : {{startLoop+endLoop}}
+             length :<input type="number" [(ngModel)]="endLoop" (change)="setStartLopper()" />
         </span>
         <span style="float:right">
             <button mat-stroked-button (click)="clear()">
@@ -12,7 +11,7 @@
             <button mat-stroked-button (click)="random()">random</button>
         </span>
     </div>
-    
+
     <div class="allCanvas">
         <div class="cnvsContainer" [style.width.px]="getExternalDimension()">  
             <canvas #canvasGui width="{{pianoRollDimensionIn}}" height="960"></canvas>

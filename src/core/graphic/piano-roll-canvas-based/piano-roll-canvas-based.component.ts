@@ -313,19 +313,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
   }
 
-  private collisionsArrayControl(square: Square): Collision {
-    let count = 0;
-
-    for (let i = 0; i < this.enemies.length; i++) {
-
-      if (this.collision(square, this.enemies[i])) {
-        return { esito: false, indice: i };
-      }
-      count = i;
-    }
-    return { esito: true, indice: count };
-  }
-
   public start() {
     this.isPlayed = true;
     this.myTimer.play();
