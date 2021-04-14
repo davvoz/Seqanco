@@ -38,6 +38,27 @@
                     <td>
                         <app-stereo-panner #pan></app-stereo-panner>
                     </td>
+                    
+                    <td rowspan="2" class="a">
+                        <ul>
+                            <li>
+                                <button (click)="enableModulation()">enableModulation</button>
+
+                            </li>
+                            <li>
+                                <button (click)="enableModulation2()">enableModulation2</button>
+
+                            </li>
+                            <li>
+                                <button (click)="enableModulation3()">enableModulation3</button>
+
+                            </li>
+                            <li>
+                                <button (click)="enablePseudoArpeggiator()">enablePseudoArpeggiator</button>
+
+                            </li>
+                        </ul>
+                    </td>
                 </tr>
                 <tr>
                     <td  class="a">
@@ -63,16 +84,8 @@
                         </table>
                     </td>
                 </tr>
+                
             </table>
-
-
-
-
-
-
-
-
-
         </div>
     </div>
 </div>

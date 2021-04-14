@@ -90,8 +90,8 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  onChangeMaster($event: number) {
-    this.masterGain = $event / 100;
+  onChangeMaster() {
+   
     this.myTimer.merger.gain.setValueAtTime(
       this.masterGain,
       this.myTimer.audioContext.currentTime

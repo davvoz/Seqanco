@@ -8,11 +8,14 @@ import { TimerService } from '../services/timer.service';
 })
 export class TimerControlComponent implements OnInit {
 
-  speed!: number;
+  speed: number = 120;
   constructor(public myTimer: TimerService) { }
 
   ngOnInit() {
-    this.myTimer.speed=120;
+    this.myTimer.speed = 120;
+  }
+  changeTime() {
+    this.myTimer.speed = (60000 / this.speed) / 4;
   }
 
 }

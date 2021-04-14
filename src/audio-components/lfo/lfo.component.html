@@ -1,0 +1,22 @@
+One shot LFO
+<table>
+    <tr>
+        <td>
+            center frequency<input type="number" [(ngModel)]="center" (change)="changed()" />
+        </td>
+        <td>
+            <select [(ngModel)]="shape">
+                <option *ngFor="let wave of waveforms" [value]="wave"> {{wave}}</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            rate<input type="number" [(ngModel)]="rate" (change)="changed()" />
+        </td>
+        <td>
+            bpm <input type="number" [(ngModel)]="tempo" (change)="changed()" />
+        </td>
+    </tr>
+    
+</table>

@@ -14,7 +14,7 @@ export class TimerService {
   isPlayed!: boolean;
   timer!: any;
   step!: boolean;
-  steps!: number;
+  steps: number =0;;
   merger!: GainNode;
   gain = 1;
   private numberOfTraksSource = new BehaviorSubject<number>(0);
@@ -111,15 +111,17 @@ export class TimerService {
     secondsPerBeat = 0;
   }
   private changeStateTrack(pt: number) {
+   
     this.trackStateSource.next({
       traksAreOn: this.trackStateModel.traksAreOn,
       timePosition: this.steps,
       isStarted: this.isPlayed,
       audioContextTime: pt
     });
-    this.steps >= this.maxStep
-      ? ((this.step = true), (this.steps = 0))
-      : ((this.step = true), this.steps++);
+    this.steps >= 3
+    ? ((this.step = true), (this.steps = 0))
+    : ((this.step = true), this.steps++);
+    
   }
 
 

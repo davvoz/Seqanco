@@ -38,6 +38,7 @@ import { jqxNumberInputModule } from 'jqwidgets-ng/jqxnumberinput';
 import { MatTabsModule } from '@angular/material/tabs';
 import{MatSidenavModule}from '@angular/material/sidenav';
 import {MatExpansionModule} from '@angular/material/expansion';
+import { LfoComponent } from 'src/audio-components/lfo/lfo.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     StereoPannerComponent,
     FilterComponent,
     KnobComponent,
-    PianoRollCanvasBasedComponent
+    PianoRollCanvasBasedComponent,
+    LfoComponent
   ],
   imports: [
     BrowserModule,

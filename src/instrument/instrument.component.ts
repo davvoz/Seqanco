@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { LfoComponent } from 'src/audio-components/lfo/lfo.component';
 import { FilterComponent } from '../audio-components/filter/filter.component';
 import { GainComponent } from '../audio-components/gain/gain.component';
 import { OscComponent } from '../audio-components/osc/osc.component';
@@ -12,7 +13,7 @@ import { PianoRollCanvasBasedComponent } from '../core/graphic/piano-roll-canvas
 import { Nota, SyntControl } from '../interfaces/interfaces';
 import { SamplesLibraryService } from '../services/samples-library.service';
 import { TimerService } from '../services/timer.service';
-
+//var LFO = require('lfo')
 @Component({
   selector: 'app-instrument',
   templateUrl: './instrument.component.html',
@@ -51,6 +52,7 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
   @ViewChild("pianoRoll", { static: false })
   pianoRoll!: PianoRollCanvasBasedComponent;
 
+
   public myMonoosc!: MonooscObj;
   public myDoubleosc!: DubleoscObj;
   public myMonosamp!: MonoSampObj;
@@ -68,11 +70,76 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
   lfoConOsc2: boolean = false;
   lfoConOsciJustCon: boolean = false;
   lfoConOsciJustCon2: boolean = false;
+  subscription: any;
+  stepper = 0;
+  waveArray = new Float32Array(9);
+  enableModulationBool = false;
+  enableModulation2Bool = false;
+  enablePseudoArpeggiatorBool = false;
+  enableModulation3Bool = false;
+  constructor(public myTimer: TimerService, private library: SamplesLibraryService) {
+    this.waveArray[0] = 0.5;
+    this.waveArray[1] = 1;
+    this.waveArray[2] = 0.5;
+    this.waveArray[3] = 0;
+    this.waveArray[4] = 0.5;
+    this.waveArray[5] = 1;
+    this.waveArray[6] = 0.5;
+    this.waveArray[7] = 0;
+    this.waveArray[8] = 0.5;
+  }
+  enableModulation() {
+    this.enableModulationBool ? this.enableModulationBool = false : this.enableModulationBool = true;
+  }
+  enableModulation2() {
+    this.enableModulation2Bool ? this.enableModulation2Bool = false : this.enableModulation2Bool = true;
+  }
+  enableModulation3() {
+    this.enableModulation3Bool ? this.enableModulation3Bool = false : this.enableModulation3Bool = true;
+  }
+  enablePseudoArpeggiator() {
 
-  constructor(public myTimer: TimerService, private library: SamplesLibraryService) { }
-
-
+    this.enablePseudoArpeggiatorBool ? this.enablePseudoArpeggiatorBool = false : this.enablePseudoArpeggiatorBool = true;
+  }
   ngAfterViewInit(): void {
+    this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
+      this.stepper = res.timePosition;
+
+      this.stepper = res.timePosition;
+
+      if (typeof this.osc.oscWk !== 'undefined') {
+        if (this.enablePseudoArpeggiatorBool) {
+          this.osc.oscWk.frequency.exponentialRampToValueAtTime((this.osc.oscWk.frequency.value - 12), 0.1);
+          this.oscillator2.oscWk.frequency.exponentialRampToValueAtTime((this.osc.oscWk.frequency.value - 12), 0.1);
+        }
+        if (this.enableModulationBool) {
+          switch (res.timePosition) {
+            case 0: this.filter.filterNode.frequency.setValueAtTime(100, this.myTimer.audioContext.currentTime); break;
+            case 1: this.filter.filterNode.frequency.setValueAtTime(3000, this.myTimer.audioContext.currentTime); break;
+            case 2: this.filter.filterNode.frequency.setValueAtTime(100, this.myTimer.audioContext.currentTime); break;
+            case 3: this.filter.filterNode.frequency.setValueAtTime(3000, this.myTimer.audioContext.currentTime); break;
+          }
+        }
+        if (this.enableModulation2Bool) {
+          switch (res.timePosition) {
+            case 0: this.filter.filterNode.frequency.setValueAtTime(100, this.myTimer.audioContext.currentTime);; break;
+            case 1: this.filter.filterNode.frequency.setValueAtTime(100, this.myTimer.audioContext.currentTime); break;
+            case 2: this.filter.filterNode.frequency.setValueAtTime(3000, this.myTimer.audioContext.currentTime); break;
+            case 3: this.filter.filterNode.frequency.setValueAtTime(3000, this.myTimer.audioContext.currentTime); break;
+          }
+        }
+        if (this.enableModulation3Bool) {
+          switch (res.timePosition) {
+            case 0: this.filter.filterNode.frequency.setValueAtTime(500, this.myTimer.audioContext.currentTime); break;
+            case 1: this.filter.filterNode.frequency.setTargetAtTime(3000, this.myTimer.audioContext.currentTime,this.myTimer.steps); break;
+            case 2: this.filter.filterNode.frequency.setValueAtTime(500, this.myTimer.audioContext.currentTime); break;
+            case 3:  this.filter.filterNode.frequency.setTargetAtTime(3000, this.myTimer.audioContext.currentTime,this.myTimer.steps); break;
+          }
+        }
+
+      }
+
+    });
     if (this.type !== 'NEWSYNTH') {
       this.myAutopan = new Autopan(this.myTimer.audioContext);
       this.myWaveshaper = new Waveshaper(this.myTimer.audioContext);
@@ -93,7 +160,8 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
         break;
       case 'NEWSYNTH':
         this.osc2.setAudioNodeIn(this.gainOsc2.gainNode);
-        this.gainOsc2.connectToAudioParam(this.filter.filterNode.frequency);
+        //this.gainOsc2.connectToAudioParam(this.filter.filterNode.frequency);
+
         this.lfo.setAudioNodeIn(this.gainLfo.gainNode);
         this.oscillator2.setAudioNodeIn(this.gain.gainAdsr)
         this.osc.setAudioNodeIn(this.gain.gainAdsr);
@@ -104,14 +172,15 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
     }
   }
 
+  tick() {
+    throw new Error('Method not implemented.');
+  }
+
   setClip(index: number) {
     this.pianoRoll.setClip(index);
   }
 
-  ngOnInit() {
-
-  }
-
+  ngOnInit() { }
 
   setAutopan() {
     if (this.autopanSpenta) {
@@ -264,6 +333,10 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
           this.myDoubleosc.play($event.notaDaSuonare, this.index, $event.velocity);
           break;
         case 'NEWSYNTH':
+          let frequenzaFiltro = 0;
+          if (this.myTimer.steps === 0) {
+
+          }
           this.gainLfo.play(1);
           this.lfo.play(1);
           this.osc2.play(1);

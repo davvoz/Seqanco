@@ -21,8 +21,8 @@
 					<mat-icon>keyboard</mat-icon>
 				</button></mat-list-item>
 			<mat-list-item>
-				Master <app-knob #master (valore)="onChangeMaster($event)" [isCollapsed]="true" [height]="50"
-					[width]="50"></app-knob>
+				Master 
+					<input type="number" [(ngModel)]="masterGain" (change)="onChangeMaster()" min="0.01" max="1" step="0.01"/>
 			</mat-list-item>
 		</mat-list>
 	</mat-drawer>
@@ -78,27 +78,31 @@
 				</div>
 			</div>
 			<div class="instrument" [style.display]="getDisplay(!showMixer)">
-				<div class="instHeader">
-					<div>
-						<button mat-icon-button>
-							<mat-icon>settings</mat-icon>
-						</button>
-						<button mat-icon-button>
-							<mat-icon>play_arrow</mat-icon>
-						</button>
-						<button mat-icon-button>
-							<mat-icon>volume_off</mat-icon>
-						</button>
-						<button mat-icon-button>
-							<span style="font-size: 145%;">
-								<strong>S</strong></span>
-						</button>
+				<div class="instrumentToolbar">
+					<div class="instHeader" style="background-color: chocolate;">
+						<div>
+							<button mat-icon-button disabled>
+								<mat-icon>settings</mat-icon>
+							</button>
+							<button mat-icon-button disabled>
+								<mat-icon>play_arrow</mat-icon>
+							</button>
+							<button disabled mat-icon-button>
+								<mat-icon>volume_off</mat-icon>
+							</button>
+							<button mat-icon-button disabled>
+								<span style="font-size: 145%;">
+									<strong>S</strong></span>
+							</button>
+						</div>
 					</div>
-					<div class="trakTitle">MASTER </div>
 				</div>
+				<div class="trakTitle">MASTER </div>
+
 				<!-- <app-analizer [connectHere]="connectMaster"></app-analizer> -->
 				<div class="clipsContiner">
-					<div *ngFor="let clip of clipsMaster;let i=index" class="clip" [style.background-color]="clip.color">
+					<div *ngFor="let clip of clipsMaster;let i=index" class="clip"
+						[style.background-color]="clip.color">
 						<button mat-icon-button (click)="setClipMassive(i)">
 							<mat-icon>play_arrow</mat-icon>
 						</button>
@@ -106,7 +110,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 
 		<div class="instrumentsContainer">
 			<div class="instrumentPanel" *ngFor="let instrument of instruments;let i =index;">

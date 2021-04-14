@@ -20,14 +20,11 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
   @Output() notaDaSuonare = new EventEmitter<Nota>();
   @Output() velocity = new EventEmitter<number>();
-  @Input()
-  la!: number;
-  @Input()
-  pianoRollDimensionIn!: number;
+  @Input() la!: number;
+  @Input() pianoRollDimensionIn!: number;
   @Input() clipIndex: number = 0;
-  @Input()
-  instrumentType!: string;
-  @ViewChild('container') container! : ElementRef ;
+  @Input() instrumentType!: string;
+  @ViewChild('container') container!: ElementRef;
 
   @ViewChild("canvas", { static: false })
   canvas!: ElementRef<HTMLCanvasElement>;
@@ -97,7 +94,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   }
   ngAfterViewInit(): void {
     // @ts-ignore*/
-    this.lato = this.canvasGui.nativeElement.getContext("2d")?.canvas.clientWidth /64;
+    this.lato = this.canvasGui.nativeElement.getContext("2d")?.canvas.clientWidth / 64;
     this.createScale(this.la);
     // @ts-ignore*/
     this.ctxGui = this.canvasGui.nativeElement.getContext("2d");
@@ -233,7 +230,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     if (this.myLine.getX() == (range - 1) || this.myLine.getX() == (this.pianoRollDimensionIn / this.lato - 1)) {
       this.myLine.setX(this.startLoop);
       if (!col.esito) {
-        if (this.enemies[this.myLine.getX()].isStanding()) { 
+        if (this.enemies[this.myLine.getX()].isStanding()) {
           this.playStep(this.myLine.getX());
         }
       }
@@ -241,7 +238,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
       this.myLine.moveRight();
       if (this.enemies.length > 0) {
         if (!col.esito) {
-          if (typeof this.enemies[this.myLine.getX()] !=='undefined' && this.enemies[this.myLine.getX()].isStanding()) {
+          if (typeof this.enemies[this.myLine.getX()] !== 'undefined' && this.enemies[this.myLine.getX()].isStanding()) {
             this.playStep(this.myLine.getX());
           }
         }
