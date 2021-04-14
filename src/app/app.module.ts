@@ -39,6 +39,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import{MatSidenavModule}from '@angular/material/sidenav';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { LfoComponent } from 'src/audio-components/lfo/lfo.component';
+import { MIDI_INPUT } from '@ng-web-apis/midi';
 
 @NgModule({
   declarations: [

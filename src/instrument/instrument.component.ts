@@ -73,10 +73,33 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
   subscription: any;
   stepper = 0;
   waveArray = new Float32Array(9);
-  enableModulationBool = false;
+  mod1 = {
+    modulation: false,
+    min: 100,
+    max: 3000
+  };
+  mod2 = {
+    modulation: false,
+    min: 100,
+    max: 3000
+  };
+  mod3 = {
+    modulation: false,
+    min: 100,
+    max: 3000
+  };
+  mod4 = {
+    modulation: false,
+    min: 100,
+    max: 3000
+  };
+  mod5 = {
+    modulation: false,
+    min: 100,
+    max: 3000
+  };
   enableModulation2Bool = false;
   enablePseudoArpeggiatorBool = false;
-  enableModulation3Bool = false;
   constructor(public myTimer: TimerService, private library: SamplesLibraryService) {
     this.waveArray[0] = 0.5;
     this.waveArray[1] = 1;
@@ -89,54 +112,63 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
     this.waveArray[8] = 0.5;
   }
   enableModulation() {
-    this.enableModulationBool ? this.enableModulationBool = false : this.enableModulationBool = true;
+    this.mod1.modulation ? this.mod1.modulation = false : this.mod1.modulation = true;
   }
   enableModulation2() {
-    this.enableModulation2Bool ? this.enableModulation2Bool = false : this.enableModulation2Bool = true;
+    this.mod2.modulation ? this.mod2.modulation = false : this.mod2.modulation = true;
   }
   enableModulation3() {
-    this.enableModulation3Bool ? this.enableModulation3Bool = false : this.enableModulation3Bool = true;
+    this.mod3.modulation ? this.mod3.modulation = false : this.mod3.modulation = true;
+  }
+  enableModulation4() {
+    this.mod4.modulation ? this.mod4.modulation = false : this.mod4.modulation = true;
   }
   enablePseudoArpeggiator() {
-
-    this.enablePseudoArpeggiatorBool ? this.enablePseudoArpeggiatorBool = false : this.enablePseudoArpeggiatorBool = true;
-  }
+    this.mod5.modulation ? this.mod5.modulation = false : this.mod5.modulation = true; 
+   }
   ngAfterViewInit(): void {
     this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
       this.stepper = res.timePosition;
 
       this.stepper = res.timePosition;
 
-      if (typeof this.osc.oscWk !== 'undefined') {
-        if (this.enablePseudoArpeggiatorBool) {
-          this.osc.oscWk.frequency.exponentialRampToValueAtTime((this.osc.oscWk.frequency.value - 12), 0.1);
-          this.oscillator2.oscWk.frequency.exponentialRampToValueAtTime((this.osc.oscWk.frequency.value - 12), 0.1);
+      if (this.type === 'NEWSYNTH' && typeof this.osc.oscWk !== 'undefined') {
+        if (this.mod5.modulation) {
+          this.osc.oscWk.frequency.exponentialRampToValueAtTime((this.osc.oscWk.frequency.value - this.mod5.min), 0.1);
+          this.oscillator2.oscWk.frequency.exponentialRampToValueAtTime((this.oscillator2.oscWk.frequency.value - this.mod5.min), 0.1);
         }
-        if (this.enableModulationBool) {
+        if (this.mod1.modulation) {
           switch (res.timePosition) {
-            case 0: this.filter.filterNode.frequency.setValueAtTime(100, this.myTimer.audioContext.currentTime); break;
-            case 1: this.filter.filterNode.frequency.setValueAtTime(3000, this.myTimer.audioContext.currentTime); break;
-            case 2: this.filter.filterNode.frequency.setValueAtTime(100, this.myTimer.audioContext.currentTime); break;
-            case 3: this.filter.filterNode.frequency.setValueAtTime(3000, this.myTimer.audioContext.currentTime); break;
+            case 0: this.filter.filterNode.frequency.setValueAtTime(this.mod1.min, this.myTimer.audioContext.currentTime); break;
+            case 1: this.filter.filterNode.frequency.setValueAtTime(this.mod1.max, this.myTimer.audioContext.currentTime); break;
+            case 2: this.filter.filterNode.frequency.setValueAtTime(this.mod1.min, this.myTimer.audioContext.currentTime); break;
+            case 3: this.filter.filterNode.frequency.setValueAtTime(this.mod1.max, this.myTimer.audioContext.currentTime); break;
           }
         }
-        if (this.enableModulation2Bool) {
+        if (this.mod2.modulation) {
           switch (res.timePosition) {
-            case 0: this.filter.filterNode.frequency.setValueAtTime(100, this.myTimer.audioContext.currentTime);; break;
-            case 1: this.filter.filterNode.frequency.setValueAtTime(100, this.myTimer.audioContext.currentTime); break;
-            case 2: this.filter.filterNode.frequency.setValueAtTime(3000, this.myTimer.audioContext.currentTime); break;
-            case 3: this.filter.filterNode.frequency.setValueAtTime(3000, this.myTimer.audioContext.currentTime); break;
+            case 0: this.filter.filterNode.frequency.setValueAtTime(this.mod2.min, this.myTimer.audioContext.currentTime);; break;
+            case 1: this.filter.filterNode.frequency.setValueAtTime(this.mod2.min, this.myTimer.audioContext.currentTime); break;
+            case 2: this.filter.filterNode.frequency.setValueAtTime(this.mod2.max, this.myTimer.audioContext.currentTime); break;
+            case 3: this.filter.filterNode.frequency.setValueAtTime(this.mod2.max, this.myTimer.audioContext.currentTime); break;
           }
         }
-        if (this.enableModulation3Bool) {
+        if (this.mod3.modulation) {
           switch (res.timePosition) {
-            case 0: this.filter.filterNode.frequency.setValueAtTime(500, this.myTimer.audioContext.currentTime); break;
-            case 1: this.filter.filterNode.frequency.setTargetAtTime(3000, this.myTimer.audioContext.currentTime,this.myTimer.steps); break;
-            case 2: this.filter.filterNode.frequency.setValueAtTime(500, this.myTimer.audioContext.currentTime); break;
-            case 3:  this.filter.filterNode.frequency.setTargetAtTime(3000, this.myTimer.audioContext.currentTime,this.myTimer.steps); break;
+            case 0: this.filter.filterNode.frequency.setValueAtTime(this.mod3.min, this.myTimer.audioContext.currentTime); break;
+            case 1: this.filter.filterNode.frequency.setTargetAtTime(this.mod3.max, this.myTimer.audioContext.currentTime, this.myTimer.steps); break;
+            case 2: this.filter.filterNode.frequency.setValueAtTime(this.mod3.max, this.myTimer.audioContext.currentTime); break;
+            case 3: this.filter.filterNode.frequency.setTargetAtTime(this.mod3.min, this.myTimer.audioContext.currentTime, this.myTimer.steps); break;
           }
         }
-
+        if (this.mod4.modulation) {
+          switch (res.timePosition) {
+            case 0: this.filter.filterNode.frequency.setTargetAtTime(this.mod4.max, this.myTimer.audioContext.currentTime, this.myTimer.steps); break;
+            case 1: this.filter.filterNode.frequency.setValueAtTime(this.mod4.min, this.myTimer.audioContext.currentTime); break;
+            case 2: this.filter.filterNode.frequency.setValueAtTime(this.mod4.min, this.myTimer.audioContext.currentTime); break;
+            case 3: this.filter.filterNode.frequency.setTargetAtTime(this.mod4.max, this.myTimer.audioContext.currentTime, this.myTimer.steps); break;
+          }
+        }
       }
 
     });
@@ -160,7 +192,7 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
         break;
       case 'NEWSYNTH':
         this.osc2.setAudioNodeIn(this.gainOsc2.gainNode);
-        //this.gainOsc2.connectToAudioParam(this.filter.filterNode.frequency);
+        this.gainOsc2.connectToAudioParam(this.filter.filterNode.frequency);
 
         this.lfo.setAudioNodeIn(this.gainLfo.gainNode);
         this.oscillator2.setAudioNodeIn(this.gain.gainAdsr)

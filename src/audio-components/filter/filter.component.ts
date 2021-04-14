@@ -11,7 +11,7 @@ import { TimerService } from '../../services/timer.service';
 })
 export class FilterComponent implements OnInit {
   @ViewChild(AdsrComponent, { static: false })
-  adsr: AdsrComponent = new AdsrComponent;
+  adsr!: AdsrComponent;
   @Input()
   nome!: string;
   @Input()

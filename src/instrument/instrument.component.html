@@ -42,20 +42,24 @@
                     <td rowspan="2" class="a">
                         <ul>
                             <li>
-                                <button (click)="enableModulation()">enableModulation</button>
-
+                                <button (click)="enableModulation()"[style.background-color]="this.mod1.modulation ? 'red':'grey'">enableModulation</button>
+                                <input type="number"[(ngModel)]="this.mod1.min"/><input type="number"[(ngModel)]="this.mod1.max"/>
                             </li>
                             <li>
-                                <button (click)="enableModulation2()">enableModulation2</button>
-
+                                <button (click)="enableModulation2()"[style.background-color]="this.mod2.modulation ? 'red':'grey'">enableModulation2</button>
+                                <input type="number"[(ngModel)]="this.mod2.min"/><input type="number"[(ngModel)]="this.mod2.max"/>
                             </li>
                             <li>
-                                <button (click)="enableModulation3()">enableModulation3</button>
-
+                                <button (click)="enableModulation3()"[style.background-color]="this.mod3.modulation ? 'red':'grey'">enableModulation3</button>
+                                <input type="number"[(ngModel)]="this.mod3.min"/><input type="number"[(ngModel)]="this.mod3.max"/>
                             </li>
                             <li>
-                                <button (click)="enablePseudoArpeggiator()">enablePseudoArpeggiator</button>
-
+                                <button (click)="enableModulation4()" [style.background-color]="this.mod4.modulation ? 'red':'grey'">enableModulation4</button>
+                                <input type="number"[(ngModel)]="this.mod4.min"/><input type="number"[(ngModel)]="this.mod4.max"/>
+                            </li>
+                            <li>
+                                <button (click)="enablePseudoArpeggiator()" [style.background-color]="this.mod5.modulation ? 'red':'grey'">enablePseudoArpeggiator</button>
+                                <input type="number"[(ngModel)]="this.mod5.min"/>
                             </li>
                         </ul>
                     </td>
