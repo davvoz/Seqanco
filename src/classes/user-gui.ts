@@ -18,6 +18,16 @@ export class UserGui {
   public setCollisions(value: number) {
     this.collisions = value;
   }
+  drawBeat() {
+    const margin = this.lato / 5;
+    for (let y = 0; y < this.ctxGui.canvas.height / 4; y = y + this.lato) {
+      for (let x = 0; x < this.ctxGui.canvas.width; x = x + this.lato) {
+
+        this.ctxGui.strokeRect(x - margin / 2, y, this.lato - margin, this.lato - margin);
+
+      }
+    }
+  }
   draw() {
     for (let y = 0; y < this.ctxGui.canvas.height; y = y + this.lato) {
       for (let x = 0; x < this.ctxGui.canvas.width; x = x + this.lato) {
@@ -95,7 +105,7 @@ export class UserGui {
           this.ctxGui.shadowBlur = 0;
           this.ctxGui.stroke();
         }
-        if (x % (16*4) == 0) {
+        if (x % (16 * 4) == 0) {
           this.ctxGui.beginPath();
           this.ctxGui.moveTo(x, 0);
           this.ctxGui.strokeStyle = "rgb(200,200,200)";

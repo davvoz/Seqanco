@@ -46,7 +46,6 @@ canvas {
     line-height: 38px;
 }
 .looper-layer{
-   
     z-index: 2;
 }
 .example-spacer {
@@ -54,4 +53,7 @@ canvas {
 }
 .allCanvas{
     height: 4px;
+}
+.beat-layer{
+z-index: 9999;
 }

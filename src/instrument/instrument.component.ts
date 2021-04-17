@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { LfoComponent } from 'src/audio-components/lfo/lfo.component';
+import { MonoDrummachineObj } from 'src/classes/mono-drummachine-obj';
 import { FilterComponent } from '../audio-components/filter/filter.component';
 import { GainComponent } from '../audio-components/gain/gain.component';
 import { OscComponent } from '../audio-components/osc/osc.component';
@@ -13,7 +13,6 @@ import { PianoRollCanvasBasedComponent } from '../core/graphic/piano-roll-canvas
 import { Nota, SyntControl } from '../interfaces/interfaces';
 import { SamplesLibraryService } from '../services/samples-library.service';
 import { TimerService } from '../services/timer.service';
-//var LFO = require('lfo')
 @Component({
   selector: 'app-instrument',
   templateUrl: './instrument.component.html',
@@ -58,6 +57,7 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
   public myMonosamp!: MonoSampObj;
   public myAutopan!: Autopan;
   public myWaveshaper!: Waveshaper;
+  public myDrumachine!: MonoDrummachineObj;
 
   autopanSpenta: boolean = true;
   waveshaperSpenta: boolean = true;
@@ -101,15 +101,7 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
   enableModulation2Bool = false;
   enablePseudoArpeggiatorBool = false;
   constructor(public myTimer: TimerService, private library: SamplesLibraryService) {
-    this.waveArray[0] = 0.5;
-    this.waveArray[1] = 1;
-    this.waveArray[2] = 0.5;
-    this.waveArray[3] = 0;
-    this.waveArray[4] = 0.5;
-    this.waveArray[5] = 1;
-    this.waveArray[6] = 0.5;
-    this.waveArray[7] = 0;
-    this.waveArray[8] = 0.5;
+   
   }
   enableModulation() {
     this.mod1.modulation ? this.mod1.modulation = false : this.mod1.modulation = true;
@@ -124,8 +116,8 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
     this.mod4.modulation ? this.mod4.modulation = false : this.mod4.modulation = true;
   }
   enablePseudoArpeggiator() {
-    this.mod5.modulation ? this.mod5.modulation = false : this.mod5.modulation = true; 
-   }
+    this.mod5.modulation ? this.mod5.modulation = false : this.mod5.modulation = true;
+  }
   ngAfterViewInit(): void {
     this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
       this.stepper = res.timePosition;
@@ -147,7 +139,7 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
         }
         if (this.mod2.modulation) {
           switch (res.timePosition) {
-            case 0: this.filter.filterNode.frequency.setValueAtTime(this.mod2.min, this.myTimer.audioContext.currentTime);; break;
+            case 0: this.filter.filterNode.frequency.setValueAtTime(this.mod2.min, this.myTimer.audioContext.currentTime); break;
             case 1: this.filter.filterNode.frequency.setValueAtTime(this.mod2.min, this.myTimer.audioContext.currentTime); break;
             case 2: this.filter.filterNode.frequency.setValueAtTime(this.mod2.max, this.myTimer.audioContext.currentTime); break;
             case 3: this.filter.filterNode.frequency.setValueAtTime(this.mod2.max, this.myTimer.audioContext.currentTime); break;
@@ -172,11 +164,15 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
       }
 
     });
-    if (this.type !== 'NEWSYNTH') {
+    
       this.myAutopan = new Autopan(this.myTimer.audioContext);
       this.myWaveshaper = new Waveshaper(this.myTimer.audioContext);
-    }
+    
     switch (this.type) {
+      case 'DRUM':
+        this.myDrumachine = new MonoDrummachineObj(this.myTimer.audioContext, this.library);
+        this.myDrumachine.volume.connect(this.myTimer.merger);
+        break;
       case 'SAMPLER':
         this.myMonosamp = new MonoSampObj(this.myTimer.audioContext, this.library);
         this.myMonosamp.volume.connect(this.myTimer.merger);
@@ -193,7 +189,6 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
       case 'NEWSYNTH':
         this.osc2.setAudioNodeIn(this.gainOsc2.gainNode);
         this.gainOsc2.connectToAudioParam(this.filter.filterNode.frequency);
-
         this.lfo.setAudioNodeIn(this.gainLfo.gainNode);
         this.oscillator2.setAudioNodeIn(this.gain.gainAdsr)
         this.osc.setAudioNodeIn(this.gain.gainAdsr);
@@ -217,6 +212,9 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
   setAutopan() {
     if (this.autopanSpenta) {
       switch (this.type) {
+        case 'DRUM':
+          this.spegniAutopan(this.myDrumachine.volume);
+          break;
         case 'SAMPLER':
           this.spegniAutopan(this.myMonosamp.volume);
           break;
@@ -224,11 +222,19 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
           this.spegniAutopan(this.myMonoosc.volume);
           break;
         case 'DOUBLEOOSC':
-          this.spegniAutopan(this.myDoubleosc.volume);
+          this.spegniAutopan(this.myDoubleosc.volume); break
+        case 'NEWSYNTH':
+          if (typeof this.pan !== 'undefined' && typeof this.pan.stereoPannerNode !== 'undefined') {
+            this.spegniAutopan(this.pan.stereoPannerNode);
+          }
+          break;
       }
       this.autopanSpenta = false;
     } else {
-      switch (this.type) {
+      switch (this.type) { 
+        case 'DRUM':
+          this.accendiAutopan(this.myDrumachine.volume);
+          break;
         case 'SAMPLER':
           this.accendiAutopan(this.myMonosamp.volume);
           break;
@@ -238,15 +244,20 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
         case 'DOUBLEOOSC':
           this.accendiAutopan(this.myDoubleosc.volume);
           break;
+        case 'NEWSYNTH':
+          this.accendiAutopan(this.pan.stereoPannerNode);
+          break;
       }
       this.autopanSpenta = true;
     }
   }
 
-
   setWaveshaper() {
     if (this.waveshaperSpenta) {
       switch (this.type) {
+        case 'DRUM':
+          this.accendiWaveshaper(this.myDrumachine.volume);
+          break;
         case 'SAMPLER':
           this.accendiWaveshaper(this.myMonosamp.volume);
           break;
@@ -256,10 +267,17 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
         case 'DOUBLEOOSC':
           this.accendiWaveshaper(this.myDoubleosc.volume);
           break;
+        case 'NEWSYNTH':
+          this.accendiWaveshaper(this.pan.stereoPannerNode);
+          break;
+
       }
       this.waveshaperSpenta = false;
     } else {
       switch (this.type) {
+        case 'DRUM':
+          this.spegniWaveshaper(this.myDrumachine.volume);
+          break;
         case 'SAMPLER':
           this.spegniWaveshaper(this.myMonosamp.volume);
           break;
@@ -268,6 +286,9 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
           break;
         case 'DOUBLEOOSC':
           this.spegniWaveshaper(this.myDoubleosc.volume);
+          break;
+        case 'NEWSYNTH':
+          this.spegniWaveshaper(this.pan.stereoPannerNode);
           break;
       }
       this.waveshaperSpenta = true;
@@ -320,6 +341,9 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
 
   onSetSoundParams(params: SyntControl, instrumentType: string) {
     switch (instrumentType) {
+      case 'DRUM':
+        this.myDrumachine.setParams(params, this.index);
+        break;
       case 'SAMPLER':
         this.myMonosamp.setParams(params, this.index);
         break;
@@ -331,6 +355,7 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
         break;
     }
   }
+
   changeConnection() {
     if (this.lfoConOsciJustCon) {
       this.osc.disconnectModulatoreDiFrequenza();
@@ -339,9 +364,8 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
       this.osc.setModulatoreDiFrequenza(this.gainLfo.gainNode);
       this.lfoConOsciJustCon = true;
     }
-
-
   }
+
   changeConnection2() {
     if (this.lfoConOsciJustCon2) {
       this.oscillator2.disconnectModulatoreDiFrequenza();
@@ -355,6 +379,9 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
   play($event: Nota, instrumentType: string) {
     if (!this.muted) {
       switch (instrumentType) {
+        case 'DRUM':
+          this.myDrumachine.play($event.libIndex, this.index, $event.velocity);
+          break;
         case 'SAMPLER':
           this.myMonosamp.play($event.notaDaSuonare, this.index, $event.velocity);
           break;
@@ -365,10 +392,6 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
           this.myDoubleosc.play($event.notaDaSuonare, this.index, $event.velocity);
           break;
         case 'NEWSYNTH':
-          let frequenzaFiltro = 0;
-          if (this.myTimer.steps === 0) {
-
-          }
           this.gainLfo.play(1);
           this.lfo.play(1);
           this.osc2.play(1);
@@ -380,12 +403,10 @@ export class InstrumentComponent implements OnInit, AfterViewInit {
           break;
       }
     }
-
   }
 
   getActiveButton(el: boolean): string {
     return !el ? (el = true, 'red') : (el = false, 'grey');
   }
-
 
 }

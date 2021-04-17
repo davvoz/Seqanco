@@ -91,7 +91,6 @@ export class AppComponent implements AfterViewInit {
   }
 
   onChangeMaster() {
-   
     this.myTimer.merger.gain.setValueAtTime(
       this.masterGain,
       this.myTimer.audioContext.currentTime
@@ -105,12 +104,13 @@ export class AppComponent implements AfterViewInit {
   getActiveColor(boolProp: boolean) {
     return boolProp ? '#dfff2d' : null;
   }
-  
+
   ngAfterViewInit(): void { }
 
   getSelectedTrakBorderStyle(isCollapsed: boolean): string {
     return isCollapsed ? '1px solid white' : '1px solid red';
   }
+
   setClipMassive(clipIndex: number) {
     let i = 0;
     for (const inst in this.instruments) {
@@ -120,9 +120,7 @@ export class AppComponent implements AfterViewInit {
     if (!this.myTimer.isPlayed) {
       this.myTimer.play();
     }
-
     this.changeColorClipRoutine(this.clipsMaster, clipIndex, this.verde, this.bianco);
-
   }
 
   private changeColorClipRoutine(clipArray: Clip[], clipIndex: number, focusColor: string, unfocusColor: string): Clip[] {
@@ -145,8 +143,8 @@ export class AppComponent implements AfterViewInit {
     }
     return clipArray
   }
-  solo(instrumenIndex: number) {
 
+  solo(instrumenIndex: number) {
     for (let i = 0; i > this.instruments.length; i++) {
       if (i !== instrumenIndex) {
         this.instruments[i].isMuted;
@@ -163,15 +161,35 @@ export class AppComponent implements AfterViewInit {
         this.changeColorClipRoutine(this.instruments[instrumenIndex].clips, clipIndex, this.verde, this.monooscClipColor);
         break;
       case 'SAMPLER':
-        this.changeColorClipRoutine(this.instruments[instrumenIndex].clips, clipIndex, this.verde, this.samplerClipColor); break;
+        this.changeColorClipRoutine(this.instruments[instrumenIndex].clips, clipIndex, this.verde, this.samplerClipColor);
+        break;
       case 'NEWSYNTH':
-        this.changeColorClipRoutine(this.instruments[instrumenIndex].clips, clipIndex, this.verde, this.newsynthClipColor); break;
+        this.changeColorClipRoutine(this.instruments[instrumenIndex].clips, clipIndex, this.verde, this.newsynthClipColor);
+        break;
+      case 'DRUM':
+        this.changeColorClipRoutine(this.instruments[instrumenIndex].clips, clipIndex, this.verde, this.newsynthClipColor);
+        break;
     }
     if (this.instruments[instrumenIndex].isCollapsed) {
       // this.collassaInstrument(instrumenIndex);
     }
     this.instrumentsViews.toArray()[instrumenIndex].setClip(clipIndex);
+  }
 
+  addDrummachine() {
+    const clips = this.instantiateClipsArray(this.monooscClipColor);
+    this.instruments.push({
+      name: 'Drum' + this.instruments.length,
+      index: this.instruments.length,
+      isCollapsed: true,
+      pianoRollDimension: 1280,
+      params: [],
+      type: 'DRUM',
+      clipPlaying: 0,
+      clips: clips,
+      isMuted: false
+    });
+    this.collassaInstrument(this.instruments.length - 1);
   }
 
   addMonoosc() {
@@ -275,7 +293,6 @@ export class AppComponent implements AfterViewInit {
   }
 
   show() {
-
     if (this.showMixer) {
       this.showMixer = false;
     } else {

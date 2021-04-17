@@ -108,6 +108,7 @@ export interface Playable {
 export interface Nota {
   notaDaSuonare: number;
   velocity: number;
+  libIndex:number;
 }
 export interface DialogDataNewTrack {
   name: string;
@@ -115,8 +116,6 @@ export interface DialogDataNewTrack {
   pianoRollDimension: number;
   instrument: Instrument;
 }
-
-
 
 export interface Clip{
   index:number,

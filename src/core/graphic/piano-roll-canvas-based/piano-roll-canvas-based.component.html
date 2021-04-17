@@ -11,12 +11,16 @@
             <button mat-stroked-button (click)="random()">random</button>
         </span>
     </div>
-
     <div class="allCanvas">
         <div class="cnvsContainer" [style.width.px]="getExternalDimension()">  
-            <canvas #canvasGui width="{{pianoRollDimensionIn}}" height="960"></canvas>
-            <canvas #canvas width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)" class="game-layer" ></canvas>
-            <canvas #canvasLine width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)" class="game-layer"></canvas>
+           
+            <canvas #canvasBeat width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)" class="beat-layer" ></canvas>
+
+    <canvas #canvasGui width="{{pianoRollDimensionIn}}" height="960"></canvas>
+    <canvas #canvas width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)" class="game-layer" ></canvas>
+    <canvas #canvasLine width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)" class="game-layer"></canvas>
+
+            
         </div>
         <canvas #canvasVelo width="{{pianoRollDimensionIn}}" height="60" (click)="handleChangeVelo($event)" class="velocity-layer" ></canvas>
     </div>

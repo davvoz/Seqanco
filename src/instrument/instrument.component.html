@@ -1,20 +1,18 @@
 <div class="{{type}}">
+    
     <app-piano-roll-canvas-based #pianoRoll [clipIndex]="clipIndex" (notaDaSuonare)="play($event,type)"
         [instrumentType]="type" [la]="selectedHrtz" [pianoRollDimensionIn]="pianoRollDimension">
     </app-piano-roll-canvas-based>
-
-
+   
     <div class="esternaInstrument">
         <div class="intestazioneNEWSYNTH" *ngIf="type === 'NEWSYNTH'">{{name}}-{{index}}</div>
         <div class="intestazioneSAMPLER" *ngIf="type === 'SAMPLER'">{{name}}-{{index}}</div>
         <div class="intestazioneMONOOSC" *ngIf="type === 'MONOOSC'">{{name}}-{{index}}</div>
-
-        <app-synth-control *ngIf="type !== 'NEWSYNTH'" (parametriSynth)="onSetSoundParams($event,type)" [typeIn]="type"
-            [name]="name"></app-synth-control>
-
-
+        
+        <app-synth-control *ngIf="type !== 'NEWSYNTH'" (parametriSynth)="onSetSoundParams($event,type)" [typeIn]="type" [name]="name"></app-synth-control>
+        
         <div *ngIf="type === 'NEWSYNTH'" class="NEWSYNTH">
-            <table >
+            <table>
                 <tr>
                     <td class="a">
                         <app-osc #osc [nome]="'Main oscillator 1'"></app-osc>
@@ -23,7 +21,7 @@
                         <app-gain [envelope]="true" [nome]="'Main gain'" #gain></app-gain>
                     </td>
                     <td colspan="2" class="a">
-                        <table >
+                        <table>
                             <tr>
                                 <td>
                                     <app-osc [nome]="'LFO to frequency filter'" #osc2> </app-osc>
@@ -33,12 +31,10 @@
                                 </td>
                             </tr>
                         </table>
-
                     </td>
                     <td>
                         <app-stereo-panner #pan></app-stereo-panner>
-                    </td>
-                    
+                    </td>                  
                     <td rowspan="2" class="a">
                         <ul>
                             <li>
@@ -65,14 +61,14 @@
                     </td>
                 </tr>
                 <tr>
-                    <td  class="a">
+                    <td class="a">
                         <app-osc #oscillator2 [nome]="'Main oscillator 2'"></app-osc>
                     </td>
                     <td class="a">
                         <app-filter [envelope]="true" [nome]="'FILTER'" #filter></app-filter>
                     </td>
                     <td colspan="3" class="a">
-                        <table >
+                        <table>
                             <tr>
                                 <td>
                                     <app-osc [nome]="'LFO to frequency oscillators'" #lfo></app-osc>
@@ -80,21 +76,20 @@
                                 <td>
                                     <app-gain [envelope]="false" [nome]="'LFO ocs amplitude'" #gainLfo></app-gain>
                                 </td>
-                                <td> enable osc1 <input type="checkbox" [(ngModel)]="lfoConOsc1"
-                                        (change)="changeConnection()" /><br>
-                                    enable osc2 <input type="checkbox" [(ngModel)]="lfoConOsc2"
-                                        (change)="changeConnection2()" /></td>
+                                <td> 
+                                     enable osc1 <input type="checkbox" [(ngModel)]="lfoConOsc1" (change)="changeConnection()"/> <br>
+                                     enable osc2 <input type="checkbox" [(ngModel)]="lfoConOsc2" (change)="changeConnection2()"/>
+                                </td>
                             </tr>
                         </table>
                     </td>
-                </tr>
-                
+                </tr>               
             </table>
         </div>
     </div>
 </div>
 
-<div class="chainFxContainer" *ngIf="type !== 'NEWSYNTH'">
+<div class="chainFxContainer" >
     <button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button>
     rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
     drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />
