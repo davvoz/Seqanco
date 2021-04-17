@@ -1,16 +1,26 @@
 <div class="{{type}}">
-    
+
     <app-piano-roll-canvas-based #pianoRoll [clipIndex]="clipIndex" (notaDaSuonare)="play($event,type)"
         [instrumentType]="type" [la]="selectedHrtz" [pianoRollDimensionIn]="pianoRollDimension">
     </app-piano-roll-canvas-based>
-   
+
     <div class="esternaInstrument">
-        <div class="intestazioneNEWSYNTH" *ngIf="type === 'NEWSYNTH'">{{name}}-{{index}}</div>
-        <div class="intestazioneSAMPLER" *ngIf="type === 'SAMPLER'">{{name}}-{{index}}</div>
-        <div class="intestazioneMONOOSC" *ngIf="type === 'MONOOSC'">{{name}}-{{index}}</div>
-        
-        <app-synth-control *ngIf="type !== 'NEWSYNTH'" (parametriSynth)="onSetSoundParams($event,type)" [typeIn]="type" [name]="name"></app-synth-control>
-        
+        <div class="intestazioneNEWSYNTH" *ngIf="type === 'NEWSYNTH'">{{name}}-{{index}}<button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button>
+            rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
+            drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />
+            <button (click)="setWaveshaper()" [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button></div>
+        <div class="intestazioneSAMPLER" *ngIf="type === 'SAMPLER'">{{name}}-{{index}}<button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button>
+            rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
+            drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />
+            <button (click)="setWaveshaper()" [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button></div>
+        <div class="intestazioneMONOOSC" *ngIf="type === 'MONOOSC'">{{name}}-{{index}}<button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button>
+            rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
+            drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />
+            <button (click)="setWaveshaper()" [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button></div>
+
+        <app-synth-control *ngIf="type !== 'NEWSYNTH'" (parametriSynth)="onSetSoundParams($event,type)" [typeIn]="type"
+            [name]="name"></app-synth-control>
+
         <div *ngIf="type === 'NEWSYNTH'" class="NEWSYNTH">
             <table>
                 <tr>
@@ -32,32 +42,27 @@
                             </tr>
                         </table>
                     </td>
-                    <td>
+                    <td  class="a">
                         <app-stereo-panner #pan></app-stereo-panner>
-                    </td>                  
+                    </td>
                     <td rowspan="2" class="a">
-                        <ul>
-                            <li>
-                                <button (click)="enableModulation()"[style.background-color]="this.mod1.modulation ? 'red':'grey'">enableModulation</button>
-                                <input type="number"[(ngModel)]="this.mod1.min"/><input type="number"[(ngModel)]="this.mod1.max"/>
-                            </li>
-                            <li>
-                                <button (click)="enableModulation2()"[style.background-color]="this.mod2.modulation ? 'red':'grey'">enableModulation2</button>
-                                <input type="number"[(ngModel)]="this.mod2.min"/><input type="number"[(ngModel)]="this.mod2.max"/>
-                            </li>
-                            <li>
-                                <button (click)="enableModulation3()"[style.background-color]="this.mod3.modulation ? 'red':'grey'">enableModulation3</button>
-                                <input type="number"[(ngModel)]="this.mod3.min"/><input type="number"[(ngModel)]="this.mod3.max"/>
-                            </li>
-                            <li>
-                                <button (click)="enableModulation4()" [style.background-color]="this.mod4.modulation ? 'red':'grey'">enableModulation4</button>
-                                <input type="number"[(ngModel)]="this.mod4.min"/><input type="number"[(ngModel)]="this.mod4.max"/>
-                            </li>
-                            <li>
-                                <button (click)="enablePseudoArpeggiator()" [style.background-color]="this.mod5.modulation ? 'red':'grey'">enablePseudoArpeggiator</button>
-                                <input type="number"[(ngModel)]="this.mod5.min"/>
-                            </li>
-                        </ul>
+                        <table>
+                            <thead>
+                                <th colspan="3">modulations</th>
+                            </thead>
+                            <tr *ngFor="let mod of modulations;let i = index">
+                                <td>
+                                    <button (click)="enableMod(i)"
+                                        [style.background-color]="mod.modulation ? 'red':'grey'">V</button>
+                                </td>
+                                <td>
+                                    <input type="number" [(ngModel)]="mod.min" />
+                                </td>
+                                <td>
+                                    <input type="number" [(ngModel)]="mod.max" />
+                                </td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
                 <tr>
@@ -76,22 +81,19 @@
                                 <td>
                                     <app-gain [envelope]="false" [nome]="'LFO ocs amplitude'" #gainLfo></app-gain>
                                 </td>
-                                <td> 
-                                     enable osc1 <input type="checkbox" [(ngModel)]="lfoConOsc1" (change)="changeConnection()"/> <br>
-                                     enable osc2 <input type="checkbox" [(ngModel)]="lfoConOsc2" (change)="changeConnection2()"/>
+                                <td>
+                                    enable osc1 <input type="checkbox" [(ngModel)]="lfoConOsc1"
+                                        (change)="changeConnection()" /> <br>
+                                    enable osc2 <input type="checkbox" [(ngModel)]="lfoConOsc2"
+                                        (change)="changeConnection2()" />
                                 </td>
                             </tr>
                         </table>
                     </td>
-                </tr>               
+                </tr>
             </table>
         </div>
+        
     </div>
 </div>
 
-<div class="chainFxContainer" >
-    <button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button>
-    rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
-    drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />
-    <button (click)="setWaveshaper()" [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button>
-</div>
