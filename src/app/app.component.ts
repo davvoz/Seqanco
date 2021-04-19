@@ -5,7 +5,12 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { InstrumentComponent } from '../instrument/instrument.component';
 import { Clip, Instrument } from '../interfaces/interfaces';
 import { TimerService } from '../services/timer.service';
-
+export interface Tile {
+  color: string;
+  cols: number;
+  rows: number;
+  text: string;
+}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,7 +18,10 @@ import { TimerService } from '../services/timer.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements AfterViewInit {
-
+  tiles: Tile[] = [
+    {text: 'TRAX', cols: 4, rows: 1, color: 'lightblue'},
+    {text: 'INSTRUMENT', cols: 4, rows: 1, color: 'lightgreen'}
+  ];
   isActiveKeyboardControl = false;
   showFiller = false;
   @HostListener('document:keyup', ['$event'])

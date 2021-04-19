@@ -20,12 +20,13 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
   @Output() notaDaSuonare = new EventEmitter<Nota>();
   @Output() velocity = new EventEmitter<number>();
+
   @Input() la!: number;
   @Input() pianoRollDimensionIn!: number;
   @Input() clipIndex: number = 0;
   @Input() instrumentType!: string;
-  @ViewChild('container') container!: ElementRef;
 
+  @ViewChild('container') container!: ElementRef;
   @ViewChild("canvas", { static: false })
   canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild("canvasGui", { static: false })
@@ -36,9 +37,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   canvasLooper!: ElementRef<HTMLCanvasElement>;
   @ViewChild("canvasVelo", { static: false })
   canvasVelo!: ElementRef<HTMLCanvasElement>;
-  @ViewChild("canvasBeat", { static: false })
-  canvasBeat!: ElementRef<HTMLCanvasElement>;
-
 
   ctxGui!: CanvasRenderingContext2D;
   ctx!: CanvasRenderingContext2D;
@@ -46,7 +44,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   ctxLine!: CanvasRenderingContext2D;
   ctxLoopper!: CanvasRenderingContext2D;
   ctxVelo!: CanvasRenderingContext2D;
-  ctxBeat!: CanvasRenderingContext2D;
 
   lato = 20;
   subscription!: Subscription;
@@ -57,7 +54,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   pianoRollDimension: number = 0;
 
   enemies: Square[] = [];
-  enemiesNew: Square[] = [];
   freq: number[] = [];
   coord: Coordinates = { x: 0, y: 0 };
 
@@ -108,47 +104,18 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     // @ts-ignore*/
     this.ctxLoopper = this.canvasLooper.nativeElement.getContext("2d");
     // @ts-ignore*/
-    //this.ctxEnemiesNew = this.canvasEnemiesNew.nativeElement.getContext("2d");
-    this.ctxBeat = this.canvasBeat.nativeElement.getContext("2d");
+
     this.myBeatGui = new UserGui(this.lato,0,this.ctxGui, { x: 0, y: 0 },0,"0,0,0",this.lato);  
     this.myLoopper = new Loopper(this.startLoop * this.lato, this.endLoop * this.lato, this.ctxLoopper, 19 * this.lato);
+    this.myVelocity = new VelocityGui(0, 0,this.ctxVelo, { x: 0, y: 0 },0,"0,0,0", this.lato);
+    this.myLine = new LineOfSquares( this.lato, -this.lato, 0,"0,0,0",this.ctxLine,100,58,"VERTICALE", 0 );
+    this.userGui = new UserGui( this.lato,0,this.ctxGui,{ x: 0, y: 0 }, 0,"0,0,0",this.lato );
 
-    this.myVelocity = new VelocityGui(
-      0,
-      0,
-      this.ctxVelo,
-      { x: 0, y: 0 },
-      0,
-      "0,0,0",
-      this.lato);
-
-    this.myLine = new LineOfSquares(
-      this.lato,
-      -this.lato,
-      0,
-      "0,0,0",
-      this.ctxLine,
-      100,
-      58,
-      "VERTICALE", 0
-    );
     this.setStartLopper();
     this.myLine.standUp();
-    this.enemiesNew = this.populateEnemiesArray();
     this.enemies = this.populateEnemiesArray();
     this.myVelocity.draw();
-    //this.myBeatGui.drawBeat();
-    this.intitializeClips();
-    this.userGui = new UserGui(
-      this.lato,
-      0,
-      this.ctxGui,
-      { x: 0, y: 0 },
-      0,
-      "0,0,0",
-      this.lato
-    );
-    
+    this.intitializeClips(); 
     this.userGui.draw();
 
     this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
@@ -211,19 +178,18 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   }
 
   tick() {
-    this.ctxLine.clearRect(
-      0,
-      0,
-      this.ctxLine.canvas.width,
-      this.ctxLine.canvas.height
-    );
+    
+    this.ctxLine.clearRect( 0,0,this.ctxLine.canvas.width,this.ctxLine.canvas.height );
     this.coord = { x: this.myLine.getX(), y: 0 };
     this.myLine.setColor("200,200,0");
+    
     let col: Collision = { esito: false, indice: 0 };
     let enemyNumber: number[] = [];
+
     for (let i = 0; i < this.enemies.length; i++) {
       enemyNumber.push(this.enemies[i].getX());
     }
+
     this.worker.postMessage({ squareDimensioneX: this.myLine.getX(), enemiesDimensioneX: enemyNumber, enemiesDimensioneLato: this.lato });
     if (typeof Worker !== 'undefined') {
       this.worker.onmessage = ({ data }) => {
@@ -273,9 +239,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   private populateEnemiesArray(): Square[] {
     let enemies = [];
     for (let i = 0; i < this.ctx.canvas.width / this.lato; i++) {
-      enemies.push(
-        new Square(this.lato, i, 0, "100,100,100", this.ctx, 0, i)
-      );
+      enemies.push(new Square(this.lato, i, 0, "100,100,100", this.ctx, 0, i) );
       enemies[i].velocity = 1;
       enemies[i].standUp();
       enemies[i].kill();

@@ -1,15 +1,7 @@
 canvas {
     position: absolute;
 }
-.ui-layer {
-    z-index: 3;
-}
-.game-layer {
-    z-index: 2;
-}
-.background-layer {
-    z-index: 1;
-}
+
 .cnvsContainer {   
  
     width: 100%;
@@ -17,7 +9,6 @@ canvas {
     position: absolute;
     overflow: auto;
     left: 0px;
-    z-index: 999;
 
 }
 .velocity-layer {
@@ -27,6 +18,7 @@ canvas {
     overflow: auto;
     top: 279px;
     border:1px solid grey;
+    z-index: 0;
 }
 .titleContainer {
     position: relative;
@@ -45,15 +37,26 @@ canvas {
     height: 38px;
     line-height: 38px;
 }
-.looper-layer{
-    z-index: 2;
-}
+
 .example-spacer {
     flex: 1 3 auto;
 }
 .allCanvas{
     height: 4px;
 }
-.beat-layer{
-z-index: 9999;
+.looper-layer{
+    z-index: 0;
+}
+.bg-layer{
+    z-index: 0;
+}
+.line-layer{
+    z-index: 0;
+}
+.game-layer{
+    z-index: 1;
+}
+canvas{
+    position:absolute;
+    left: 0;
 }

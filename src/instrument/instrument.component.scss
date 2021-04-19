@@ -1,4 +1,3 @@
-
 .intestazione {
     position: absolute;
 }
@@ -6,14 +5,13 @@
     background-color: rgba(200, 90, 90, 1);
     width: 100%;
     height: 67%;
-    position: absolute;  
+    position: absolute;
 }
 .MONOOSC {
-    background-color: rgba(90, 200, 90,1);
+    background-color: rgba(90, 200, 90, 1);
     width: 100%;
     height: 67%;
     position: absolute;
-    
 }
 .SAMPLER {
     background-color: rgba(90, 90, 200, 1);
@@ -26,6 +24,7 @@
     width: 100%;
     height: 67%;
     position: absolute;
+    top: 17%;
 }
 
 .autopan {
@@ -41,43 +40,63 @@
     top: 0;
     right: 20%;
 }
-.esternaInstrument {
+
+input {
+    width: 50px;
+}
+.intestazioneNEWSYNTH {
+    background-color: rgba(100, 200, 200, 0.4);
+    height: 38px;
+    line-height: 38px;
+    top: 74%;
+    width: 100%;
+    z-index: 99;
+}
+.intestazioneSAMPLER {
+    background-color: #bdbde9;
+    height: 38px;
+    line-height: 38px;
+    top: 74%;
+    width: 100%;
+    z-index: 99;
+}
+.intestazioneMONOOSC {
+    background-color: rgba(90, 200, 90, 1);
+    height: 38px;
+    line-height: 38px;
+    top: 74%;
+    width: 100%;
+    z-index: 99;
+}
+.a {
+    border: 1px solid white;
+}
+table {
+    height: 100%;
+    width: 100%;
+}
+
+.mainContainer {
     overflow-y: auto;
     overflow-x: hidden;
     width: 100%;
     position: fixed;
     bottom: 0%;
-    height: 26%;
+    height: 50%;
     overflow-y: auto;
     overflow-x: auto;
+    background-color: maroon;
 }
-.intestazioneNEWSYNTH{
-    background-color: rgba(100, 200, 200, 0.4);;
-    height: 38px;
-    line-height: 38px;
-    top: 66%;
-    position: fixed;
-    width: 100%;
-    z-index: 99;
+.esternaInstrument {
+    background-color: purple;
+    position: absolute;
 }
-.intestazioneSAMPLER{
-    background-color: #bdbde9;
-    height: 38px;
-    line-height: 38px;
-    top: 66%;
-    position: fixed;
-    width: 100%; 
-    z-index: 99; 
+.esternaInstrumentPianoRoll{
+    
+    background-color: goldenrod;
+    position: absolute;
 }
-.intestazioneMONOOSC{
-    background-color: rgba(90, 200, 90, 1);    
-    height: 38px;
-    line-height: 38px;
-    top: 66%;
-    position: fixed;
-    width: 100%;
-    z-index: 99;
-}
-.a{
-   border: 1px solid white;
+.mainContainer{
+    overflow: hidden;
+    height: 650px;
 }

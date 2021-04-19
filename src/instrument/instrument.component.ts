@@ -13,10 +13,35 @@ import { PianoRollCanvasBasedComponent } from '../core/graphic/piano-roll-canvas
 import { Nota, SyntControl } from '../interfaces/interfaces';
 import { SamplesLibraryService } from '../services/samples-library.service';
 import { TimerService } from '../services/timer.service';
+import { trigger, transition, animate, style, state } from '@angular/animations';
+
+
 @Component({
   selector: 'app-instrument',
   templateUrl: './instrument.component.html',
-  styleUrls: ['./instrument.component.scss']
+  styleUrls: ['./instrument.component.scss'],
+  animations: [
+    trigger(
+      'slideView',
+      [
+        state('true', style({ transform: 'translateX(100%)', opacity: 0 })),
+        state('false', style({ transform: 'translateX(0)', opacity: 1 })),
+        transition('0 => 1', animate('500ms', style({ transform: 'translateX(0)', 'opacity': 1 }))),
+        transition('1 => 1', animate('500ms', style({ transform: 'translateX(100%)', 'opacity': 0 }))),
+      ]),
+
+    trigger('slideInOut', [
+      transition(':enter', [
+        style({ transform: 'translateX(100%)', opacity: 0 }),
+        animate('600ms ease-in', style({ transform: 'translateX(0%)', 'opacity': 1 }))
+      ]),
+      
+      transition(':leave', [
+        style({ transform: 'translateX(0%)', opacity: 1 }),
+        animate('0ms ease-in', style({ transform: 'translateX(100%)', 'opacity': 0 }))
+      ])
+    ])
+  ]
 })
 export class InstrumentComponent implements AfterViewInit {
   @Input() clipIndex: number = 0;
@@ -72,7 +97,11 @@ export class InstrumentComponent implements AfterViewInit {
   lfoConOsciJustCon2: boolean = false;
   subscription: any;
   stepper = 0;
-  waveArray = new Float32Array(9);
+  isPianoRollVisible = false;
+  visible = false;
+  showMessage() {
+    this.visible = !this.visible;
+  }
   modulations = [
     {
       modulation: false,
@@ -95,10 +124,23 @@ export class InstrumentComponent implements AfterViewInit {
       min: 100,
       max: 3000
     }];
+  
   enableModulation2Bool = false;
   enablePseudoArpeggiatorBool = false;
   constructor(public myTimer: TimerService, private library: SamplesLibraryService) { }
-
+  getHeight(bol: boolean) {
+    return bol ? '1250' : '20';
+  }
+  getDisplay(bol: boolean) {
+    return bol ? 0.0 : 1;
+  }
+  getZindex(bol: boolean) {
+    return bol ? 0 : 9999;
+  }
+  toggle(){
+    this.isPianoRollVisible ? this.isPianoRollVisible = false : this.isPianoRollVisible = true;
+    //console.log(this.getPianoRollDisplay());
+  }
   enableMod(modIndex: number) {
     this.modulations[modIndex].modulation ? this.modulations[modIndex].modulation = false : this.modulations[modIndex].modulation = true;
   }
@@ -111,8 +153,8 @@ export class InstrumentComponent implements AfterViewInit {
 
       if (this.type === 'NEWSYNTH' && typeof this.osc.oscWk !== 'undefined') {
         if (this.modulations[4].modulation) {
-          this.osc.oscWk.frequency.exponentialRampToValueAtTime((this.osc.oscWk.frequency.value - this.modulations[4].min), 0.1);
-          this.oscillator2.oscWk.frequency.exponentialRampToValueAtTime((this.oscillator2.oscWk.frequency.value - this.modulations[4].min), 0.1);
+          this.osc.oscWk.frequency.setValueAtTime((this.osc.oscWk.frequency.value + this.modulations[4].min), this.modulations[4].max);
+          this.oscillator2.oscWk.frequency.setValueAtTime((this.oscillator2.oscWk.frequency.value + this.modulations[4].min), this.modulations[4].max);
         }
         if (this.modulations[0].modulation) {
           switch (res.timePosition) {

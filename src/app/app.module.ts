@@ -21,25 +21,16 @@ import { StereoPannerComponent } from '../audio-components/stereo-panner/stereo-
 import { FilterComponent } from '../audio-components/filter/filter.component';
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { MatDividerModule } from '@angular/material/divider';
-import { KnobComponent } from '../core/graphic/knob/knob.component';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { jqxKnobModule } from 'jqwidgets-ng/jqxknob';
-import { jqxNumberInputModule } from 'jqwidgets-ng/jqxnumberinput';
-import { MatTabsModule } from '@angular/material/tabs';
 import{MatSidenavModule}from '@angular/material/sidenav';
-import {MatExpansionModule} from '@angular/material/expansion';
 import { LfoComponent } from 'src/audio-components/lfo/lfo.component';
-import { MIDI_INPUT } from '@ng-web-apis/midi';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -54,7 +45,6 @@ import { MIDI_INPUT } from '@ng-web-apis/midi';
     GainComponent,
     StereoPannerComponent,
     FilterComponent,
-    KnobComponent,
     PianoRollCanvasBasedComponent,
     LfoComponent
   ],
@@ -64,23 +54,15 @@ import { MIDI_INPUT } from '@ng-web-apis/midi';
     HttpClientModule,
     BrowserAnimationsModule,
     MatIconModule,
-    MatSliderModule,
-    MatSelectModule,
     MatToolbarModule,
     MatButtonModule,
     MatInputModule,
-    MatDividerModule,
     MatGridListModule,
     MatMenuModule,
-    MatCardModule,
     MatTooltipModule,
     MatListModule,
-    jqxKnobModule,
-    jqxNumberInputModule,
-    MatTabsModule,
     MatSidenavModule,
-    MatExpansionModule
-    
+    DragDropModule
   ],
   providers: [TimerService, AudioContext, SamplesLibraryService],
   bootstrap: [AppComponent],
