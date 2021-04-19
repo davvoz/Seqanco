@@ -1,9 +1,3 @@
-<!-- <div class="mixerContainer" [style.display]="getDisplay(showMixer)">
-	<div *ngFor="let instrument of instruments;let i =index;" class="mixerTrack"
-		[style.display]="getDisplay(showMixer)">
-		<div class="{{instrument.type}}">{{instrument.name}}-{{instrument.type}}</div>
-	</div>
-</div> -->
 <mat-drawer-container class="example-container" autosize>
 	<mat-drawer #drawer class="example-sidenav" mode="side" opened>
 		<mat-list>
@@ -28,7 +22,6 @@
 	</mat-drawer>
 
 	<div class="example-sidenav-content">
-
 		<mat-toolbar color="primary">
 			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle();">
 				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
@@ -36,13 +29,11 @@
 			<h3>Eazy Drop </h3>
 			<app-start-stop></app-start-stop>
 			<span class="example-spacer"></span>
-
 			<mat-menu #menu="matMenu">
 				<button mat-menu-item color="basic" (click)="addSampler()">Add sampler</button>
 				<button mat-menu-item color="basic" (click)="addSynth()">Add Synth</button>
 				<button mat-menu-item color="basic" (click)="addMonoosc()">Add Monoosc</button>
 				<button mat-menu-item color="basic" (click)="addDrummachine()">Add Drum</button>
-
 			</mat-menu>
 		</mat-toolbar>
 
@@ -112,7 +103,6 @@
 				</div>
 			</div>
 		</div>
-
 
 		<div class="instrumentsContainer">
 			<div class="instrumentPanel" *ngFor="let instrument of instruments;let i =index;">

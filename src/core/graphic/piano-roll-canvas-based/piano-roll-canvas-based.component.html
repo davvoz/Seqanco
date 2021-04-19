@@ -1,8 +1,11 @@
-<div class="esterna">
-    <div class="pianoRollToolbar" [style.background-color]="getInstrumentColor()" >
+<div class="esterna" style="    position: absolute;
+width: 100%;
+background: red;
+height: 342px;">
+    <div class="pianoRollToolbar" [style.background-color]="getInstrumentColor()">
         <span>
             Loop start :<input type="number" [(ngModel)]="startLoop" min="0" (change)="setStartLopper()" />
-             length :<input type="number" [(ngModel)]="endLoop" (change)="setStartLopper()" />
+            length :<input type="number" [(ngModel)]="endLoop" (change)="setStartLopper()" />
         </span>
         <span style="float:right">
             <button mat-stroked-button (click)="clear()">
@@ -11,14 +14,21 @@
             <button mat-stroked-button (click)="random()">random</button>
         </span>
     </div>
-        <div class="cnvsContainer" [style.width.px]="getExternalDimension()"  >  
-           
+    <div class="allCanvas">
+        <div class="cnvsContainer" [style.width.px]="getExternalDimension()">
+
             <canvas #canvasGui width="{{pianoRollDimensionIn}}" height="960" class="bg-layer"></canvas>
-            <canvas #canvasLine width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)" class="line-layer"></canvas>
-            <canvas #canvas width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)" class="game-layer" ></canvas>
+            <canvas #canvasLine width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)"
+                class="line-layer"></canvas>
+            <canvas #canvas width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)"
+                class="game-layer"></canvas>
 
         </div>
-        <canvas #canvasVelo width="{{pianoRollDimensionIn}}" height="60" (click)="handleChangeVelo($event)" class="velocity-layer" ></canvas>
-        <canvas #canvasLooper width="{{pianoRollDimensionIn}}" height="239" class="looper-layer"></canvas>   
-       
+        <canvas #canvasVelo width="{{pianoRollDimensionIn}}" height="60" (click)="handleChangeVelo($event)"
+            class="velocity-layer"></canvas>
+        <canvas #canvasLooper width="{{pianoRollDimensionIn}}" height="239" class="looper-layer"></canvas>
+
+    </div>
+
+
 </div>

@@ -1,13 +1,10 @@
-<div style=" background-color: hotpink;
-    bottom: 0;
-    position: fixed;
-    height: 33%;
-    width: 100%;
-    z-index: 9;">
-    {{name}}-{{index}}
+<div  style=" width: 100%;
+top: 650px;
+position: absolute;">
+    
 
-    <div class="esternaInstrument">
-
+    <div>
+        {{name}}-{{index}}
         <button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button>
         rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
         drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />
@@ -15,7 +12,7 @@
             [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button>
     </div>
 
-    <div *ngIf="type !== 'NEWSYNTH'" style="background-color: hotpink;">
+    <div *ngIf="type !== 'NEWSYNTH'" >
         <app-synth-control (parametriSynth)="onSetSoundParams($event,type)" [typeIn]="type" [name]="name">
         </app-synth-control>
     </div>
@@ -94,11 +91,12 @@
     </div>
 
 </div>
-<div style="background-color: darkgoldenrod;
-overflow: scroll;
+
+
+<div style="
 width: 100%;
-top: 317px;
-position: fixed;
+top: 297px;
+position: relative;
 height: 450px;">
 
 
