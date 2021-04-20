@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { LineOfSquares } from '../../../classes/line-of-squares';
 import { Loopper } from '../../../classes/loopper';
@@ -9,7 +9,7 @@ import { VelocityGui } from '../../../classes/velocity-gui';
 import { Collision, Coordinates, Nota } from '../../../interfaces/interfaces';
 import { TimerService } from '../../../services/timer.service';
 
-
+declare var ResizeObserver: new (arg0: (entries: any) => void) => any;
 @Component({
   selector: 'app-piano-roll-canvas-based',
   templateUrl: './piano-roll-canvas-based.component.html',
@@ -17,6 +17,7 @@ import { TimerService } from '../../../services/timer.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PianoRollCanvasBasedComponent implements AfterViewInit {
+
 
   @Output() notaDaSuonare = new EventEmitter<Nota>();
   @Output() velocity = new EventEmitter<number>();
@@ -45,7 +46,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   ctxLoopper!: CanvasRenderingContext2D;
   ctxVelo!: CanvasRenderingContext2D;
 
-  lato = 20;
+  lato = 0;
   subscription!: Subscription;
   subscriptionStartStop!: Subscription;
   key: any;
@@ -69,8 +70,11 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   clips: Square[][] = [[]];
   selectedClipIndex: number = 0;
   worker = new Worker('./helper.worker', { type: 'module' });
+  observer: any;
+  constructor(public myTimer: TimerService) {
 
-  constructor(public myTimer: TimerService) { }
+
+  }
 
   getInstrumentColor() {
     switch (this.instrumentType) {
@@ -91,7 +95,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     // @ts-ignore*/
-    this.lato = this.canvasGui.nativeElement.getContext("2d")?.canvas.clientWidth / 64;
+    this.lato = this.canvasGui.nativeElement.getContext("2d")?.canvas.width / 64;
     this.createScale(this.la);
     // @ts-ignore*/
     this.ctxGui = this.canvasGui.nativeElement.getContext("2d");
@@ -105,17 +109,17 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     this.ctxLoopper = this.canvasLooper.nativeElement.getContext("2d");
     // @ts-ignore*/
 
-    this.myBeatGui = new UserGui(this.lato,0,this.ctxGui, { x: 0, y: 0 },0,"0,0,0",this.lato);  
-    this.myLoopper = new Loopper(this.startLoop * this.lato, this.endLoop * this.lato, this.ctxLoopper, 19 * this.lato);
-    this.myVelocity = new VelocityGui(0, 0,this.ctxVelo, { x: 0, y: 0 },0,"0,0,0", this.lato);
-    this.myLine = new LineOfSquares( this.lato, -this.lato, 0,"0,0,0",this.ctxLine,100,58,"VERTICALE", 0 );
-    this.userGui = new UserGui( this.lato,0,this.ctxGui,{ x: 0, y: 0 }, 0,"0,0,0",this.lato );
+    this.myBeatGui = new UserGui(this.lato, 0, this.ctxGui, { x: 0, y: 0 }, 0, "0,0,0", this.lato);
+    this.myLoopper = new Loopper(this.startLoop * this.lato, this.endLoop * this.lato, this.ctxLoopper, this.lato);
+    this.myVelocity = new VelocityGui(0, 0, this.ctxVelo, { x: 0, y: 0 }, 0, "0,0,0", this.lato);
+    this.myLine = new LineOfSquares(this.lato, -this.lato, 0, "0,0,0", this.ctxLine, 100, 58, "VERTICALE", 0);
+    this.userGui = new UserGui(this.lato, 0, this.ctxGui, { x: 0, y: 0 }, 0, "0,0,0", this.lato);
 
     this.setStartLopper();
     this.myLine.standUp();
     this.enemies = this.populateEnemiesArray();
     this.myVelocity.draw();
-    this.intitializeClips(); 
+    this.intitializeClips();
     this.userGui.draw();
 
     this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
@@ -131,6 +135,13 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
         this.myLine.setX(+this.startLoop - 1);
       }
     });
+    this.observer = new ResizeObserver(entries => {
+      this.lato = entries[0].contentRect.width / 64;
+      console.log(this.lato)
+    });
+
+
+    this.observer.observe(this.canvas.nativeElement);
   }
 
   intitializeClips() {
@@ -178,11 +189,11 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   }
 
   tick() {
-    
-    this.ctxLine.clearRect( 0,0,this.ctxLine.canvas.width,this.ctxLine.canvas.height );
+
+    this.ctxLine.clearRect(0, 0, this.ctxLine.canvas.width, this.ctxLine.canvas.height);
     this.coord = { x: this.myLine.getX(), y: 0 };
     this.myLine.setColor("200,200,0");
-    
+
     let col: Collision = { esito: false, indice: 0 };
     let enemyNumber: number[] = [];
 
@@ -233,13 +244,13 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   }
 
   public playStep(index: number) {
-    this.notaDaSuonare.emit({ notaDaSuonare: this.enemies[index].getTune(), velocity: this.enemies[index].velocity,libIndex:this.enemies[index].indice });
+    this.notaDaSuonare.emit({ notaDaSuonare: this.enemies[index].getTune(), velocity: this.enemies[index].velocity, libIndex: this.enemies[index].indice });
   }
 
   private populateEnemiesArray(): Square[] {
     let enemies = [];
     for (let i = 0; i < this.ctx.canvas.width / this.lato; i++) {
-      enemies.push(new Square(this.lato, i, 0, "100,100,100", this.ctx, 0, i) );
+      enemies.push(new Square(this.lato, i, 0, "100,100,100", this.ctx, 0, i));
       enemies[i].velocity = 1;
       enemies[i].standUp();
       enemies[i].kill();
@@ -252,15 +263,19 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     for (let i = 0; i < this.enemies.length; i++) {
       let tonoRandom = this.getRandomInt(this.freq.length, 0);
       this.clips[this.selectedClipIndex][i].setTune(this.freq[tonoRandom]);
+      
       this.enemies[i].setTune(this.freq[tonoRandom]);
-      this.enemies[i].indice =tonoRandom;
+      this.enemies[i].indice = tonoRandom;
+      this.enemies[i].setY(tonoRandom - 1);
+      this.enemies[i].standUp();
+      this.enemies[i].velocity = 1;
+
       this.clips[this.selectedClipIndex][i].indice = tonoRandom;
       this.clips[this.selectedClipIndex][i].setY(tonoRandom - 1);
-      this.enemies[i].setY(tonoRandom - 1);
-      this.clips[this.selectedClipIndex][i].standUp();
-      this.enemies[i].standUp();
       this.clips[this.selectedClipIndex][i].velocity = 1;
-      this.enemies[i].velocity = 1;
+      this.clips[this.selectedClipIndex][i].standUp();
+      
+      
       this.myVelocity.drawVertLine({ x: i, y: 0 }, true);
     }
   }
@@ -300,8 +315,8 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     }
   }
   // @ts-ignore*/
-  private getMousePos(evt, canvas: ElementRef<HTMLCanvasElement>) {
-    let rect = canvas.nativeElement.getBoundingClientRect();
+  private getMousePos(evt, canvas: HTMLCanvasElement) {
+    let rect = canvas.getBoundingClientRect();
     return {
       x: Math.floor((evt.clientX - rect.left) / this.lato),
       y: Math.floor((evt.clientY - rect.top) / this.lato)
@@ -312,29 +327,34 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     return Math.floor(Math.random() * (maxValue - 0)) + minValue;
   }
 
-  // @ts-ignore*/
-  handleChange(evt) {
-    let coo: Coordinates = this.getMousePos(evt, this.canvas);
-    
+
+  handleChange(evt: any) {
+    console.log(evt);
+    let coo: Coordinates = this.getMousePos(evt, this.ctx.canvas);
+    console.log(coo);
+
     if (this.enemies[coo.x].isStanding()) {
       this.enemies[coo.x].kill();
       this.clips[this.selectedClipIndex][coo.x].kill();
       this.myVelocity.drawVertLine({ x: coo.x, y: 0 }, false);
     } else {
-      this.clips[this.selectedClipIndex][coo.x].setTune(this.freq[coo.y]);
+
       this.enemies[coo.x].setTune(this.freq[coo.y]);
       this.enemies[coo.x].indice = coo.y;
-      this.clips[this.selectedClipIndex][coo.x].setY(coo.y - 1);
       this.enemies[coo.x].setY(coo.y - 1);
-      this.clips[this.selectedClipIndex][coo.x].standUp();
-      this.clips[this.selectedClipIndex][coo.x].indice = coo.y;
       this.enemies[coo.x].standUp();
+
+      this.clips[this.selectedClipIndex][coo.x].setTune(this.freq[coo.y]);
+      this.clips[this.selectedClipIndex][coo.x].indice = coo.y;
+      this.clips[this.selectedClipIndex][coo.x].setY(coo.y - 1);
+      this.clips[this.selectedClipIndex][coo.x].standUp();
+
       this.myVelocity.drawVertLine({ x: coo.x, y: 0 }, true);
     }
   }
   // @ts-ignore*/
   handleChangeVelo(evt) {
-    let coo: Coordinates = this.getMousePos(evt, this.canvasVelo);
+    let coo: Coordinates = this.getMousePos(evt, this.ctxVelo.canvas);
     if (this.enemies[coo.x].isStanding()) {
       this.myVelocity.cancelVertLine(coo);
       switch (coo.y) {
@@ -350,7 +370,8 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
   }
   getExternalDimension(): number {
-    const n: number = 20;
-    return +this.pianoRollDimensionIn + +n;
+    // const n: number = 20;
+    // return +this.pianoRollDimensionIn + +n;
+    return this.pianoRollDimensionIn
   }
 }

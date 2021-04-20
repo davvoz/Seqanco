@@ -1,6 +1,5 @@
-<div class="esterna" style="    position: absolute;
+<div class="esterna" style="position: absolute;
 width: 100%;
-background: red;
 height: 342px;">
     <div class="pianoRollToolbar" [style.background-color]="getInstrumentColor()">
         <span>
@@ -14,19 +13,17 @@ height: 342px;">
             <button mat-stroked-button (click)="random()">random</button>
         </span>
     </div>
-    <div class="allCanvas">
-        <div class="cnvsContainer" [style.width.px]="getExternalDimension()">
+    <div class="allCanvas" >
+        <div class="cnvsContainer"  #container>
 
-            <canvas #canvasGui width="{{pianoRollDimensionIn}}" height="960" class="bg-layer"></canvas>
-            <canvas #canvasLine width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)"
-                class="line-layer"></canvas>
-            <canvas #canvas width="{{pianoRollDimensionIn}}" height="960" (click)="handleChange($event)"
-                class="game-layer"></canvas>
+            <canvas #canvasGui  width="{{getExternalDimension()}}" height="960" (click)="handleChange($event)" class="bg-layer"></canvas>
+            <canvas #canvasLine width="{{getExternalDimension()}}" height="960" class="line-layer"></canvas>
+            <canvas #canvas     width="{{getExternalDimension()}}" height="960" (click)="handleChange($event)" class="game-layer"></canvas>
 
         </div>
-        <canvas #canvasVelo width="{{pianoRollDimensionIn}}" height="60" (click)="handleChangeVelo($event)"
+        <canvas #canvasVelo width="{{getExternalDimension()}}" height="60" (click)="handleChangeVelo($event)"
             class="velocity-layer"></canvas>
-        <canvas #canvasLooper width="{{pianoRollDimensionIn}}" height="239" class="looper-layer"></canvas>
+        <canvas #canvasLooper width="{{getExternalDimension()}}" height="180" class="looper-layer"></canvas>
 
     </div>
 
