@@ -1,4 +1,6 @@
-
+.container{
+  background-color: orangered;
+}
 
 .pallino {
   border-radius: 7px;
@@ -15,7 +17,6 @@ mat-tab-group{
   width: 100%;
   
 }
-.container{
-  top:23%;
-  position: absolute;
+td{
+  border: 1px solid white;
 }

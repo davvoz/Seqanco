@@ -1,6 +1,7 @@
 <div  style=" width: 100%;
-top: 700px;
-position: absolute;">
+top: 680px;
+position: absolute;
+background: repeating-radial-gradient(#d28f8f, transparent 10px); ">
     
 
     <div>
@@ -8,8 +9,7 @@ position: absolute;">
         <button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button>
         rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
         drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />
-        <button (click)="setWaveshaper()"
-            [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button>
+        <button (click)="setWaveshaper()" [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button>
     </div>
 
     <div *ngIf="type !== 'NEWSYNTH'" >

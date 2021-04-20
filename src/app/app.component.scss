@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
 mat-sidenav-content {
     overflow: hidden;
 }
@@ -125,9 +124,7 @@ mat-toolbar {
    
     /* top: 43%; */
 }
-.titl {
-    font-family: "Press Start 2P", cursive;
-}
+
 .trakTitle {
    // width: 150px;
     text-overflow: ellipsis;
@@ -181,3 +178,10 @@ h3 {
     height: 69%;
     
 }
+mat-drawer-container {
+    overflow: hidden;
+}
+mat-list-item{
+    width: 100%;
+}
+

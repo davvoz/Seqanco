@@ -55,14 +55,14 @@ export class SynthControlComponent implements AfterViewInit {
     'allpass'
   ];
   isMuted: number = 0;
-  gain: number = 0;
+  gain: number = 1;
   attack: number = 0;
   decay: number = 0;
   sustain: number = 0;
   sustainVal: number = 0;
   release: number = 0;
-  filterCutoff: number = 0;
-  filterReso: number = 0;
+  filterCutoff: number = 1450;
+  filterReso: number = 1000;
   lfoWaveSelected = 'square';
   lfoAmplitude: number = 0;
   lfoRate: number = 0;
@@ -72,7 +72,7 @@ export class SynthControlComponent implements AfterViewInit {
   pitchEnvFreq: number = 0;
   pitchEnvEnd: number = 0;
   velocity!: number;
-  adsrVolume: Adsr = { attack: 0.1, decay: 0.3, sustain: 0.3, sustainVal: 0.3, release: 0.3 };
+  adsrVolume: Adsr = { attack: 0.0, decay: 0.3, sustain: 0.3, sustainVal: 0.3, release: 0.3 };
   adsrPitch: Adsr = { attack: 0.1, decay: 0.3, sustain: 0.3, sustainVal: 0.3, release: 0.3 };
   adsrPitchDisplay = false;
   distorsion: boolean = false;

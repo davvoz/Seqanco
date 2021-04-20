@@ -2,6 +2,7 @@
     <button *ngIf="typeIn === 'MONOOSC'" (click)="distorsionGestione()" [style.background-color]="getBgDistorsion()">
         waveshaper
     </button>
+   
     <select [(ngModel)]="waveSelected" *ngIf="typeIn ==='MONOOSC'" (change)="changed()">
         <option *ngFor="let wave of waveforms">{{wave}} </option>
     </select>

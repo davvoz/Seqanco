@@ -1,33 +1,35 @@
-<mat-drawer-container class="example-container" autosize>
+<mat-drawer-container class="example-container" autosize >
 	<mat-drawer #drawer class="example-sidenav" mode="side" opened>
 		<mat-list>
 			<mat-list-item>
-				<app-timer-control></app-timer-control>
+				Bpm<span class="example-spacer"></span><app-timer-control></app-timer-control>
 			</mat-list-item>
 			<mat-list-item>
-				Add instrument<button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add instrument">
+				Volume <span class="example-spacer"></span>
+					<input type="number" [(ngModel)]="masterGain" (change)="onChangeMaster()" min="0.01" max="1" step="0.01"/>
+			</mat-list-item>
+			<mat-list-item>
+				Add instrument<span class="example-spacer"></span><button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add instrument">
 					<mat-icon>add_circle_outline</mat-icon>
 				</button>
 			</mat-list-item>
-			<mat-list-item>Keyboard control <button mat-icon-button (click)="activeKeyboardControl()"
+			<mat-list-item>Keyboard control<span class="example-spacer"></span> <button style="float: left;" mat-icon-button (click)="activeKeyboardControl()"
 					matTooltip="Enable keyboard control click or press CTRL"
 					[style.background-color]="getActiveColor(isActiveKeyboardControl)">
 					<mat-icon>keyboard</mat-icon>
-				</button></mat-list-item>
-			<mat-list-item>
-				Master 
-					<input type="number" [(ngModel)]="masterGain" (change)="onChangeMaster()" min="0.01" max="1" step="0.01"/>
+				</button>
 			</mat-list-item>
 		</mat-list>
 	</mat-drawer>
 
-	<div class="example-sidenav-content" style="overflow-x: hidden;">
+	<div class="example-sidenav-content" style="overflow-y: auto;overflow-x:hidden;" >
 		<mat-toolbar color="primary">
 			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle();">
 				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
 			</button>
-			<h3>Eazy Drop </h3>
+			<h3> </h3>
 			<app-start-stop></app-start-stop>
+			Izy Drop
 			<span class="example-spacer"></span>
 			<mat-menu #menu="matMenu">
 				<button mat-menu-item color="basic" (click)="addSampler()">Add sampler</button>
