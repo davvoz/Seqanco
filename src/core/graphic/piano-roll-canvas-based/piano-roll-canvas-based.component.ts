@@ -54,7 +54,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   isMuted = 0;
   pianoRollDimension: number = 0;
 
-  enemies: Square[] = [];
   freq: number[] = [];
   coord: Coordinates = { x: 0, y: 0 };
 
@@ -71,10 +70,8 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   selectedClipIndex: number = 0;
   worker = new Worker('./helper.worker', { type: 'module' });
   observer: any;
-  constructor(public myTimer: TimerService) {
 
-
-  }
+  constructor(public myTimer: TimerService) {}
 
   getInstrumentColor() {
     switch (this.instrumentType) {
@@ -117,7 +114,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
     this.setStartLopper();
     this.myLine.standUp();
-    this.enemies = this.populateEnemiesArray();
+    //this.clips[this.selectedClipIndex] = this.populateEnemiesArray();
     this.myVelocity.draw();
     this.intitializeClips();
     this.userGui.draw();
@@ -137,7 +134,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     });
     this.observer = new ResizeObserver(entries => {
       this.lato = entries[0].contentRect.width / 64;
-      console.log(this.lato)
     });
 
 
@@ -148,7 +144,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     for (let i = 0; i < 4; i++) {
       this.clips[i] = [];
       this.clips[i] = this.populateEnemiesArray();
-      for (let j = 0; j < this.enemies.length; j++) {
+      for (let j = 0; j < this.clips[this.selectedClipIndex].length; j++) {
         this.clips[i][j].kill();
       }
     }
@@ -167,13 +163,13 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
           }
         }
         if (e[i].isStanding() || !e[i].isUcciso) {
-          this.enemies[i].velocity = 1;
-          this.enemies[i].indice = e[i].indice;
+          this.clips[this.selectedClipIndex][i].velocity = 1;
+          this.clips[this.selectedClipIndex][i].indice = e[i].indice;
           // @ts-ignore*/
-          this.enemies[i].setTune(this.freq[indiceTrovato]);
+          this.clips[this.selectedClipIndex][i].setTune(this.freq[indiceTrovato]);
           // @ts-ignore*/
-          this.enemies[i].setY(indiceTrovato - 1);
-          this.enemies[i].standUp();
+          this.clips[this.selectedClipIndex][i].setY(indiceTrovato - 1);
+          this.clips[this.selectedClipIndex][i].standUp();
           this.myVelocity.drawVertLine({ x: i, y: 0 }, true);
         }
       }
@@ -181,7 +177,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   }
 
   saveClip() {
-    this.clips[this.selectedClipIndex] = this.enemies;
+    this.clips[this.selectedClipIndex] = this.clips[this.selectedClipIndex];
   }
 
   setStartLopper(): void {
@@ -197,8 +193,8 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     let col: Collision = { esito: false, indice: 0 };
     let enemyNumber: number[] = [];
 
-    for (let i = 0; i < this.enemies.length; i++) {
-      enemyNumber.push(this.enemies[i].getX());
+    for (let i = 0; i < this.clips[this.selectedClipIndex].length; i++) {
+      enemyNumber.push(this.clips[this.selectedClipIndex][i].getX());
     }
 
     this.worker.postMessage({ squareDimensioneX: this.myLine.getX(), enemiesDimensioneX: enemyNumber, enemiesDimensioneLato: this.lato });
@@ -211,15 +207,15 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     if (this.myLine.getX() == (range - 1) || this.myLine.getX() == (this.pianoRollDimensionIn / this.lato - 1)) {
       this.myLine.setX(this.startLoop);
       if (!col.esito) {
-        if (this.enemies[this.myLine.getX()].isStanding()) {
+        if (this.clips[this.selectedClipIndex][this.myLine.getX()].isStanding()) {
           this.playStep(this.myLine.getX());
         }
       }
     } else {
       this.myLine.moveRight();
-      if (this.enemies.length > 0) {
+      if (this.clips[this.selectedClipIndex].length > 0) {
         if (!col.esito) {
-          if (typeof this.enemies[this.myLine.getX()] !== 'undefined' && this.enemies[this.myLine.getX()].isStanding()) {
+          if (typeof this.clips[this.selectedClipIndex][this.myLine.getX()] !== 'undefined' && this.clips[this.selectedClipIndex][this.myLine.getX()].isStanding()) {
             this.playStep(this.myLine.getX());
           }
         }
@@ -244,7 +240,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   }
 
   public playStep(index: number) {
-    this.notaDaSuonare.emit({ notaDaSuonare: this.enemies[index].getTune(), velocity: this.enemies[index].velocity, libIndex: this.enemies[index].indice });
+    this.notaDaSuonare.emit({ notaDaSuonare: this.clips[this.selectedClipIndex][index].getTune(), velocity: this.clips[this.selectedClipIndex][index].velocity, libIndex: this.clips[this.selectedClipIndex][index].indice });
   }
 
   private populateEnemiesArray(): Square[] {
@@ -260,20 +256,15 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
   public random() {
     this.clear();
-    for (let i = 0; i < this.enemies.length; i++) {
+    for (let i = 0; i < this.clips[this.selectedClipIndex].length; i++) {
       let tonoRandom = this.getRandomInt(this.freq.length, 0);
-      this.clips[this.selectedClipIndex][i].setTune(this.freq[tonoRandom]);
-      
-      this.enemies[i].setTune(this.freq[tonoRandom]);
-      this.enemies[i].indice = tonoRandom;
-      this.enemies[i].setY(tonoRandom - 1);
-      this.enemies[i].standUp();
-      this.enemies[i].velocity = 1;
 
+      this.clips[this.selectedClipIndex][i].setTune(this.freq[tonoRandom]);
       this.clips[this.selectedClipIndex][i].indice = tonoRandom;
       this.clips[this.selectedClipIndex][i].setY(tonoRandom - 1);
-      this.clips[this.selectedClipIndex][i].velocity = 1;
       this.clips[this.selectedClipIndex][i].standUp();
+      this.clips[this.selectedClipIndex][i].velocity = 1;
+
       
       
       this.myVelocity.drawVertLine({ x: i, y: 0 }, true);
@@ -285,8 +276,8 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   }
 
   public clear(): void {
-    for (let i = 0; i < this.enemies.length; i++) {
-      this.enemies[i].kill();
+    for (let i = 0; i < this.clips[this.selectedClipIndex].length; i++) {
+      this.clips[this.selectedClipIndex][i].kill();
       this.myVelocity.drawVertLine({ x: i, y: 0 }, false);
     }
 
@@ -333,21 +324,17 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     let coo: Coordinates = this.getMousePos(evt, this.ctx.canvas);
     console.log(coo);
 
-    if (this.enemies[coo.x].isStanding()) {
-      this.enemies[coo.x].kill();
+    if (this.clips[this.selectedClipIndex][coo.x].isStanding()) {
+      this.clips[this.selectedClipIndex][coo.x].kill();
       this.clips[this.selectedClipIndex][coo.x].kill();
       this.myVelocity.drawVertLine({ x: coo.x, y: 0 }, false);
     } else {
-
-      this.enemies[coo.x].setTune(this.freq[coo.y]);
-      this.enemies[coo.x].indice = coo.y;
-      this.enemies[coo.x].setY(coo.y - 1);
-      this.enemies[coo.x].standUp();
 
       this.clips[this.selectedClipIndex][coo.x].setTune(this.freq[coo.y]);
       this.clips[this.selectedClipIndex][coo.x].indice = coo.y;
       this.clips[this.selectedClipIndex][coo.x].setY(coo.y - 1);
       this.clips[this.selectedClipIndex][coo.x].standUp();
+
 
       this.myVelocity.drawVertLine({ x: coo.x, y: 0 }, true);
     }
@@ -355,15 +342,15 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   // @ts-ignore*/
   handleChangeVelo(evt) {
     let coo: Coordinates = this.getMousePos(evt, this.ctxVelo.canvas);
-    if (this.enemies[coo.x].isStanding()) {
+    if (this.clips[this.selectedClipIndex][coo.x].isStanding()) {
       this.myVelocity.cancelVertLine(coo);
       switch (coo.y) {
-        case 0: this.enemies[coo.x].velocity = 1; break;
-        case 1: this.enemies[coo.x].velocity = 0.6; break;
-        case 2: this.enemies[coo.x].velocity = 0.3; break;
-        default: this.enemies[coo.x].velocity = 0; break;
+        case 0: this.clips[this.selectedClipIndex][coo.x].velocity = 1; break;
+        case 1: this.clips[this.selectedClipIndex][coo.x].velocity = 0.6; break;
+        case 2: this.clips[this.selectedClipIndex][coo.x].velocity = 0.3; break;
+        default: this.clips[this.selectedClipIndex][coo.x].velocity = 0; break;
       }
-      this.velocity.emit(this.enemies[coo.x].velocity);
+      this.velocity.emit(this.clips[this.selectedClipIndex][coo.x].velocity);
     } else {
       //this.myVelocity.drawVertLine(coo, false);
     }
