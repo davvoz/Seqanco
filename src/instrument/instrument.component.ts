@@ -13,35 +13,13 @@ import { PianoRollCanvasBasedComponent } from '../core/graphic/piano-roll-canvas
 import { Nota, SyntControl } from '../interfaces/interfaces';
 import { SamplesLibraryService } from '../services/samples-library.service';
 import { TimerService } from '../services/timer.service';
-import { trigger, transition, animate, style, state } from '@angular/animations';
+import { Utilities } from 'src/classes/utilities';
 
 
 @Component({
   selector: 'app-instrument',
   templateUrl: './instrument.component.html',
-  styleUrls: ['./instrument.component.scss'],
-  animations: [
-    trigger(
-      'slideView',
-      [
-        state('true', style({ transform: 'translateX(100%)', opacity: 0 })),
-        state('false', style({ transform: 'translateX(0)', opacity: 1 })),
-        transition('0 => 1', animate('500ms', style({ transform: 'translateX(0)', 'opacity': 1 }))),
-        transition('1 => 1', animate('500ms', style({ transform: 'translateX(100%)', 'opacity': 0 }))),
-      ]),
-
-    trigger('slideInOut', [
-      transition(':enter', [
-        style({ transform: 'translateX(100%)', opacity: 0 }),
-        animate('600ms ease-in', style({ transform: 'translateX(0%)', 'opacity': 1 }))
-      ]),
-      
-      transition(':leave', [
-        style({ transform: 'translateX(0%)', opacity: 1 }),
-        animate('0ms ease-in', style({ transform: 'translateX(100%)', 'opacity': 0 }))
-      ])
-    ])
-  ]
+  styleUrls: ['./instrument.component.scss']
 })
 export class InstrumentComponent implements AfterViewInit {
   @Input() clipIndex: number = 0;
@@ -55,6 +33,8 @@ export class InstrumentComponent implements AfterViewInit {
   pianoRollDimension!: number;
   @Input() muted: boolean = false;
 
+  @ViewChild('back', { static: false })
+  back!: HTMLDivElement;
   @ViewChild('osc', { static: false })
   osc!: OscComponent;
   @ViewChild('oscillator2', { static: false })
@@ -98,10 +78,7 @@ export class InstrumentComponent implements AfterViewInit {
   subscription: any;
   stepper = 0;
   isPianoRollVisible = false;
-  visible = false;
-  showMessage() {
-    this.visible = !this.visible;
-  }
+ 
   modulations = [
     {
       modulation: false,
@@ -125,9 +102,14 @@ export class InstrumentComponent implements AfterViewInit {
       max: 3000
     }];
   
-  enableModulation2Bool = false;
-  enablePseudoArpeggiatorBool = false;
   constructor(public myTimer: TimerService, private library: SamplesLibraryService) { }
+  getState(){
+
+  }
+  getBackground(){
+    let a = Utilities.getRandomInt(300,1);
+    return 'repeating-radial-gradient(#d28f8f, transparent '+a+'px)';
+  }
   getHeight(bol: boolean) {
     return bol ? '1250' : '20';
   }
@@ -139,7 +121,6 @@ export class InstrumentComponent implements AfterViewInit {
   }
   toggle(){
     this.isPianoRollVisible ? this.isPianoRollVisible = false : this.isPianoRollVisible = true;
-    //console.log(this.getPianoRollDisplay());
   }
   enableMod(modIndex: number) {
     this.modulations[modIndex].modulation ? this.modulations[modIndex].modulation = false : this.modulations[modIndex].modulation = true;
@@ -396,8 +377,10 @@ export class InstrumentComponent implements AfterViewInit {
       this.lfoConOsciJustCon2 = true;
     }
   }
-
+ 
   play($event: Nota, instrumentType: string) {
+    // @ts-ignore*/
+ 
     if (!this.muted) {
       switch (instrumentType) {
         case 'DRUM':

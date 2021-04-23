@@ -1,4 +1,4 @@
-   {{nome}}<br> <input type="number" [(ngModel)]="gain" (change)="changeGain()" min="0" max="10000" step="0.01"/>
+   {{nome}}<br> <input matInput  type="number" [(ngModel)]="gain" (change)="changeGain()" min="0" max="10000" step="0.01"/>
    
         <app-adsr *ngIf="envelope" #adsr (adsrEmitter)="changeAdsr($event)" [adsr]="adsrVolume"></app-adsr>
       

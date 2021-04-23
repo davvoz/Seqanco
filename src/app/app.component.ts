@@ -5,12 +5,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { InstrumentComponent } from '../instrument/instrument.component';
 import { Clip, Instrument } from '../interfaces/interfaces';
 import { TimerService } from '../services/timer.service';
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -18,10 +13,7 @@ export interface Tile {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements AfterViewInit {
-  tiles: Tile[] = [
-    {text: 'TRAX', cols: 4, rows: 1, color: 'lightblue'},
-    {text: 'INSTRUMENT', cols: 4, rows: 1, color: 'lightgreen'}
-  ];
+
   isActiveKeyboardControl = false;
   showFiller = false;
   @HostListener('document:keyup', ['$event'])
@@ -84,11 +76,10 @@ export class AppComponent implements AfterViewInit {
     { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false }];
 
   constructor(public myTimer: TimerService) {
-
     this.connectMaster = this.myTimer.merger;
   }
-  @ViewChild('sidenav') sidenav!: MatSidenav;
 
+  @ViewChild('sidenav') sidenav!: MatSidenav;
 
   close() {
     if (this.sidenav.opened) {
@@ -178,9 +169,11 @@ export class AppComponent implements AfterViewInit {
         this.changeColorClipRoutine(this.instruments[instrumenIndex].clips, clipIndex, this.verde, this.newsynthClipColor);
         break;
     }
+    
     if (this.instruments[instrumenIndex].isCollapsed) {
-      // this.collassaInstrument(instrumenIndex);
+
     }
+
     this.instrumentsViews.toArray()[instrumenIndex].setClip(clipIndex);
   }
 
@@ -310,8 +303,7 @@ export class AppComponent implements AfterViewInit {
 
   getInstrumentColor(instrumentType: string) {
     switch (instrumentType) {
-      case 'SYNTH':
-        break;
+      case 'SYNTH':break;
       case 'SAMPLER':
         return 'rgba(90, 90, 200, 0.4)';
       case 'MONOOSC':

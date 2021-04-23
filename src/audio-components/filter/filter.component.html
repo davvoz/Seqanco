@@ -14,16 +14,16 @@
                 </select>
             </td>
             <td>
-                <input type="number" [(ngModel)]="frequency" (change)="changeFilterFrequency()" min="0" max="20000" step="10"/>
+                <input matInput type="number" [(ngModel)]="frequency" (change)="changeFilterFrequency()" min="0" max="20000" step="10"/>
             </td>
             <td>
-                <input type="number" [(ngModel)]="gain" (change)="changeFilterGain()" min="0" max="1000" step="1"/>
+                <input matInput type="number" [(ngModel)]="gain" (change)="changeFilterGain()" min="0" max="1000" step="1"/>
             </td>
             <td>
-                <input type="number" [(ngModel)]="detune" (change)="changeFilterDetune()" min="0" max="10" step="0.01"/>
+                <input matInput type="number" [(ngModel)]="detune" (change)="changeFilterDetune()" min="0" max="10" step="0.01"/>
             </td>
             <td>
-                <input type="number" [(ngModel)]="q" (change)="changeFilterQ()" min="-10" max="10" step="0.01"/>
+                <input matInput  type="number" [(ngModel)]="q" (change)="changeFilterQ()" min="-10" max="10" step="0.01"/>
             </td>
         </tr>
     </table>

@@ -1,6 +1,6 @@
 <mat-drawer-container class="example-container" autosize >
-	<mat-drawer #drawer class="example-sidenav" mode="side" opened>
-		<mat-list>
+	<mat-drawer #drawer class="example-sidenav" mode="side" opened > 
+		<mat-list >
 			<mat-list-item>
 				Bpm<span class="example-spacer"></span><app-timer-control></app-timer-control>
 			</mat-list-item>
@@ -22,15 +22,15 @@
 		</mat-list>
 	</mat-drawer>
 
-	<div class="example-sidenav-content" style="overflow-y: auto;overflow-x:hidden;" >
 		<mat-toolbar color="primary">
 			<button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle();">
 				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
 			</button>
 			<h3> </h3>
 			<app-start-stop></app-start-stop>
-			Izy Drop
+			<span style="font-size: 140%;">ED - Easy Drop</span>
 			<span class="example-spacer"></span>
+			
 			<mat-menu #menu="matMenu">
 				<button mat-menu-item color="basic" (click)="addSampler()">Add sampler</button>
 				<button mat-menu-item color="basic" (click)="addSynth()">Add Synth</button>
@@ -39,9 +39,10 @@
 			</mat-menu>
 		</mat-toolbar>
 
-		<div class="tracksContainer">
-			<div *ngFor="let instrument of instruments;let i =index;" class="instrument">
-				<div class="instrumentToolbar" [style.border]="getSelectedTrakBorderStyle(instrument.isCollapsed)">
+	<div class="example-sidenav-content"  >
+		<div class="tracksContainer" >
+			<div *ngFor="let instrument of instruments;let i =index;" class="instrument" >
+				<div class="instrumentToolbar" [style.border]="getSelectedTrakBorderStyle(instrument.isCollapsed)" >
 					<div [style.background-color]="getInstrumentColor(instrument.type)" class="instHeader">
 						<div>
 							<button mat-icon-button (click)="collassaInstrument(i)">

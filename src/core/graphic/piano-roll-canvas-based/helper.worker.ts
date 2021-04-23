@@ -5,19 +5,20 @@ import { Collision } from "src/interfaces/interfaces";
 
 addEventListener('message', ({ data }) => {
   //const response = collisionsArrayControl();
-  postMessage(collisionsArrayControl(data.playerDimensioneX,data.enemiesDimensioneX,data.enemiesDimensioneLato));
+  postMessage(collisionsArrayControl(data.playerDimensioneX, data.enemiesDimensioneX, data.enemiesDimensioneLato));
 
 });
 function collisionsArrayControl(squareDimensioneX: number, enemiesDimensioneX: number[], enemiesDimensioneLato: number): Collision {
   let count = 0;
-
-  for (let i = 0; i < enemiesDimensioneX.length; i++) {
-
-    if (collision(squareDimensioneX, enemiesDimensioneLato, enemiesDimensioneX[i])) {
-      return { esito: false, indice: i };
+  if (typeof enemiesDimensioneX !== 'undefined') {
+    for (let i = 0; i < enemiesDimensioneX.length; i++) {
+      if (collision(squareDimensioneX, enemiesDimensioneLato, enemiesDimensioneX[i])) {
+        return { esito: false, indice: i };
+      }
+      count = i;
     }
-    count = i;
   }
+
   return { esito: true, indice: count };
 }
 function collision(playerDimensioneX: number, enemyDimensioneLato: number, enemyDimensioneX: number) {

@@ -1,6 +1,4 @@
-<div class="esterna" style="position: absolute;
-                            width: 100%;
-                            height: 342px;">
+<div class="esterna" style="position: absolute; width: 100%;height: 342px;">
     <div class="pianoRollToolbar" [style.background-color]="getInstrumentColor()">
         <span>
             Loop start :<input type="number" [(ngModel)]="startLoop" min="0" (change)="setStartLopper()" />
@@ -14,12 +12,12 @@
         </span>
     </div>
     <div class="allCanvas" >
-        <div class="cnvsContainer"  #container>
-            <canvas #canvasGui  width="{{getExternalDimension()}}" height="960" (click)="handleChange($event)" class="bg-layer"></canvas>
+        <div class="cnvsContainer">
+            <canvas #canvasGui  width="{{getExternalDimension()}}" height="960" class="bg-layer" (click)="handleChange($event)" ></canvas>
             <canvas #canvasLine width="{{getExternalDimension()}}" height="960" class="line-layer"></canvas>
-            <canvas #canvas     width="{{getExternalDimension()}}" height="960" (click)="handleChange($event)" class="game-layer"></canvas>
+            <canvas #canvas     width="{{getExternalDimension()}}" height="960" class="game-layer" (click)="handleChange($event)" ></canvas>
         </div>
-        <canvas #canvasVelo width="{{getExternalDimension()}}" height="60" (click)="handleChangeVelo($event)" class="velocity-layer"></canvas>
+        <canvas #canvasVelo   width="{{getExternalDimension()}}" height="60"  class="velocity-layer" (click)="handleChangeVelo($event)" ></canvas>
         <canvas #canvasLooper width="{{getExternalDimension()}}" height="180" class="looper-layer"></canvas>
     </div>
 </div>

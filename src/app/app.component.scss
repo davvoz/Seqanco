@@ -178,8 +178,21 @@ h3 {
     height: 69%;
     
 }
+mat-drawer-content {
+    position: relative;
+    z-index: 1;
+    display: block;
+    height: 100%;
+    overflow-x: hidden;
+}
+
 mat-drawer-container {
-    overflow: hidden;
+    position: relative;
+    z-index: 1;
+    display: block;
+    height: 100%;
+    overflow: auto;
+    overflow-x: hidden;
 }
 mat-list-item{
     width: 100%;
