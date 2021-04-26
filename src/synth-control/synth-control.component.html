@@ -17,11 +17,8 @@
             </td>
             <td>adsr-gain<app-adsr [slave]="'volume'" (adsrEmitter)="changeAdsr($event)" [adsr]="adsrVolume"></app-adsr>
             </td>
- 
         </tr>
-        <tr>
-            
-        </tr>
+
         <tr>
             <td colspan="3"> 
                 <table >
@@ -70,11 +67,16 @@
                     
                 </table>
             </td>
+            <td rowspan="2" *ngIf="typeIn === 'SAMPLER'">
+                <span >
+                    pitch time
+                    <input type="number" [(ngModel)]="pitchEnvEnd" min="0.01" max="1000" step="0.01" (change)="changed()" />
+                    end time
+                    <input type="number" [(ngModel)]="pitchEnvFreq" min="0.01" max="1000" step="0.01" (change)="changed()" />
+                </span>
+            </td>
         </tr>
     </table>
-
-    pitch time
-    <input type="number" [(ngModel)]="pitchEnvEnd" min="0.01" max="1000" step="0.01" (change)="changed()" />
-    end time
-    <input type="number" [(ngModel)]="pitchEnvFreq" min="0.01" max="1000" step="0.01" (change)="changed()" />
+   
+  
 </div>

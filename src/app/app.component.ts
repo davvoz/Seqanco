@@ -17,7 +17,7 @@ export class AppComponent implements AfterViewInit {
   isActiveKeyboardControl = false;
   showFiller = false;
   @HostListener('document:keyup', ['$event'])
-  onKeyUp(ev: KeyboardEvent) {
+  onKeyDown(ev: KeyboardEvent) {
     if (ev.key === 'Control') {
       this.isActiveKeyboardControl ? this.isActiveKeyboardControl = false : this.isActiveKeyboardControl = true;
     }

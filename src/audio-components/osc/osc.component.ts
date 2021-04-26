@@ -14,7 +14,6 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
   audioParamIn!: AudioParam;
   @Input()
   nome!: string;
-
   selectedWaveView: string = 'sine';
   frequency: number;
   oscWk!: OscillatorNode;
@@ -45,11 +44,9 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isStarted = true;
       if (typeof this.audioNodeIn !== 'undefined') {
         this.oscWk.connect(this.audioNodeIn);
-        console.log(this.oscWk, 'connetted to audioNodeIn', this.audioNodeIn);
       }
       if (typeof this.audioParamIn !== 'undefined') {
         this.oscWk.connect(this.audioParamIn);
-        console.log(this.oscWk, 'connetted to audioParamIn', this.audioParamIn);
       }
     }
 
@@ -104,12 +101,10 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
     duty.setValueAtTime(this.duty, this.myTimer.audioContext.currentTime);
   }
   setAudioParamIn(ap: AudioParam) {
-    console.log(this.oscWk, 'instantiate audioParamIn', ap);
     this.audioParamIn = ap;
   }
 
   setAudioNodeIn(an: AudioNode) {
-    console.log(this.oscWk, 'instantiate audioNodeIn', an);
     this.audioNodeIn = an;
 
   }
@@ -121,7 +116,6 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
     myWk = myWk.replace('Fake', 'AudioWorkletProcessor');
     myWk = myWk.replace('var sampleRate;', '');
     myWk = myWk.replace('oscillator', nomeProcesso);
-    console.log(myWk);
     const blob = new Blob([`(${myWk})()`], {
       type: "application/javascript"
     });

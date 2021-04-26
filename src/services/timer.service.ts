@@ -26,7 +26,7 @@ export class TimerService {
   timeout: any;
   round: any;
   accurateStop: any;
-
+  //worker = new Worker('./helper.worker', { type: 'module' });
   private trackStateModel: TickResponse = {
     traksAreOn: [],
     timePosition: 0,
@@ -64,8 +64,6 @@ export class TimerService {
     this.audioContext.resume();
     //this.scheduleNote();
     this.playingStateSource.next(true);
-
-
     this._ngZone.runOutsideAngular(() => {
       //this.timer = setTimeout(this.scheduleNote.bind(this), 0);
       this.accurateTimer(() => { this.changeStateTrack(this.audioContext.currentTime) }, this.speed, console.log('error'));
@@ -124,20 +122,8 @@ export class TimerService {
     
   }
 
-
   async loadWorklet() {
-
-
-    const nomeProcesso = 'bypass-processor';
-    let myWk;
-    myWk = this.createWorklet.toString();
-    myWk = `function ${myWk}`;
-    myWk = myWk.replace('Fake', 'AudioWorkletProcessor');
-    const blob = new Blob([`(${myWk})()`], {
-      type: "application/javascript"
-    });
-    const tempUrl = URL.createObjectURL(blob);
-
+    const tempUrl = this.createUrl();
     this.audioContext = new AudioContext();
     return await this.audioContext.audioWorklet.addModule(tempUrl).then(() => {
       this.startTime = this.audioContext.currentTime + 0.005;
@@ -150,6 +136,19 @@ export class TimerService {
       this.merger.connect(this.audioContext.destination);
     })
   }
+
+  private createUrl() {
+    //const nomeProcesso = 'bypass-processor';
+    let myWk;
+    myWk = this.createWorklet.toString();
+    myWk = `function ${myWk}`;
+    myWk = myWk.replace('Fake', 'AudioWorkletProcessor');
+    const blob = new Blob([`(${myWk})()`], {
+      type: "application/javascript"
+    });
+    return URL.createObjectURL(blob);
+  }
+
   createWorklet() {
     class BypassProcessor extends Fake {
       isPlaying: boolean;
@@ -184,6 +183,7 @@ export class TimerService {
 
     registerProcessor('bypass-processor', BypassProcessor);
   }
+
   accurateTimer(callback: any, timeInterval: number, errorCallback: any) {
     this.speed = timeInterval;
 
@@ -210,11 +210,8 @@ export class TimerService {
   }
 }
 
-class Fake {
-
-}
+class Fake {}
 function registerProcessor(arg0: string, arg1: any) {
-
   throw new Error("Function not implemented.");
 }
 

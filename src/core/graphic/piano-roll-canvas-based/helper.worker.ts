@@ -5,9 +5,12 @@ import { Collision } from "src/interfaces/interfaces";
 
 addEventListener('message', ({ data }) => {
   //const response = collisionsArrayControl();
-  postMessage(collisionsArrayControl(data.playerDimensioneX, data.enemiesDimensioneX, data.enemiesDimensioneLato));
+ 
 
 });
+
+
+
 function collisionsArrayControl(squareDimensioneX: number, enemiesDimensioneX: number[], enemiesDimensioneLato: number): Collision {
   let count = 0;
   if (typeof enemiesDimensioneX !== 'undefined') {
