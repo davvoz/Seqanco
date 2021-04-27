@@ -1,6 +1,7 @@
 import { Injectable, NgZone } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { TickResponse } from "../interfaces/interfaces";
+import * as workerTimers from 'worker-timers';
 @Injectable()
 export class TimerService {
   numberOfTraks = 0;
@@ -19,14 +20,12 @@ export class TimerService {
   gain = 1;
   private numberOfTraksSource = new BehaviorSubject<number>(0);
 
-
   timeInterval: number = 0;
   start: any;
   expected: any;
   timeout: any;
   round: any;
   accurateStop: any;
-  //worker = new Worker('./helper.worker', { type: 'module' });
   private trackStateModel: TickResponse = {
     traksAreOn: [],
     timePosition: 0,
@@ -62,13 +61,15 @@ export class TimerService {
   play() {
     this.isPlayed = true;
     this.audioContext.resume();
-    //this.scheduleNote();
+   // this.scheduleNote();
     this.playingStateSource.next(true);
+    
     this._ngZone.runOutsideAngular(() => {
-      //this.timer = setTimeout(this.scheduleNote.bind(this), 0);
+     //this.timer = setTimeout(this.scheduleNote.bind(this), 0);
       this.accurateTimer(() => { this.changeStateTrack(this.audioContext.currentTime) }, this.speed, console.log('error'));
       this.start();
-    });
+   });
+
 
   }
   stop() {
@@ -97,16 +98,16 @@ export class TimerService {
     //     this.nextNote();
     //   }
     // }
-    this._ngZone.runOutsideAngular(() => {
-      //this.timer = setTimeout(this.scheduleNote.bind(this), 0);
-      this.accurateTimer(() => { console.log('it runs') }, 500, console.log('error'));
-    });
+    // this._ngZone.runOutsideAngular(() => {
+    //  this.timer = setTimeout(this.scheduleNote.bind(this), 0);
+    //   this.accurateTimer(() => { console.log('it runs') }, 500, console.log('error'));
+    // });
   }
   private nextNote() {
-    let secondsPerBeat = 60.0 / this.speed;
-    // 0.25 because each square is a 16th note
-    this.noteTime += 0.25 * secondsPerBeat;
-    secondsPerBeat = 0;
+    // let secondsPerBeat = 60.0 / this.speed;
+    // // 0.25 because each square is a 16th note
+    // this.noteTime += 0.25 * secondsPerBeat;
+    // secondsPerBeat = 0;
   }
   private changeStateTrack(pt: number) {
    
@@ -193,7 +194,7 @@ export class TimerService {
       console.log('started');
     }
     this.accurateStop = () => {
-      clearTimeout(this.timeout);
+      workerTimers.clearTimeout(this.timeout);
       console.log('started');
     }
     this.round = () => {
@@ -205,7 +206,7 @@ export class TimerService {
       }
       callback();
       this.expected += this.speed;
-      this.timeout = setTimeout(this.round, this.speed - drift);
+      this.timeout = workerTimers.setTimeout(this.round, this.speed - drift);
     }
   }
 }

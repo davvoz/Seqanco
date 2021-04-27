@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { Utilities } from 'src/classes/utilities';
 import { TimerService } from '../../services/timer.service';
 
 
@@ -109,17 +110,8 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
 
   }
   async loadWorklet() {
-    const nomeProcesso = this.makeid(10);
-    let myWk;
-    myWk = this.createWorklet.toString();
-    myWk = `function ${myWk}`;
-    myWk = myWk.replace('Fake', 'AudioWorkletProcessor');
-    myWk = myWk.replace('var sampleRate;', '');
-    myWk = myWk.replace('oscillator', nomeProcesso);
-    const blob = new Blob([`(${myWk})()`], {
-      type: "application/javascript"
-    });
-    const tempUrl = URL.createObjectURL(blob);
+    const nomeProcesso = Utilities.makeid(10);
+    const tempUrl = this.createUrl(nomeProcesso);
     return await this.myTimer.audioContext.audioWorklet.addModule(tempUrl).then(() => {
       this.oscWk =this.myTimer.audioContext.createOscillator(); //new AudioWorkletNode(this.myTimer.audioContext, nomeProcesso);
       this.oscWk.start();
@@ -130,6 +122,20 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
   }
+  private createUrl(nomeProcesso: string) {
+    let myWk;
+    myWk = this.createWorklet.toString();
+    myWk = `function ${myWk}`;
+    myWk = myWk.replace('Fake', 'AudioWorkletProcessor');
+    myWk = myWk.replace('var sampleRate;', '');
+    myWk = myWk.replace('oscillator', nomeProcesso);
+    const blob = new Blob([`(${myWk})()`], {
+      type: "application/javascript"
+    });
+    const tempUrl = URL.createObjectURL(blob);
+    return tempUrl;
+  }
+
   setModulatoreDiFrequenza(modulatore: AudioNode) {
     if (typeof this.oscWk !== 'undefined' && !this.modulatoreDioFrequenzaJustCon) {
       this.modulatoreDiFrequenza = modulatore;
@@ -147,16 +153,7 @@ export class OscComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isActive = true;
     }
   }
-  makeid(length: number) {
-    let result = '';
-    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
-
+  
   createWorklet() {
     var sampleRate: number;
     const saw = (v: number) => v - Math.floor(v);

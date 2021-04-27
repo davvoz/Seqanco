@@ -13,8 +13,6 @@ import { InstrumentComponent } from '../instrument/instrument.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AdsrComponent } from '../adsr/adsr.component';
-import { AutopanComponent } from '../autopan/autopan.component';
-//import { AnalizerComponent } from './analizer/analizer.component';
 import { OscComponent } from '../audio-components/osc/osc.component';
 import { GainComponent } from '../audio-components/gain/gain.component';
 import { StereoPannerComponent } from '../audio-components/stereo-panner/stereo-panner.component';
@@ -40,7 +38,6 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     SynthControlComponent,
     InstrumentComponent,
     AdsrComponent,
-    AutopanComponent,
     OscComponent,
     GainComponent,
     StereoPannerComponent,
@@ -61,8 +58,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     MatMenuModule,
     MatTooltipModule,
     MatListModule,
-    MatSidenavModule,
-    DragDropModule
+    MatSidenavModule
   ],
   providers: [TimerService, AudioContext, SamplesLibraryService],
   bootstrap: [AppComponent],

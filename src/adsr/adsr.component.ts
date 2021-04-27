@@ -15,7 +15,7 @@ export class AdsrComponent implements AfterViewInit {
   @Input()
   adsr: Adsr = { attack: 0.1, decay: 0.3, sustain: 0.3, sustainVal: 0.3, release: 0.3 };
   constructor(
-    ) { }
+  ) { }
   ngAfterViewInit(): void {
   }
 

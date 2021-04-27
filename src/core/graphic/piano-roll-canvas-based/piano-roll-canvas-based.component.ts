@@ -198,12 +198,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     this.coord = { x: this.myLine.getX(), y: 0 };
     //this.myLine.setColor("200,200,0");
     let col: Collision = { esito: false, indice: 0 };
-    // this.worker.postMessage({ start:this.startLoop * this.lato, end:this.endLoop * this.lato, ctx:this.ctxLoopper});
-    // if (typeof Worker !== 'undefined') {
-    //   this.worker.onmessage = ({ data }) => {
-    //     //data;
-    //   };
-    // }
     let range = this.startLoop + this.endLoop;
     if (this.myLine.getX() == (range - 1) || this.myLine.getX() == (this.pianoRollDimensionIn / this.lato - 1)) {
       this.myLine.setX(this.startLoop);
@@ -264,22 +258,30 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     for (let i = 0; i < this.notes.notesObject.length; i++) {
       let tonoRandom = Utilities.getRandomInt(this.freq.length, 0);
 
-      this.notes.notesObject[i].setTune(this.freq[tonoRandom]);
-      this.notes.notesObject[i].setY(tonoRandom - 1);
-      this.notes.notesObject[i].standUp();
-      this.notes.notesObject[i].velocity = 1;
-      this.notes.notesObject[i].indice = tonoRandom;
-
-      this.clips[this.selectedClipIndex].notesObject[i].setTune(this.freq[tonoRandom]);
-      this.clips[this.selectedClipIndex].notesObject[i].indice = tonoRandom;
-      this.clips[this.selectedClipIndex].notesObject[i].setY(tonoRandom - 1);
-      this.clips[this.selectedClipIndex].notesObject[i].standUp();
-
+      this.setNote(this.notes.notesObject[i], this.freq[tonoRandom], tonoRandom, 1, true);
+      this.setNote(this.clips[this.selectedClipIndex].notesObject[i], this.freq[tonoRandom], tonoRandom, 1, true);
       this.notes.notesValue[i] = this.freq[tonoRandom];
-
+      this.clips[this.selectedClipIndex].notesValue[i] =this.freq[tonoRandom];
       this.myVelocity.drawVertLine({ x: i, y: 0 }, true);
       this.myVelocity.cancelVertLine({ x: i, y: this.notes.notesObject[i].velocity });
     }
+  }
+
+  private setNote(nota: Square, tune: number, y: number, velocity: number, isStand: boolean) {
+    if (isStand) {
+      nota.velocity = velocity;
+      nota.indice = tune;
+      nota.setTune(tune);
+      nota.setY(tune - 1);
+      nota.standUp();
+    } else {
+      nota.velocity = velocity;
+      nota.indice = tune;
+      nota.setTune(tune);
+      nota.setY(tune - 1);
+      nota.kill();
+    }
+
   }
 
   public setClip(index: number) {
@@ -289,6 +291,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   public clear(): void {
     for (let i = 0; i < this.notes.notesObject.length; i++) {
       this.notes.notesObject[i].kill();
+      //this.clips[this.selectedClipIndex].notesObject[i].kill();
       this.myVelocity.drawVertLine({ x: i, y: 0 }, false);
     }
   }
@@ -331,13 +334,15 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
       this.clips[this.selectedClipIndex].notesObject[coo.x].kill();
       this.myVelocity.drawVertLine({ x: coo.x, y: 0 }, false);
     } else {
+      //this.setNote(this.notes.notesObject[coo.x] , coo.y,this.freq[coo.y],1,true)
       this.notes.notesValue[coo.x] = this.freq[coo.y];
       this.notes.notesObject[coo.x].setTune(this.freq[coo.y]);
       this.notes.notesObject[coo.x].indice = coo.y;
       this.notes.notesObject[coo.x].setY(coo.y - 1);
       this.notes.notesObject[coo.x].standUp();
+      //this.setNote( this.clips[this.selectedClipIndex].notesObject[coo.x] ,coo.y,this.freq[coo.y],1,true)
 
-      this.clips[this.selectedClipIndex].notesValue[coo.x] = this.freq[coo.y];
+     this.clips[this.selectedClipIndex].notesValue[coo.x] = this.freq[coo.y];
       this.clips[this.selectedClipIndex].notesObject[coo.x].setTune(this.freq[coo.y]);
       this.clips[this.selectedClipIndex].notesObject[coo.x].indice = coo.y;
       this.clips[this.selectedClipIndex].notesObject[coo.x].setY(coo.y - 1);
