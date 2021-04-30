@@ -6,7 +6,7 @@ canvas {
 
 .cnvsContainer {
     width: 100%;
-    height: 239px;
+    height: 344px;
     position: absolute;
     overflow: auto;
     left: 0px;
@@ -16,10 +16,10 @@ canvas {
     align-content: center;
     background-color: burlywood;
     overflow: auto;
-    top: 279px;
+    top: 383px;
     border: 1px solid grey;
     z-index: 0;
-    width: 100%;
+ 
 }
 .titleContainer {
     position: relative;
@@ -46,21 +46,21 @@ canvas {
 }
 .looper-layer {
     z-index: 0;
-    width: 100%;
+   
 }
 .bg-layer {
     z-index: 0;
-    width: 100%;
+   
 }
 .line-layer {
     z-index: 0;
     
-    width: 100%;
+   
 }
 .game-layer {
     z-index: 1;
    
-    width: 100%;
+   
 }
 canvas {
     position: absolute;

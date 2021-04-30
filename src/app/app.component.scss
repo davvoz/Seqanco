@@ -106,7 +106,6 @@ mat-toolbar {
     z-index: 99999;
 }
 .instrument {
-    top: 66px;
     position: relative;
     float: left;
     left: 1px;
@@ -178,23 +177,16 @@ h3 {
     height: 69%;
     
 }
-mat-drawer-content {
-    position: relative;
-    z-index: 1;
-    display: block;
-    height: 100%;
-    overflow-x: hidden;
-}
 
-mat-drawer-container {
-    position: relative;
-    z-index: 1;
-    display: block;
-    height: 100%;
-    overflow: auto;
-    overflow-x: hidden;
+.row1 {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    background-color: gray;
+    border: 1px solid black;
 }
-mat-list-item{
-    width: 100%;
+.row4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background-color: gray;
+    border: 1px solid black;
 }
-

@@ -42,9 +42,7 @@ export class TimerService {
   trackStateItem$ = this.trackStateSource.asObservable();
   public audioContext!: AudioContext;
 
-  constructor(private _ngZone: NgZone) {
-
-    this.loadWorklet();
+  constructor(private _ngZone: NgZone) {this.loadWorklet();
 
   }
   addTrack() {

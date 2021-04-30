@@ -35,19 +35,22 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild("canvasGui", { static: false })
   canvasGui!: ElementRef<HTMLCanvasElement>;
-  @ViewChild("canvasLine", { static: false })
-  canvasLine!: ElementRef<HTMLCanvasElement>;
+  // @ViewChild("canvasLine", { static: false })
+  // canvasLine!: ElementRef<HTMLCanvasElement>;
   @ViewChild("canvasLooper", { static: false })
   canvasLooper!: ElementRef<HTMLCanvasElement>;
   @ViewChild("canvasVelo", { static: false })
   canvasVelo!: ElementRef<HTMLCanvasElement>;
+  @ViewChild("canvasProva", { static: false })
+  canvasProva!: ElementRef<HTMLCanvasElement>;
 
   ctxGui!: CanvasRenderingContext2D;
   ctx!: CanvasRenderingContext2D;
   ctxEnemiesNew!: CanvasRenderingContext2D;
-  ctxLine!: CanvasRenderingContext2D;
+  //ctxLine!: CanvasRenderingContext2D;
   ctxLoopper!: CanvasRenderingContext2D;
   ctxVelo!: CanvasRenderingContext2D;
+  ctxProva!: CanvasRenderingContext2D;
   lato = 0;
   subscription!: Subscription;
   subscriptionStartStop!: Subscription;
@@ -64,15 +67,17 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   userGui!: UserGui;
   myVelocity!: VelocityGui;
   myBeatGui!: UserGui;
-  myLine!: LineOfSquares;
+  logicTimeMarker!: LineOfSquares;
   visualizzazione = 'normale';
   startLoop: number = 0;
   endLoop: number = 16;
   clips: Notes[] = [];
   selectedClipIndex: number = 0;
-  //worker = new Worker('./helper.worker', { type: 'module' });
+  worker = new Worker('./helper.worker', { type: 'module' });
+  wka!: OffscreenCanvas;
   observer: any;
-
+  htmlCanvas: any;
+  offscreen: any;
   constructor(public myTimer: TimerService) { }
 
   getInstrumentColor() {
@@ -93,26 +98,33 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+
+    // @ts-ignore*/
+    //this.ctxProva = this.canvasProva.nativeElement.getContext("2d");
+    this.htmlCanvas = this.canvasProva.nativeElement;
+    this.offscreen = this.htmlCanvas.transferControlToOffscreen();
     // @ts-ignore*/
     this.lato = this.canvasGui.nativeElement.getContext("2d")?.canvas.width / 64;
+    this.worker.postMessage({ canvas: this.offscreen }, [this.offscreen]);
+
+
     this.createScale(this.la);
     // @ts-ignore*/
     this.ctxGui = this.canvasGui.nativeElement.getContext("2d");
     // @ts-ignore*/
     this.ctx = this.canvas.nativeElement.getContext("2d");
-    // @ts-ignore*/
-    this.ctxLine = this.canvasLine.nativeElement.getContext("2d");
+
     // @ts-ignore*/
     this.ctxVelo = this.canvasVelo.nativeElement.getContext("2d");
     // @ts-ignore*/
     this.ctxLoopper = this.canvasLooper.nativeElement.getContext("2d");
-    // @ts-ignore*/
+
     this.myBeatGui = new UserGui(this.lato, 0, this.ctxGui, { x: 0, y: 0 }, 0, "0,0,0", this.lato);
     this.myVelocity = new VelocityGui(0, 0, this.ctxVelo, { x: 0, y: 0 }, 0, "0,0,0", this.lato);
-    this.myLine = new LineOfSquares(this.lato, -this.lato, 0, "0,0,0", this.ctxLine, 100, 58, "VERTICALE", 0);
+    this.logicTimeMarker = new LineOfSquares(this.lato, -this.lato, 0, "0,0,0", 100, 58, "VERTICALE", 0);
     this.userGui = new UserGui(this.lato, 0, this.ctxGui, { x: 0, y: 0 }, 0, "0,0,0", this.lato);
     this.setStartLopper();
-    this.myLine.standUp();
+    this.logicTimeMarker.standUp();
     this.notes.notesObject = this.populateEnemiesArray();
 
     for (let i = 0; i < this.populateEnemiesArray().length; i++) {
@@ -133,15 +145,15 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
     this.subscriptionStartStop = this.myTimer.playingStateItem$.subscribe(res => {
       if (!res) {
-        this.myLine.setX(this.startLoop - 1);
+        this.logicTimeMarker.setX(this.startLoop - 1);
       }
     });
 
-    this.observer = new ResizeObserver(entries => {
-      this.lato = entries[0].contentRect.width / 64;
-    });
+    // this.observer = new ResizeObserver(entries => {
+    //   this.lato = entries[0].contentRect.width / 64;
+    // });
 
-    this.observer.observe(this.canvas.nativeElement);
+    // this.observer.observe(this.canvas.nativeElement);
   }
 
   intitializeClips() {
@@ -194,36 +206,31 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   }
 
   tick() {
-    this.ctxLine.clearRect(0, 0, this.ctxLine.canvas.width, this.ctxLine.canvas.height);
-    this.coord = { x: this.myLine.getX(), y: 0 };
+
+    //this.ctxLine.clearRect(0, 0, this.ctxLine.canvas.width, this.ctxLine.canvas.height);
+    this.coord = { x: this.logicTimeMarker.getX(), y: 0 };
     //this.myLine.setColor("200,200,0");
-    let col: Collision = { esito: false, indice: 0 };
     let range = this.startLoop + this.endLoop;
-    if (this.myLine.getX() == (range - 1) || this.myLine.getX() == (this.pianoRollDimensionIn / this.lato - 1)) {
-      this.myLine.setX(this.startLoop);
-      if (!col.esito) {
-        if (this.notes.notesObject[this.myLine.getX()].isStanding()) {
-          this.playStep(this.myLine.getX());
-        }
+    this.worker.postMessage({ dimension: this.lato, end: range, pos: this.logicTimeMarker.getX() * this.lato });
+    if (this.logicTimeMarker.getX() == (range - 1) || this.logicTimeMarker.getX() == (this.pianoRollDimensionIn / this.lato - 1)) {
+      this.logicTimeMarker.setX(this.startLoop);
+      if (this.notes.notesObject[this.logicTimeMarker.getX()].isStanding()) {
+        this.playStep(this.logicTimeMarker.getX());
       }
     } else {
-      this.myLine.moveRight();
+      this.logicTimeMarker.moveRight();
       if (this.notes.notesObject.length > 0) {
-        if (!col.esito) {
-          if (typeof this.notes.notesObject[this.myLine.getX()] !== 'undefined' && this.notes.notesObject[this.myLine.getX()].isStanding()) {
-            this.playStep(this.myLine.getX());
-          }
+        if (typeof this.notes.notesObject[this.logicTimeMarker.getX()] !== 'undefined' && this.notes.notesObject[this.logicTimeMarker.getX()].isStanding()) {
+          this.playStep(this.logicTimeMarker.getX());
         }
       }
     }
   }
 
   createScale(la: number) {
-    //const A4 = 220;
     if (typeof la === 'undefined') {
       la = 110;
     }
-
     for (let i = 0; i < 4; i++) {
       let a = la * Math.pow(2, i);
       let octave = new Octave(a);
@@ -257,11 +264,10 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     this.clear();
     for (let i = 0; i < this.notes.notesObject.length; i++) {
       let tonoRandom = Utilities.getRandomInt(this.freq.length, 0);
-
       this.setNote(this.notes.notesObject[i], this.freq[tonoRandom], tonoRandom, 1, true);
       this.setNote(this.clips[this.selectedClipIndex].notesObject[i], this.freq[tonoRandom], tonoRandom, 1, true);
       this.notes.notesValue[i] = this.freq[tonoRandom];
-      this.clips[this.selectedClipIndex].notesValue[i] =this.freq[tonoRandom];
+      this.clips[this.selectedClipIndex].notesValue[i] = this.freq[tonoRandom];
       this.myVelocity.drawVertLine({ x: i, y: 0 }, true);
       this.myVelocity.cancelVertLine({ x: i, y: this.notes.notesObject[i].velocity });
     }
@@ -281,7 +287,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
       nota.setY(tune - 1);
       nota.kill();
     }
-
   }
 
   public setClip(index: number) {
@@ -342,7 +347,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
       this.notes.notesObject[coo.x].standUp();
       //this.setNote( this.clips[this.selectedClipIndex].notesObject[coo.x] ,coo.y,this.freq[coo.y],1,true)
 
-     this.clips[this.selectedClipIndex].notesValue[coo.x] = this.freq[coo.y];
+      this.clips[this.selectedClipIndex].notesValue[coo.x] = this.freq[coo.y];
       this.clips[this.selectedClipIndex].notesObject[coo.x].setTune(this.freq[coo.y]);
       this.clips[this.selectedClipIndex].notesObject[coo.x].indice = coo.y;
       this.clips[this.selectedClipIndex].notesObject[coo.x].setY(coo.y - 1);
