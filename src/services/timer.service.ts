@@ -63,6 +63,20 @@ export class TimerService {
     // this.scheduleNote();
     this.playingStateSource.next(true);
 
+
+    if (typeof Worker !== 'undefined') {
+      // Create a new
+      const worker = new Worker('./helper.worker', { type: 'module' });
+      worker.onmessage = ({ data }) => {
+        console.log(`page got message: ${data}`);
+      };
+      worker.postMessage('hello');
+    } else {
+      // Web Workers are not supported in this environment.
+      // You should add a fallback so that your program still executes correctly.
+    }
+
+
     this._ngZone.runOutsideAngular(() => {
       //this.timer = setTimeout(this.scheduleNote.bind(this), 0);
       this.accurateTimer(() => { this.changeStateTrack(this.audioContext.currentTime) }, this.speed, console.log('error'));
@@ -189,7 +203,7 @@ export class TimerService {
 
     this.start = () => {
       this.expected = Date.now() + this.speed;
-      this.timeout = setTimeout(this.round, this.speed)
+      this.timeout = workerTimers.setTimeout(this.round, this.speed)
       console.log('started');
     }
     this.accurateStop = () => {

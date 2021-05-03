@@ -17,19 +17,22 @@
         <table>
             <tr>
                 <td class="a">
-                    <app-osc #osc [nome]="'Main oscillator 1'"></app-osc>
+                    <app-osc #mainOscillator1 [nome]="'Main oscillator 1'"></app-osc>
                 </td>
                 <td class="a">
-                    <app-gain [envelope]="true" [nome]="'Main gain'" #gain></app-gain>
+<app-gain [envelope]="false" [nome]="'Gain osc 1'" #mainGain1></app-gain>
+
+                <td class="a">
+                    <app-gain [envelope]="true" [nome]="'Main gain'" #mainGain></app-gain>
                 </td>
                 <td colspan="2" class="a">
                     <table>
                         <tr>
                             <td>
-                                <app-osc [nome]="'LFO to frequency filter'" #osc2> </app-osc>
+                                <app-osc [nome]="'LFO to frequency filter'" #lfoFrequencyFilter> </app-osc>
                             </td>
                             <td>
-                                <app-gain [envelope]="false" [nome]="'LFO filter amplitude'" #gainOsc2></app-gain>
+                                <app-gain [envelope]="false" [nome]="'LFO filter amplitude'" #filterLfoGain></app-gain>
                             </td>
                         </tr>
                     </table>
@@ -58,8 +61,11 @@
             </tr>
             <tr>
                 <td class="a">
-                    <app-osc #oscillator2 [nome]="'Main oscillator 2'"></app-osc>
+                    <app-osc #mainOscillator2 [nome]="'Main oscillator 2'"></app-osc>
                 </td>
+                <td class="a">
+<app-gain [envelope]="false" [nome]="'Gain osc 2'" #mainGain2></app-gain>
+
                 <td class="a">
                     <app-filter [envelope]="true" [nome]="'FILTER'" #filter></app-filter>
                 </td>
@@ -67,10 +73,10 @@
                     <table>
                         <tr>
                             <td>
-                                <app-osc [nome]="'LFO to frequency oscillators'" #lfo></app-osc>
+                                <app-osc [nome]="'LFO to frequency oscillators'" #lfoFrequencyOscillator></app-osc>
                             </td>
                             <td>
-                                <app-gain [envelope]="false" [nome]="'LFO ocs amplitude'" #gainLfo></app-gain>
+                                <app-gain [envelope]="false" [nome]="'LFO ocs amplitude'" #freqOscLfoGain></app-gain>
                             </td>
                             <td>
                                 enable osc1 <input type="checkbox" [(ngModel)]="lfoConOsc1" (change) = "changeConnection()" /> <br>

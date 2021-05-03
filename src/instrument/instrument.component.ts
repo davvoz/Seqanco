@@ -14,7 +14,6 @@ import { Nota, SyntControl } from '../interfaces/interfaces';
 import { SamplesLibraryService } from '../services/samples-library.service';
 import { TimerService } from '../services/timer.service';
 import { Utilities } from 'src/classes/utilities';
-import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 
 @Component({
   selector: 'app-instrument',
@@ -35,26 +34,30 @@ export class InstrumentComponent implements AfterViewInit {
 
   @ViewChild('back', { static: false })
   back!: HTMLDivElement;
-  @ViewChild('osc', { static: false })
-  osc!: OscComponent;
-  @ViewChild('oscillator2', { static: false })
-  oscillator2!: OscComponent;
-  @ViewChild('gain', { static: false })
-  gain!: GainComponent;
+  @ViewChild('mainOscillator1', { static: false })
+  mainOscillator1!: OscComponent;
+  @ViewChild('mainOscillator2', { static: false })
+  mainOscillator2!: OscComponent;
+  @ViewChild('mainGain', { static: false })
+  mainGain!: GainComponent;
   @ViewChild('pan', { static: false })
   pan!: StereoPannerComponent;
   @ViewChild('filter', { static: false })
   filter!: FilterComponent;
-  @ViewChild('osc2', { static: false })
-  osc2!: OscComponent;
-  @ViewChild('gainOsc2', { static: false })
-  gainOsc2!: GainComponent;
-  @ViewChild('lfo', { static: false })
-  lfo!: OscComponent;
-  @ViewChild('gainLfo', { static: false })
-  gainLfo!: GainComponent;
+  @ViewChild('lfoFrequencyFilter', { static: false })
+  lfoFrequencyFilter!: OscComponent;
+  @ViewChild('filterLfoGain', { static: false })
+  filterLfoGain!: GainComponent;
+  @ViewChild('lfoFrequencyOscillator', { static: false })
+  lfoFrequencyOscillator!: OscComponent;
+  @ViewChild('freqOscLfoGain', { static: false })
+  freqOscLfoGain!: GainComponent;
   @ViewChild("pianoRoll", { static: false })
   pianoRoll!: PianoRollCanvasBasedComponent;
+  @ViewChild('mainGain1', { static: false })
+  mainGain1!: GainComponent;
+  @ViewChild('mainGain2', { static: false })
+  mainGain2!: GainComponent;
 
 
   public myMonoosc!: MonooscObj;
@@ -130,10 +133,10 @@ export class InstrumentComponent implements AfterViewInit {
     this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
       this.stepper = res.timePosition;
 
-      if (this.type === 'NEWSYNTH' && typeof this.osc.oscWk !== 'undefined') {
+      if (this.type === 'NEWSYNTH' && typeof this.mainOscillator1.oscWk !== 'undefined') {
         if (this.modulations[4].modulation) {
-          this.osc.oscWk.frequency.setValueAtTime((this.osc.oscWk.frequency.value + this.modulations[4].min), this.modulations[4].max);
-          this.oscillator2.oscWk.frequency.setValueAtTime((this.oscillator2.oscWk.frequency.value + this.modulations[4].min), this.modulations[4].max);
+          this.mainOscillator1.oscWk.frequency.setValueAtTime((this.mainOscillator1.oscWk.frequency.value + this.modulations[4].min), this.modulations[4].max);
+          this.mainOscillator2.oscWk.frequency.setValueAtTime((this.mainOscillator2.oscWk.frequency.value + this.modulations[4].min), this.modulations[4].max);
         }
         if (this.modulations[0].modulation) {
           switch (res.timePosition) {
@@ -154,8 +157,8 @@ export class InstrumentComponent implements AfterViewInit {
         if (this.modulations[2].modulation) {
           switch (res.timePosition) {
             case 0: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 20); break;
-            case 1: ; break;
-            case 2:  break;
+            case 1: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 20); break;
+            case 2:  this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 20); break;
             case 3: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].min, this.myTimer.audioContext.currentTime, this.myTimer.steps / 20); break;
           }
         }
@@ -193,14 +196,30 @@ export class InstrumentComponent implements AfterViewInit {
         this.myDoubleosc.volume.connect(this.myTimer.merger);
         break;
       case 'NEWSYNTH':
-        this.osc2.setAudioNodeIn(this.gainOsc2.gainNode);
-        this.gainOsc2.connectToAudioParam(this.filter.filterNode.frequency);
-        this.lfo.setAudioNodeIn(this.gainLfo.gainNode);
-        this.oscillator2.setAudioNodeIn(this.gain.gainAdsr)
-        this.osc.setAudioNodeIn(this.gain.gainAdsr);
-        this.gain.connectToAudioNode(this.filter.filterNode);
+
+        // this.osc2.setAudioNodeIn(this.gainOsc2.gainNode);
+        // this.gainOsc2.connectToAudioParam(this.filter.filterNode.frequency);
+        // this.lfo.setAudioNodeIn(this.gainLfo.gainNode);
+        // this.oscillator2.setAudioNodeIn(this.gain.gainAdsr)
+        // this.osc.setAudioNodeIn(this.gain.gainAdsr);
+        // this.gain.connectToAudioNode(this.filter.filterNode);
+
+
+        this.filterLfoGain.connectToAudioParam(this.filter.filterNode.frequency);
+
+        this.lfoFrequencyFilter.setAudioNodeIn(this.filterLfoGain.gainNode);  
+        this.lfoFrequencyOscillator.setAudioNodeIn(this.freqOscLfoGain.gainNode);
+        
+        this.mainOscillator1.setAudioNodeIn(this.mainGain1.gainNode);
+        this.mainOscillator2.setAudioNodeIn(this.mainGain2.gainNode)
+
+        this.mainGain1.connectToAudioNode(this.mainGain.gainAdsr)
+        this.mainGain2.connectToAudioNode(this.mainGain.gainAdsr)
+      
+        this.mainGain.connectToAudioNode(this.filter.filterNode);
         this.filter.connectToAudioNode(this.pan.stereoPannerNode);
         this.pan.connectToAudioNode(this.myTimer.merger);
+
         break;
     }
   }
@@ -358,20 +377,20 @@ export class InstrumentComponent implements AfterViewInit {
 
   changeConnection() {
     if (this.lfoConOsciJustCon) {
-      this.osc.disconnectModulatoreDiFrequenza();
+      this.mainOscillator1.disconnectModulatoreDiFrequenza();
       this.lfoConOsciJustCon = false;
     } else {
-      this.osc.setModulatoreDiFrequenza(this.gainLfo.gainNode);
+      this.mainOscillator1.setModulatoreDiFrequenza(this.freqOscLfoGain.gainNode);
       this.lfoConOsciJustCon = true;
     }
   }
 
   changeConnection2() {
     if (this.lfoConOsciJustCon2) {
-      this.oscillator2.disconnectModulatoreDiFrequenza();
+      this.mainOscillator2.disconnectModulatoreDiFrequenza();
       this.lfoConOsciJustCon2 = false;
     } else {
-      this.oscillator2.setModulatoreDiFrequenza(this.gainLfo.gainNode);
+      this.mainOscillator2.setModulatoreDiFrequenza(this.freqOscLfoGain.gainNode);
       this.lfoConOsciJustCon2 = true;
     }
   }
@@ -394,13 +413,13 @@ export class InstrumentComponent implements AfterViewInit {
           this.myDoubleosc.play($event.notaDaSuonare, this.index, $event.velocity);
           break;
         case 'NEWSYNTH':
-          this.gainLfo.play(1);
-          this.lfo.play(1);
-          this.osc2.play(1);
-          this.gainOsc2.play(1);
-          this.osc.play($event.notaDaSuonare);
-          this.oscillator2.play($event.notaDaSuonare);
-          this.gain.play($event.velocity);
+          this.freqOscLfoGain.play(1);
+          this.lfoFrequencyOscillator.play(1);
+          this.lfoFrequencyFilter.play(1);
+          this.filterLfoGain.play(1);
+          this.mainOscillator1.play($event.notaDaSuonare);
+          this.mainOscillator2.play($event.notaDaSuonare);
+          this.mainGain.play($event.velocity);
           this.filter.play($event.velocity);
           break;
       }
