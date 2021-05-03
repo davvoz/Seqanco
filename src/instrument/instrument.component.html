@@ -1,4 +1,4 @@
-<div  style=" width: 100%;top: 680px;position: absolute;background: repeating-radial-gradient(#d28f8f, transparent 10px);" >
+<div  style=" width: 100%;top: 680px;position: absolute;" >
     
     <div>
         {{name}}-{{index}}
@@ -14,7 +14,7 @@
     </div>
 
     <div *ngIf="type === 'NEWSYNTH'">
-        <table >
+        <table>
             <tr>
                 <td class="a">
                     <app-osc #osc [nome]="'Main oscillator 1'"></app-osc>
@@ -44,8 +44,7 @@
                         </thead>
                         <tr *ngFor="let mod of modulations;let i = index">
                             <td>
-                                <button (click)="enableMod(i)"
-                                    [style.background-color]="mod.modulation ? 'red':'grey'">V</button>
+                                <button (click)="enableMod(i)" [style.background-color]="mod.modulation ? 'red':'grey'">V</button>
                             </td>
                             <td>
                                 <input type="number" [(ngModel)]="mod.min" />
@@ -74,10 +73,8 @@
                                 <app-gain [envelope]="false" [nome]="'LFO ocs amplitude'" #gainLfo></app-gain>
                             </td>
                             <td>
-                                enable osc1 <input type="checkbox" [(ngModel)]="lfoConOsc1"
-                                    (change)="changeConnection()" /> <br>
-                                enable osc2 <input type="checkbox" [(ngModel)]="lfoConOsc2"
-                                    (change)="changeConnection2()" />
+                                enable osc1 <input type="checkbox" [(ngModel)]="lfoConOsc1" (change) = "changeConnection()" /> <br>
+                                enable osc2 <input type="checkbox" [(ngModel)]="lfoConOsc2" (change) = "changeConnection2()" />
                             </td>
                         </tr>
                     </table>

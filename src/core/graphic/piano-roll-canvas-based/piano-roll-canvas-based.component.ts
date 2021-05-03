@@ -6,7 +6,7 @@ import { Octave } from '../../../classes/octave';
 import { Square } from '../../../classes/square';
 import { UserGui } from '../../../classes/user-gui';
 import { VelocityGui } from '../../../classes/velocity-gui';
-import { Collision, Coordinates, Nota } from '../../../interfaces/interfaces';
+import {  Coordinates, Nota } from '../../../interfaces/interfaces';
 import { TimerService } from '../../../services/timer.service';
 import { Loopper } from '../../../classes/loopper';
 
@@ -104,9 +104,8 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     this.htmlCanvas = this.canvasProva.nativeElement;
     this.offscreen = this.htmlCanvas.transferControlToOffscreen();
     // @ts-ignore*/
-    this.lato = this.canvasGui.nativeElement.getContext("2d")?.canvas.width / 64;
+    this.lato = this.canvasGui.nativeElement.getContext("2d")?.canvas.width / 128;
     this.worker.postMessage({ canvas: this.offscreen }, [this.offscreen]);
-
 
     this.createScale(this.la);
     // @ts-ignore*/
@@ -127,7 +126,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     this.logicTimeMarker.standUp();
     this.notes.notesObject = this.populateEnemiesArray();
 
-    for (let i = 0; i < this.populateEnemiesArray().length; i++) {
+    for (let i = 0; i < this.notes.notesObject.length; i++) {
       this.notes.notesValue.push(0);
     }
 
@@ -149,11 +148,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
       }
     });
 
-    // this.observer = new ResizeObserver(entries => {
-    //   this.lato = entries[0].contentRect.width / 64;
-    // });
-
-    // this.observer.observe(this.canvas.nativeElement);
   }
 
   intitializeClips() {
@@ -207,11 +201,9 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
   tick() {
 
-    //this.ctxLine.clearRect(0, 0, this.ctxLine.canvas.width, this.ctxLine.canvas.height);
     this.coord = { x: this.logicTimeMarker.getX(), y: 0 };
-    //this.myLine.setColor("200,200,0");
     let range = this.startLoop + this.endLoop;
-    this.worker.postMessage({ dimension: this.lato, end: range, pos: this.logicTimeMarker.getX() * this.lato });
+    this.worker.postMessage({ lato: this.lato, end: range, pos: (this.logicTimeMarker.getX() * this.lato )+this.lato});
     if (this.logicTimeMarker.getX() == (range - 1) || this.logicTimeMarker.getX() == (this.pianoRollDimensionIn / this.lato - 1)) {
       this.logicTimeMarker.setX(this.startLoop);
       if (this.notes.notesObject[this.logicTimeMarker.getX()].isStanding()) {

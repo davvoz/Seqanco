@@ -20,7 +20,7 @@ export class MonoSampObj extends AbstractMonoosc {
   lista: any[];
   //source:AudioBufferSourceNode;
 
-  constructor(public audioContext: AudioContext, private library: SamplesLibraryService) {
+  constructor(public audioContext: BaseAudioContext, private library: SamplesLibraryService) {
     super(audioContext);
 
     this.born();

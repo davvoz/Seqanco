@@ -4,7 +4,8 @@ import { TimerService } from '../services/timer.service';
 @Component({
   selector: 'app-timer-control',
   templateUrl: './timer-control.component.html',
-  styleUrls: ['./timer-control.component.scss']
+  styleUrls: ['./timer-control.component.scss'],
+  
 })
 export class TimerControlComponent implements OnInit {
 

@@ -20,7 +20,7 @@ export class MonooscObj extends AbstractMonoosc {
   freqNe: any;
   reqParam!: AudioParam;
   private isDistorsionConnetted: boolean = false;
-  constructor(public audioContext: AudioContext) {
+  constructor(public audioContext: BaseAudioContext) {
     super(audioContext);
     //this.init();
     this.born();

@@ -15,7 +15,7 @@ export class TimerService {
   isPlayed!: boolean;
   timer!: any;
   step!: boolean;
-  steps: number =0;;
+  steps: number = 0;
   merger!: GainNode;
   gain = 1;
   private numberOfTraksSource = new BehaviorSubject<number>(0);
@@ -40,11 +40,12 @@ export class TimerService {
   );
   playingStateItem$ = this.playingStateSource.asObservable();
   trackStateItem$ = this.trackStateSource.asObservable();
-  public audioContext!: AudioContext;
+  public audioContext!: BaseAudioContext;
 
-  constructor(private _ngZone: NgZone) {this.loadWorklet();
-
+  constructor(private _ngZone: NgZone) {
+    this.loadWorklet();
   }
+
   addTrack() {
     this.numberOfTraks++;
   }
@@ -58,31 +59,31 @@ export class TimerService {
   }
   play() {
     this.isPlayed = true;
-    this.audioContext.resume();
-   // this.scheduleNote();
-    this.playingStateSource.next(true);
     
+    // this.scheduleNote();
+    this.playingStateSource.next(true);
+
     this._ngZone.runOutsideAngular(() => {
-     //this.timer = setTimeout(this.scheduleNote.bind(this), 0);
+      //this.timer = setTimeout(this.scheduleNote.bind(this), 0);
       this.accurateTimer(() => { this.changeStateTrack(this.audioContext.currentTime) }, this.speed, console.log('error'));
       this.start();
-   });
+    });
 
 
   }
   stop() {
-    this.audioContext.suspend();
+   // this.audioContext.suspend();
     this.steps = 0;
     this.isPlayed = false;
-    clearTimeout(this.timer);
+    //clearTimeout(this.timer);
     this.playingStateSource.next(false);
     this.accurateStop();
   }
   pause() {
-    this.audioContext.suspend();
+   // this.audioContext.suspend();
     this.isPlayed = false;
     this.accurateStop();
-    clearTimeout(this.timer);
+    //clearTimeout(this.timer);
   }
   private scheduleNote() {
     // let contextPlayTime;
@@ -108,7 +109,7 @@ export class TimerService {
     // secondsPerBeat = 0;
   }
   private changeStateTrack(pt: number) {
-   
+
     this.trackStateSource.next({
       traksAreOn: this.trackStateModel.traksAreOn,
       timePosition: this.steps,
@@ -116,9 +117,9 @@ export class TimerService {
       audioContextTime: pt
     });
     this.steps >= 3
-    ? ((this.step = true), (this.steps = 0))
-    : ((this.step = true), this.steps++);
-    
+      ? ((this.step = true), (this.steps = 0))
+      : ((this.step = true), this.steps++);
+
   }
 
   async loadWorklet() {
@@ -209,7 +210,7 @@ export class TimerService {
   }
 }
 
-class Fake {}
+class Fake { }
 function registerProcessor(arg0: string, arg1: any) {
   throw new Error("Function not implemented.");
 }

@@ -16,7 +16,7 @@ export class DubleoscObj extends AbstractMonoosc {
     mer1!: ChannelMergerNode;
     gai1!: GainNode;
     gai2!: GainNode;
-    constructor(public audioContext: AudioContext) {
+    constructor(public audioContext: BaseAudioContext) {
         super(audioContext);
         this.born();
     }

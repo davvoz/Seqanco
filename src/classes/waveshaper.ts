@@ -1,7 +1,7 @@
 export class Waveshaper {
     public waveshaper: WaveShaperNode;
     
-    constructor(public audioContext: AudioContext,) {
+    constructor(public audioContext: BaseAudioContext,) {
         this.waveshaper = this.audioContext.createWaveShaper();
         
         this.waveshaper.oversample="4x";

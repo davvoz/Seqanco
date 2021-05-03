@@ -3,7 +3,7 @@ export class Autopan {
     private oscillator: OscillatorNode;
     private gain2: GainNode;
     
-    constructor(public audioContext: AudioContext,) {
+    constructor(public audioContext: BaseAudioContext,) {
         this.panner = this.audioContext.createStereoPanner();
         this.oscillator = this.audioContext.createOscillator();
         this.gain2 = this.audioContext.createGain();

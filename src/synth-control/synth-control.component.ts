@@ -1,3 +1,4 @@
+import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Adsr, SyntControl } from '../interfaces/interfaces';
 

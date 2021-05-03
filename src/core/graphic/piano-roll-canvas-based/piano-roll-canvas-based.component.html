@@ -12,14 +12,14 @@
         </span>
     </div>
     <div class="allCanvas" >
-        <div class="cnvsContainer">
-            <canvas #canvasGui  width="{{getExternalDimension()}}" height="960" class="bg-layer" (click)="handleChange($event)" ></canvas>
+        <div class="cnvsContainer" style="z-index: 2;">
+            <canvas #canvasGui  width="{{getExternalDimension()}}" height="960" class="bg-layer" (click)="handleChange($event)" style="z-index: 0;"></canvas>
             <!-- <canvas #canvasLine width="{{getExternalDimension()}}" height="960" class="line-layer" style="display: none;"></canvas> -->
-            <canvas #canvas     width="{{getExternalDimension()}}" height="960" class="game-layer" (click)="handleChange($event)" ></canvas>
-
+            <canvas #canvas     width="{{getExternalDimension()}}" height="960" class="game-layer" (click)="handleChange($event)" style="z-index: 4;" ></canvas>
+            <canvas #canvasProva  width="{{getExternalDimension()}}" height="960" class="game-layer"></canvas>
+            <canvas #canvasVelo   width="{{getExternalDimension()}}" height="60"  class="velocity-layer"  (click)="handleChangeVelo($event)" style="display: none;" ></canvas>       
+            <canvas #canvasLooper width="{{getExternalDimension()}}" height="4" class="looper-layer" style="z-index: 2;"></canvas>
         </div>
-        <canvas #canvasVelo   width="{{getExternalDimension()}}" height="60"  class="velocity-layer"  (click)="handleChangeVelo($event)" ></canvas>       
-        <canvas #canvasProva  width="{{getExternalDimension()}}" height="345" class="game-layer" style="z-index: 0;"></canvas>
-        <canvas #canvasLooper width="{{getExternalDimension()}}" height="180" class="looper-layer"></canvas>
+        
     </div>
 </div>

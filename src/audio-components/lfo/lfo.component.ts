@@ -1,10 +1,12 @@
+import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { TimerService } from 'src/services/timer.service';
 
 @Component({
   selector: 'app-lfo',
   templateUrl: './lfo.component.html',
-  styleUrls: ['./lfo.component.scss']
+  styleUrls: ['./lfo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LfoComponent implements OnInit {
 //Provo a fare un pseudo lfo sfruttando il gain

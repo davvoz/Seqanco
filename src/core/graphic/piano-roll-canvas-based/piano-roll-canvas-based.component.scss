@@ -8,8 +8,9 @@ canvas {
     width: 100%;
     height: 344px;
     position: absolute;
-    overflow: auto;
+    overflow: scroll;
     left: 0px;
+    z-index: 2;
 }
 .velocity-layer {
     float: left;
@@ -21,16 +22,7 @@ canvas {
     z-index: 0;
  
 }
-.titleContainer {
-    position: relative;
-    background-color: grey;
-    text-overflow: ellipsis;
-    height: 20px;
-}
 
-.form {
-    background-color: black;
-}
 .pianoRollToolbar {
     position: relative;
     background-color: lightgray;
@@ -44,25 +36,4 @@ canvas {
 .allCanvas {
     height: 4px;
 }
-.looper-layer {
-    z-index: 0;
-   
-}
-.bg-layer {
-    z-index: 0;
-   
-}
-.line-layer {
-    z-index: 0;
-    
-   
-}
-.game-layer {
-    z-index: 1;
-   
-   
-}
-canvas {
-    position: absolute;
-    margin:0;
-}
+

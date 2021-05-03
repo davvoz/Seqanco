@@ -40,7 +40,7 @@ export class AbstractMonoosc implements SyntControl, Playable {
         isDistorted:this.isDistorted
     };
 
-    constructor(public audioContext: AudioContext) { }
+    constructor(public audioContext: BaseAudioContext) { }
    
 
     play(freq: number, synthControlIndex: number, velocity: number): void {

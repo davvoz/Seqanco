@@ -14,7 +14,7 @@ import { Nota, SyntControl } from '../interfaces/interfaces';
 import { SamplesLibraryService } from '../services/samples-library.service';
 import { TimerService } from '../services/timer.service';
 import { Utilities } from 'src/classes/utilities';
-
+import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 
 @Component({
   selector: 'app-instrument',
@@ -130,8 +130,6 @@ export class InstrumentComponent implements AfterViewInit {
     this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
       this.stepper = res.timePosition;
 
-      this.stepper = res.timePosition;
-
       if (this.type === 'NEWSYNTH' && typeof this.osc.oscWk !== 'undefined') {
         if (this.modulations[4].modulation) {
           this.osc.oscWk.frequency.setValueAtTime((this.osc.oscWk.frequency.value + this.modulations[4].min), this.modulations[4].max);
@@ -156,8 +154,8 @@ export class InstrumentComponent implements AfterViewInit {
         if (this.modulations[2].modulation) {
           switch (res.timePosition) {
             case 0: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 20); break;
-            case 1: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 40); break;
-            case 2: this.filter.filterNode.frequency.setValueAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime); break;
+            case 1: ; break;
+            case 2:  break;
             case 3: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].min, this.myTimer.audioContext.currentTime, this.myTimer.steps / 20); break;
           }
         }
