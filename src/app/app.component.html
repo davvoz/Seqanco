@@ -1,29 +1,19 @@
-
-	
-
 		<div class="raw1" style="background-color: chartreuse;">
 			<!-- <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle();">
 				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
 			</button> -->
-			
-			
 			<span>ED - Easy Drop</span><app-start-stop></app-start-stop>
 			<span class="example-spacer"></span>Bpm<app-timer-control></app-timer-control>
-			
 				Volume 
 					<input type="number" [(ngModel)]="masterGain" (change)="onChangeMaster()" min="0.01" max="1" step="0.01"/>
-		
 				Add instrument<button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add instrument">
 					<mat-icon>add_circle_outline</mat-icon>
 				</button>
-	
 		Keyboard control <button  mat-icon-button (click)="activeKeyboardControl()"
 					matTooltip="Enable keyboard control click or press CTRL"
 					[style.background-color]="getActiveColor(isActiveKeyboardControl)">
 					<mat-icon>keyboard</mat-icon>
 				</button>
-			
-			
 			<mat-menu #menu="matMenu">
 				<button mat-menu-item color="basic" (click)="addSampler()">Add sampler</button>
 				<button mat-menu-item color="basic" (click)="addSynth()">Add Synth</button>
@@ -31,9 +21,8 @@
 				<button mat-menu-item color="basic" (click)="addDrummachine()">Add Drum</button>
 			</mat-menu>
 		</div>
-
 	<div class="example-sidenav-content">
-		<div class="raw1" >
+		<div class="row1" >
 			<div *ngFor="let instrument of instruments;let i =index;" class="instrument" >
 				<div class="instrumentToolbar" [style.border]="getSelectedTrakBorderStyle(instrument.isCollapsed)" >
 					<div [style.background-color]="getInstrumentColor(instrument.type)" class="instHeader">
