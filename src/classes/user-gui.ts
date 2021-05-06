@@ -22,9 +22,7 @@ export class UserGui {
     const margin = this.lato / 5;
     for (let y = 0; y < this.ctxGui.canvas.height / 4; y = y + this.lato) {
       for (let x = 0; x < this.ctxGui.canvas.width; x = x + this.lato) {
-
         this.ctxGui.strokeRect(x - margin / 2, y, this.lato - margin, this.lato - margin);
-
       }
     }
   }
@@ -119,7 +117,7 @@ export class UserGui {
           this.ctxGui.moveTo(0, y);
           this.ctxGui.lineWidth = 1;
           this.ctxGui.strokeStyle = "grey";
-          this.ctxGui.lineTo(this.lato * 80, y);
+          this.ctxGui.lineTo(this.lato * 130, y);
           this.ctxGui.shadowBlur = 0;
           this.ctxGui.stroke();
         }

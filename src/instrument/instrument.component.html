@@ -1,4 +1,4 @@
-<div  style=" width: 100%;top: 680px;position: absolute;" >
+<div  style=" width: 100%;top: 380px;position: absolute;" >
     
     <div>
         {{name}}-{{index}}
@@ -20,8 +20,7 @@
                     <app-osc #mainOscillator1 [nome]="'Main oscillator 1'"></app-osc>
                 </td>
                 <td class="a">
-<app-gain [envelope]="false" [nome]="'Gain osc 1'" #mainGain1></app-gain>
-
+                    <app-gain [envelope]="false" [nome]="'Gain osc 1'" #mainGain1></app-gain>
                 <td class="a">
                     <app-gain [envelope]="true" [nome]="'Main gain'" #mainGain></app-gain>
                 </td>
