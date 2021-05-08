@@ -619,27 +619,29 @@ class MonoSampObj extends _abstract_monoosc__WEBPACK_IMPORTED_MODULE_0__["Abstra
         this.born();
     }
     play(freq, synthControlIndex, velocity) {
-        if (!this.getAllSynthControl()[synthControlIndex].isMuted) {
-            this.castOscWaveform(this.getAllSynthControl()[synthControlIndex].lfoWaveSelected, this.lfoOsc);
-            this.castFilterWave(synthControlIndex, this.biquadFilter);
-            this.volume.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
-            this.gainVelo.gain.setValueAtTime(velocity, this.audioContext.currentTime);
-            this.lfoOsc.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoRate, this.audioContext.currentTime);
-            this.lfoGain.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoAmplitude, this.audioContext.currentTime);
-            this.gainNode.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
-            this.biquadFilter.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterCutoff, this.audioContext.currentTime);
-            this.biquadFilter.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterReso, this.audioContext.currentTime);
-            let source = this.audioContext.createBufferSource();
-            this.setAdsr(this.gainNode.gain, this.getAllSynthControl()[synthControlIndex].adsr, this.audioContext.currentTime);
-            source.connect(this.biquadFilter);
-            source.buffer = this.library.buffers[this.getAllSynthControl()[synthControlIndex].libIndex];
-            source.playbackRate.setTargetAtTime(freq / 100, this.audioContext.currentTime, 0);
-            source.playbackRate.linearRampToValueAtTime(freq / 100 + this.getAllSynthControl()[synthControlIndex].pitchEnvelope.frequency, this.audioContext.currentTime + //
-                this.getAllSynthControl()[synthControlIndex].pitchEnvelope.end);
-            source.start(this.audioContext.currentTime);
-            // source.disconnect();
-            // @ts-ignore*
-            // source = null;
+        if (typeof this.getAllSynthControl()[synthControlIndex] !== 'undefined') {
+            if (!this.getAllSynthControl()[synthControlIndex].isMuted) {
+                this.castOscWaveform(this.getAllSynthControl()[synthControlIndex].lfoWaveSelected, this.lfoOsc);
+                this.castFilterWave(synthControlIndex, this.biquadFilter);
+                this.volume.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
+                this.gainVelo.gain.setValueAtTime(velocity, this.audioContext.currentTime);
+                this.lfoOsc.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoRate, this.audioContext.currentTime);
+                this.lfoGain.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoAmplitude, this.audioContext.currentTime);
+                this.gainNode.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
+                this.biquadFilter.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterCutoff, this.audioContext.currentTime);
+                this.biquadFilter.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterReso, this.audioContext.currentTime);
+                let source = this.audioContext.createBufferSource();
+                this.setAdsr(this.gainNode.gain, this.getAllSynthControl()[synthControlIndex].adsr, this.audioContext.currentTime);
+                source.connect(this.biquadFilter);
+                source.buffer = this.library.buffers[this.getAllSynthControl()[synthControlIndex].libIndex];
+                source.playbackRate.setTargetAtTime(freq / 100, this.audioContext.currentTime, 0);
+                source.playbackRate.linearRampToValueAtTime(freq / 100 + this.getAllSynthControl()[synthControlIndex].pitchEnvelope.frequency, this.audioContext.currentTime + //
+                    this.getAllSynthControl()[synthControlIndex].pitchEnvelope.end);
+                source.start(this.audioContext.currentTime);
+                // source.disconnect();
+                // @ts-ignore*
+                // source = null;
+            }
         }
     }
     born() {
@@ -1351,29 +1353,6 @@ class TimerService {
         this.accurateStop();
         //clearTimeout(this.timer);
     }
-    scheduleNote() {
-        // let contextPlayTime;
-        // let currentTime: number;
-        // if (typeof this.audioContext !== 'undefined') {
-        //   currentTime = this.audioContext.currentTime
-        //   currentTime -= this.startTime;
-        //   while (this.noteTime < currentTime + 0.2) {
-        //     contextPlayTime = this.noteTime + this.startTime;
-        //     this.changeStateTrack(contextPlayTime);
-        //     this.nextNote();
-        //   }
-        // }
-        // this._ngZone.runOutsideAngular(() => {
-        //  this.timer = setTimeout(this.scheduleNote.bind(this), 0);
-        //   this.accurateTimer(() => { console.log('it runs') }, 500, console.log('error'));
-        // });
-    }
-    nextNote() {
-        // let secondsPerBeat = 60.0 / this.speed;
-        // // 0.25 because each square is a 16th note
-        // this.noteTime += 0.25 * secondsPerBeat;
-        // secondsPerBeat = 0;
-    }
     changeStateTrack(pt) {
         this.trackStateSource.next({
             traksAreOn: this.trackStateModel.traksAreOn,
@@ -1387,18 +1366,17 @@ class TimerService {
     }
     loadWorklet() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            const tempUrl = this.createUrl();
+            //const tempUrl = this.createUrl();
             this.audioContext = new AudioContext();
-            return yield this.audioContext.audioWorklet.addModule(tempUrl).then(() => {
-                this.startTime = this.audioContext.currentTime + 0.005;
-                this.isPlayed = false;
-                this.step = false;
-                this.steps = 0;
-                this.speed = 120;
-                this.merger = this.audioContext.createGain();
-                this.merger.gain.setValueAtTime(this.gain, this.audioContext.currentTime);
-                this.merger.connect(this.audioContext.destination);
-            });
+            //const aw = this.audioContext.audioWorklet;
+            this.startTime = this.audioContext.currentTime + 0.005;
+            this.isPlayed = false;
+            this.step = false;
+            this.steps = 0;
+            this.speed = 120;
+            this.merger = this.audioContext.createGain();
+            this.merger.gain.setValueAtTime(this.gain, this.audioContext.currentTime);
+            this.merger.connect(this.audioContext.destination);
         });
     }
     createUrl() {
@@ -1493,28 +1471,23 @@ class MonoDrummachineObj extends _abstract_monoosc__WEBPACK_IMPORTED_MODULE_0__[
         this.born();
     }
     play(freq, synthControlIndex, velocity) {
-        if (!this.getAllSynthControl()[synthControlIndex].isMuted) {
-            this.castOscWaveform(this.getAllSynthControl()[synthControlIndex].lfoWaveSelected, this.lfoOsc);
-            this.castFilterWave(synthControlIndex, this.biquadFilter);
-            this.volume.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
-            this.gainVelo.gain.setValueAtTime(velocity, this.audioContext.currentTime);
-            this.lfoOsc.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoRate, this.audioContext.currentTime);
-            this.lfoGain.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoAmplitude, this.audioContext.currentTime);
-            this.gainNode.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
-            this.biquadFilter.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterCutoff, this.audioContext.currentTime);
-            this.biquadFilter.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterReso, this.audioContext.currentTime);
-            let source = this.audioContext.createBufferSource();
-            this.setAdsr(this.gainNode.gain, this.getAllSynthControl()[synthControlIndex].adsr, this.audioContext.currentTime);
-            source.connect(this.biquadFilter);
-            source.buffer = this.library.buffers[freq];
-            // source.playbackRate.setTargetAtTime(freq / 100, this.audioContext.currentTime, 0);
-            // source.playbackRate.linearRampToValueAtTime
-            //   (freq / 100 + this.getAllSynthControl()[synthControlIndex].pitchEnvelope.frequency, this.audioContext.currentTime +//
-            //     this.getAllSynthControl()[synthControlIndex].pitchEnvelope.end);
-            source.start(this.audioContext.currentTime);
-            // source.disconnect();
-            // @ts-ignore*
-            // source = null;
+        if (typeof this.getAllSynthControl()[synthControlIndex] !== 'undefined') {
+            if (!this.getAllSynthControl()[synthControlIndex].isMuted) {
+                this.castOscWaveform(this.getAllSynthControl()[synthControlIndex].lfoWaveSelected, this.lfoOsc);
+                this.castFilterWave(synthControlIndex, this.biquadFilter);
+                this.volume.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
+                this.gainVelo.gain.setValueAtTime(velocity, this.audioContext.currentTime);
+                this.lfoOsc.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoRate, this.audioContext.currentTime);
+                this.lfoGain.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoAmplitude, this.audioContext.currentTime);
+                this.gainNode.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
+                this.biquadFilter.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterCutoff, this.audioContext.currentTime);
+                this.biquadFilter.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterReso, this.audioContext.currentTime);
+                let source = this.audioContext.createBufferSource();
+                this.setAdsr(this.gainNode.gain, this.getAllSynthControl()[synthControlIndex].adsr, this.audioContext.currentTime);
+                source.connect(this.biquadFilter);
+                source.buffer = this.library.buffers[freq];
+                source.start(this.audioContext.currentTime);
+            }
         }
     }
     born() {
@@ -1703,33 +1676,31 @@ GainComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComp
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OscComponent", function() { return OscComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var src_classes_utilities__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/classes/utilities */ "iWBn");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _services_timer_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services/timer.service */ "IqJH");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/forms */ "3Pt+");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/common */ "ofXK");
-
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var _services_timer_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services/timer.service */ "IqJH");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/forms */ "3Pt+");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "ofXK");
 
 
 
 
 
 function OscComponent_option_10_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "option", 3);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "option", 3);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
 } if (rf & 2) {
     const wave_r1 = ctx.$implicit;
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("value", wave_r1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate1"](" ", wave_r1, "");
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("value", wave_r1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
+    _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", wave_r1, "");
 } }
 class OscComponent {
     constructor(myTimer) {
         this.myTimer = myTimer;
         this.selectedWaveView = 'sine';
         this.isStarted = false;
-        this.waveforms = ['square', 'sine', 'sawtooth', 'triangle', 'noise'];
+        this.waveforms = ['square', 'sine', 'sawtooth', 'triangle'];
         this.isActive = false;
         this.modulatoreDioFrequenzaJustCon = false;
         this.frequency = 0;
@@ -1750,8 +1721,6 @@ class OscComponent {
             }
         }
         if (freq !== null) {
-            // @ts-ignore*/
-            // const freqW = this.oscWk.frequency;
             this.oscWk.frequency.setValueAtTime(freq + this.frequency, this.myTimer.audioContext.currentTime);
         }
     }
@@ -1759,15 +1728,6 @@ class OscComponent {
         this.audioNodeIn.disconnect();
     }
     changeWave() {
-        // @ts-ignore*/
-        // const par = this.oscWk.parwameters.get('wave');
-        // switch (this.selectedWaveView) {
-        //   case 'sine': par.setValueAtTime(3, this.myTimer.audioContext.currentTime); break;
-        //   case 'square': par.setValueAtTime(1, this.myTimer.audioContext.currentTime); break;
-        //   case 'noise': par.setValueAtTime(4, this.myTimer.audioContext.currentTime); break;
-        //   case 'triangle': par.setValueAtTime(0, this.myTimer.audioContext.currentTime); break;
-        //   case 'sawtooth': par.setValueAtTime(2, this.myTimer.audioContext.currentTime); break;
-        // }
         switch (this.selectedWaveView) {
             case 'sine':
                 this.oscWk.type = 'sine';
@@ -1787,19 +1747,7 @@ class OscComponent {
         }
     }
     changeFrequency() {
-        // @ts-ignore*/
-        //const freq = this.oscWk.frequency;
         this.oscWk.frequency.setValueAtTime(this.frequency, this.myTimer.audioContext.currentTime);
-    }
-    changePhase() {
-        // @ts-ignore*/
-        const phase = this.oscWk.parameters.get('phase');
-        phase.setValueAtTime(this.phase, this.myTimer.audioContext.currentTime);
-    }
-    changeDuty() {
-        // @ts-ignore*/
-        const duty = this.oscWk.parameters.get('duty');
-        duty.setValueAtTime(this.duty, this.myTimer.audioContext.currentTime);
     }
     setAudioParamIn(ap) {
         this.audioParamIn = ap;
@@ -1809,40 +1757,20 @@ class OscComponent {
     }
     loadWorklet() {
         return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function* () {
-            const nomeProcesso = src_classes_utilities__WEBPACK_IMPORTED_MODULE_1__["Utilities"].makeid(10);
-            const tempUrl = this.createUrl(nomeProcesso);
-            return yield this.myTimer.audioContext.audioWorklet.addModule(tempUrl).then(() => {
-                this.oscWk = this.myTimer.audioContext.createOscillator(); //new AudioWorkletNode(this.myTimer.audioContext, nomeProcesso);
-                this.oscWk.start();
-                if (typeof this.modulatoreDiFrequenza !== 'undefined' && !this.modulatoreDioFrequenzaJustCon) {
-                    // @ts-ignore*/
-                    this.modulatoreDiFrequenza.connect(this.oscWk.frequency);
-                }
-            });
+            this.oscWk = this.myTimer.audioContext.createOscillator();
+            this.oscWk.start();
+            if (typeof this.modulatoreDiFrequenza !== 'undefined' && !this.modulatoreDioFrequenzaJustCon) {
+                this.modulatoreDiFrequenza.connect(this.oscWk.frequency);
+            }
         });
-    }
-    createUrl(nomeProcesso) {
-        let myWk;
-        myWk = this.createWorklet.toString();
-        myWk = `function ${myWk}`;
-        myWk = myWk.replace('Fake', 'AudioWorkletProcessor');
-        myWk = myWk.replace('var sampleRate;', '');
-        myWk = myWk.replace('oscillator', nomeProcesso);
-        const blob = new Blob([`(${myWk})()`], {
-            type: "application/javascript"
-        });
-        const tempUrl = URL.createObjectURL(blob);
-        return tempUrl;
     }
     setModulatoreDiFrequenza(modulatore) {
         if (typeof this.oscWk !== 'undefined' && !this.modulatoreDioFrequenzaJustCon) {
             this.modulatoreDiFrequenza = modulatore;
-            // @ts-ignore*/
             this.modulatoreDiFrequenza.connect(this.oscWk.frequency);
         }
     }
     disconnectModulatoreDiFrequenza() {
-        // @ts-ignore*/
         this.modulatoreDiFrequenza.disconnect(this.oscWk.frequency);
     }
     start() {
@@ -1850,64 +1778,43 @@ class OscComponent {
             this.isActive = true;
         }
     }
-    createWorklet() {
-        class BypassProcessor extends Fake {
-            constructor() {
-                super();
-            }
-            process(inputs, outputs) {
-                const input = inputs[0];
-                const output = outputs[0];
-                for (let channel = 0; channel < output.length; ++channel) {
-                    output[channel].set(input[channel]);
-                }
-                return true;
-            }
-        }
-        registerProcessor("oscillator", BypassProcessor);
-    }
 }
-OscComponent.ɵfac = function OscComponent_Factory(t) { return new (t || OscComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdirectiveInject"](_services_timer_service__WEBPACK_IMPORTED_MODULE_3__["TimerService"])); };
-OscComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineComponent"]({ type: OscComponent, selectors: [["app-osc"]], inputs: { nome: "nome" }, decls: 14, vars: 4, consts: [[3, "ngModel", "ngModelChange", "change"], [3, "value", 4, "ngFor", "ngForOf"], ["type", "number", "min", "0", "max", "100", "step", "0.01", 3, "ngModel", "ngModelChange", "change"], [3, "value"]], template: function OscComponent_Template(rf, ctx) { if (rf & 1) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](0);
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](1, "table");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](2, "tr");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](3, "th");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](4, "OscillatorType");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](5, "th");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtext"](6, "frequency");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](7, "tr");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](8, "td");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](9, "select", 0);
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("ngModelChange", function OscComponent_Template_select_ngModelChange_9_listener($event) { return ctx.selectedWaveView = $event; })("change", function OscComponent_Template_select_change_9_listener() { return ctx.changeWave(); });
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](10, OscComponent_option_10_Template, 2, 2, "option", 1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](11, "td");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](12, "input", 2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("ngModelChange", function OscComponent_Template_input_ngModelChange_12_listener($event) { return ctx.frequency = $event; })("change", function OscComponent_Template_input_change_12_listener() { return ctx.changeFrequency(); });
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](13, "td");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
+OscComponent.ɵfac = function OscComponent_Factory(t) { return new (t || OscComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdirectiveInject"](_services_timer_service__WEBPACK_IMPORTED_MODULE_2__["TimerService"])); };
+OscComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: OscComponent, selectors: [["app-osc"]], inputs: { nome: "nome" }, decls: 14, vars: 4, consts: [[3, "ngModel", "ngModelChange", "change"], [3, "value", 4, "ngFor", "ngForOf"], ["type", "number", "min", "0", "max", "100", "step", "0.01", 3, "ngModel", "ngModelChange", "change"], [3, "value"]], template: function OscComponent_Template(rf, ctx) { if (rf & 1) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](0);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](1, "table");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "tr");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](3, "th");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](4, "OscillatorType");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](5, "th");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](6, "frequency");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](7, "tr");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](8, "td");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](9, "select", 0);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function OscComponent_Template_select_ngModelChange_9_listener($event) { return ctx.selectedWaveView = $event; })("change", function OscComponent_Template_select_change_9_listener() { return ctx.changeWave(); });
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](10, OscComponent_option_10_Template, 2, 2, "option", 1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](11, "td");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](12, "input", 2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("ngModelChange", function OscComponent_Template_input_ngModelChange_12_listener($event) { return ctx.frequency = $event; })("change", function OscComponent_Template_input_change_12_listener() { return ctx.changeFrequency(); });
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](13, "td");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
     } if (rf & 2) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtextInterpolate1"](" ", ctx.nome, " ");
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](9);
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngModel", ctx.selectedWaveView);
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngForOf", ctx.waveforms);
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngModel", ctx.frequency);
-    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_4__["SelectControlValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["NgModel"], _angular_common__WEBPACK_IMPORTED_MODULE_5__["NgForOf"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["NumberValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__["ɵangular_packages_forms_forms_z"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJvc2MuY29tcG9uZW50LnNjc3MifQ== */"], changeDetection: 0 });
-class Fake {
-}
-function registerProcessor(arg0, arg1) {
-    throw new Error("Function not implemented.");
-}
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtextInterpolate1"](" ", ctx.nome, " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](9);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx.selectedWaveView);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngForOf", ctx.waveforms);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngModel", ctx.frequency);
+    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_3__["SelectControlValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__["NgModel"], _angular_common__WEBPACK_IMPORTED_MODULE_4__["NgForOf"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__["NumberValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_3__["ɵangular_packages_forms_forms_z"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJvc2MuY29tcG9uZW50LnNjc3MifQ== */"], changeDetection: 0 });
 
 
 /***/ }),
@@ -2003,11 +1910,11 @@ const _c9 = ["freqOscLfoGain"];
 const _c10 = ["pianoRoll"];
 const _c11 = ["mainGain1"];
 const _c12 = ["mainGain2"];
-function InstrumentComponent_div_11_Template(rf, ctx) { if (rf & 1) {
+function InstrumentComponent_div_12_Template(rf, ctx) { if (rf & 1) {
     const _r4 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](0, "div");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](1, "app-synth-control", 9);
-    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("parametriSynth", function InstrumentComponent_div_11_Template_app_synth_control_parametriSynth_1_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r4); const ctx_r3 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](); return ctx_r3.onSetSoundParams($event, ctx_r3.type); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("parametriSynth", function InstrumentComponent_div_12_Template_app_synth_control_parametriSynth_1_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r4); const ctx_r3 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](); return ctx_r3.onSetSoundParams($event, ctx_r3.type); });
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
 } if (rf & 2) {
@@ -2015,36 +1922,36 @@ function InstrumentComponent_div_11_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](1);
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("typeIn", ctx_r0.type)("name", ctx_r0.name);
 } }
-function InstrumentComponent_div_12_tr_29_Template(rf, ctx) { if (rf & 1) {
+function InstrumentComponent_div_13_tr_29_Template(rf, ctx) { if (rf & 1) {
     const _r20 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](0, "tr");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](1, "td");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](2, "button", 1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("click", function InstrumentComponent_div_12_tr_29_Template_button_click_2_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r20); const i_r18 = ctx.index; const ctx_r19 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](2); return ctx_r19.enableMod(i_r18); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("click", function InstrumentComponent_div_13_tr_29_Template_button_click_2_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r20); const i_r18 = ctx.index; const ctx_r19 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](2); return ctx_r19.enableMod(i_r18); });
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtext"](3, "V");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](4, "td");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](5, "input", 30);
-    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("ngModelChange", function InstrumentComponent_div_12_tr_29_Template_input_ngModelChange_5_listener($event) { const mod_r17 = ctx.$implicit; return mod_r17.min = $event; });
+    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("ngModelChange", function InstrumentComponent_div_13_tr_29_Template_input_ngModelChange_5_listener($event) { const mod_r17 = ctx.$implicit; return mod_r17.min = $event; });
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](6, "td");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](7, "input", 30);
-    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("ngModelChange", function InstrumentComponent_div_12_tr_29_Template_input_ngModelChange_7_listener($event) { const mod_r17 = ctx.$implicit; return mod_r17.max = $event; });
+    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("ngModelChange", function InstrumentComponent_div_13_tr_29_Template_input_ngModelChange_7_listener($event) { const mod_r17 = ctx.$implicit; return mod_r17.max = $event; });
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
 } if (rf & 2) {
     const mod_r17 = ctx.$implicit;
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](2);
-    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵstyleProp"]("background-color", mod_r17.modulation ? "red" : "grey");
+    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵclassMap"](mod_r17.modulation ? "on" : "off");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](3);
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngModel", mod_r17.min);
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](2);
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngModel", mod_r17.max);
 } }
-function InstrumentComponent_div_12_Template(rf, ctx) { if (rf & 1) {
+function InstrumentComponent_div_13_Template(rf, ctx) { if (rf & 1) {
     const _r24 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵgetCurrentView"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](0, "div");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](1, "table");
@@ -2080,7 +1987,7 @@ function InstrumentComponent_div_12_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtext"](28, "modulations");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](29, InstrumentComponent_div_12_tr_29_Template, 8, 4, "tr", 22);
+    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](29, InstrumentComponent_div_13_tr_29_Template, 8, 4, "tr", 22);
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
@@ -2106,12 +2013,12 @@ function InstrumentComponent_div_12_Template(rf, ctx) { if (rf & 1) {
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](49, "td");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtext"](50, " enable osc1 ");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](51, "input", 29);
-    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("ngModelChange", function InstrumentComponent_div_12_Template_input_ngModelChange_51_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r24); const ctx_r23 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](); return ctx_r23.lfoConOsc1 = $event; })("change", function InstrumentComponent_div_12_Template_input_change_51_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r24); const ctx_r25 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](); return ctx_r25.changeConnection(); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("ngModelChange", function InstrumentComponent_div_13_Template_input_ngModelChange_51_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r24); const ctx_r23 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](); return ctx_r23.lfoConOsc1 = $event; })("change", function InstrumentComponent_div_13_Template_input_change_51_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r24); const ctx_r25 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](); return ctx_r25.changeConnection(); });
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelement"](52, "br");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtext"](53, " enable osc2 ");
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](54, "input", 29);
-    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("ngModelChange", function InstrumentComponent_div_12_Template_input_ngModelChange_54_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r24); const ctx_r26 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](); return ctx_r26.lfoConOsc2 = $event; })("change", function InstrumentComponent_div_12_Template_input_change_54_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r24); const ctx_r27 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](); return ctx_r27.changeConnection2(); });
+    _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("ngModelChange", function InstrumentComponent_div_13_Template_input_ngModelChange_54_listener($event) { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r24); const ctx_r26 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](); return ctx_r26.lfoConOsc2 = $event; })("change", function InstrumentComponent_div_13_Template_input_change_54_listener() { _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r24); const ctx_r27 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵnextContext"](); return ctx_r27.changeConnection2(); });
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
@@ -2256,16 +2163,12 @@ class InstrumentComponent {
                 if (this.modulations[2].modulation) {
                     switch (res.timePosition) {
                         case 0:
-                            this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 20);
+                            this.filter.filterNode.frequency.setValueAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime);
                             break;
-                        case 1:
-                            this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 20);
-                            break;
-                        case 2:
-                            this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 20);
-                            break;
+                        case 1: break;
+                        case 2: break;
                         case 3:
-                            this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].min, this.myTimer.audioContext.currentTime, this.myTimer.steps / 20);
+                            this.filter.filterNode.frequency.setValueAtTime(this.modulations[2].min, this.myTimer.audioContext.currentTime);
                             break;
                     }
                 }
@@ -2277,9 +2180,7 @@ class InstrumentComponent {
                         case 1:
                             this.filter.filterNode.frequency.setValueAtTime(this.modulations[3].min, this.myTimer.audioContext.currentTime);
                             break;
-                        case 2:
-                            this.filter.filterNode.frequency.setValueAtTime(this.modulations[3].min, this.myTimer.audioContext.currentTime);
-                            break;
+                        case 2: break;
                         case 3:
                             this.filter.filterNode.frequency.setTargetAtTime(this.modulations[3].max, this.myTimer.audioContext.currentTime, this.myTimer.steps);
                             break;
@@ -2308,12 +2209,6 @@ class InstrumentComponent {
                 this.myDoubleosc.volume.connect(this.myTimer.merger);
                 break;
             case 'NEWSYNTH':
-                // this.osc2.setAudioNodeIn(this.gainOsc2.gainNode);
-                // this.gainOsc2.connectToAudioParam(this.filter.filterNode.frequency);
-                // this.lfo.setAudioNodeIn(this.gainLfo.gainNode);
-                // this.oscillator2.setAudioNodeIn(this.gain.gainAdsr)
-                // this.osc.setAudioNodeIn(this.gain.gainAdsr);
-                // this.gain.connectToAudioNode(this.filter.filterNode);
                 this.filterLfoGain.connectToAudioParam(this.filter.filterNode.frequency);
                 this.lfoFrequencyFilter.setAudioNodeIn(this.filterLfoGain.gainNode);
                 this.lfoFrequencyOscillator.setAudioNodeIn(this.freqOscLfoGain.gainNode);
@@ -2557,7 +2452,7 @@ InstrumentComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefi
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵloadQuery"]()) && (ctx.pianoRoll = _t.first);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵloadQuery"]()) && (ctx.mainGain1 = _t.first);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵloadQuery"]()) && (ctx.mainGain2 = _t.first);
-    } }, inputs: { clipIndex: "clipIndex", name: "name", type: "type", index: "index", pianoRollDimension: "pianoRollDimension", muted: "muted" }, decls: 17, vars: 14, consts: [[2, "width", "100%", "top", "380px", "position", "absolute"], [3, "click"], ["type", "number", "min", "0", "max", "60", "step", "0.01", 3, "ngModel", "ngModelChange", "change"], ["type", "number", "min", "0", "max", "100", "step", "0.01", 3, "ngModel", "ngModelChange", "change"], [4, "ngIf"], [2, "position", "relative"], [2, "width", "100%"], [3, "clipIndex", "instrumentType", "la", "pianoRollDimensionIn", "notaDaSuonare"], ["pianoRoll", ""], [3, "typeIn", "name", "parametriSynth"], [1, "a"], [3, "nome"], ["mainOscillator1", ""], [3, "envelope", "nome"], ["mainGain1", ""], ["mainGain", ""], ["colspan", "2", 1, "a"], ["lfoFrequencyFilter", ""], ["filterLfoGain", ""], ["pan", ""], ["rowspan", "2", 1, "a"], ["colspan", "3"], [4, "ngFor", "ngForOf"], ["mainOscillator2", ""], ["mainGain2", ""], ["filter", ""], ["colspan", "3", 1, "a"], ["lfoFrequencyOscillator", ""], ["freqOscLfoGain", ""], ["type", "checkbox", 3, "ngModel", "ngModelChange", "change"], ["type", "number", 3, "ngModel", "ngModelChange"]], template: function InstrumentComponent_Template(rf, ctx) { if (rf & 1) {
+    } }, inputs: { clipIndex: "clipIndex", name: "name", type: "type", index: "index", pianoRollDimension: "pianoRollDimension", muted: "muted" }, decls: 18, vars: 14, consts: [[2, "width", "100%", "top", "380px", "position", "absolute"], [3, "click"], ["type", "number", "min", "0", "max", "60", "step", "0.01", 3, "ngModel", "ngModelChange", "change"], ["type", "number", "min", "0", "max", "100", "step", "0.01", 3, "ngModel", "ngModelChange", "change"], [4, "ngIf"], [2, "position", "relative"], [2, "width", "100%"], [3, "clipIndex", "instrumentType", "la", "pianoRollDimensionIn", "notaDaSuonare"], ["pianoRoll", ""], [3, "typeIn", "name", "parametriSynth"], [1, "a"], [3, "nome"], ["mainOscillator1", ""], [3, "envelope", "nome"], ["mainGain1", ""], ["mainGain", ""], ["colspan", "2", 1, "a"], ["lfoFrequencyFilter", ""], ["filterLfoGain", ""], ["pan", ""], ["rowspan", "2", 1, "a"], ["colspan", "3"], [4, "ngFor", "ngForOf"], ["mainOscillator2", ""], ["mainGain2", ""], ["filter", ""], ["colspan", "3", 1, "a"], ["lfoFrequencyOscillator", ""], ["freqOscLfoGain", ""], ["type", "checkbox", 3, "ngModel", "ngModelChange", "change"], ["type", "number", 3, "ngModel", "ngModelChange"]], template: function InstrumentComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](1, "div");
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtext"](2);
@@ -2573,39 +2468,40 @@ InstrumentComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefi
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](8, "input", 3);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("ngModelChange", function InstrumentComponent_Template_input_ngModelChange_8_listener($event) { return ctx.adrywet = $event; })("change", function InstrumentComponent_Template_input_change_8_listener() { return ctx.setAdrywet(); });
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](9, "button", 1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("click", function InstrumentComponent_Template_button_click_9_listener() { return ctx.setWaveshaper(); });
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtext"](10, "waveshaper");
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtext"](9, "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](10, "button", 1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("click", function InstrumentComponent_Template_button_click_10_listener() { return ctx.setWaveshaper(); });
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtext"](11, "waveshaper");
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](11, InstrumentComponent_div_11_Template, 2, 2, "div", 4);
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](12, InstrumentComponent_div_12_Template, 55, 19, "div", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](12, InstrumentComponent_div_12_Template, 2, 2, "div", 4);
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](13, InstrumentComponent_div_13_Template, 55, 19, "div", 4);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](13, "div", 5);
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](14, "div", 6);
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](15, "app-piano-roll-canvas-based", 7, 8);
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("notaDaSuonare", function InstrumentComponent_Template_app_piano_roll_canvas_based_notaDaSuonare_15_listener($event) { return ctx.play($event, ctx.type); });
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](14, "div", 5);
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](15, "div", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](16, "app-piano-roll-canvas-based", 7, 8);
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("notaDaSuonare", function InstrumentComponent_Template_app_piano_roll_canvas_based_notaDaSuonare_16_listener($event) { return ctx.play($event, ctx.type); });
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtextInterpolate2"](" ", ctx.name, "-", ctx.index, " ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtextInterpolate2"](" ", ctx.name, "-", ctx.index, "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 ");
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵstyleProp"]("background-color", ctx.getActiveButton(ctx.autopanSpenta));
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵclassMap"](!ctx.autopanSpenta ? "on" : "off");
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](3);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngModel", ctx.arate);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](2);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngModel", ctx.adrywet);
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵstyleProp"]("background-color", ctx.getActiveButton(ctx.waveshaperSpenta));
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵclassMap"](!ctx.waveshaperSpenta ? "on" : "off");
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](2);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngIf", ctx.type !== "NEWSYNTH");
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](1);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngIf", ctx.type === "NEWSYNTH");
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](3);
         _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("clipIndex", ctx.clipIndex)("instrumentType", ctx.type)("la", ctx.selectedHrtz)("pianoRollDimensionIn", ctx.pianoRollDimension);
-    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_10__["NumberValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["NgModel"], _angular_common__WEBPACK_IMPORTED_MODULE_11__["NgIf"], _core_graphic_piano_roll_canvas_based_piano_roll_canvas_based_component__WEBPACK_IMPORTED_MODULE_12__["PianoRollCanvasBasedComponent"], _synth_control_synth_control_component__WEBPACK_IMPORTED_MODULE_13__["SynthControlComponent"], _audio_components_osc_osc_component__WEBPACK_IMPORTED_MODULE_14__["OscComponent"], _audio_components_gain_gain_component__WEBPACK_IMPORTED_MODULE_15__["GainComponent"], _audio_components_stereo_panner_stereo_panner_component__WEBPACK_IMPORTED_MODULE_16__["StereoPannerComponent"], _angular_common__WEBPACK_IMPORTED_MODULE_11__["NgForOf"], _audio_components_filter_filter_component__WEBPACK_IMPORTED_MODULE_17__["FilterComponent"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["CheckboxControlValueAccessor"]], styles: [".intestazione[_ngcontent-%COMP%] {\n  position: absolute;\n}\n\n.DOUBLEOOSC[_ngcontent-%COMP%] {\n  background-color: #c85a5a;\n  width: 100%;\n  height: 67%;\n  position: absolute;\n}\n\n.MONOOSC[_ngcontent-%COMP%] {\n  background-color: #5ac85a;\n  width: 100%;\n  height: 67%;\n  position: absolute;\n}\n\n.SAMPLER[_ngcontent-%COMP%] {\n  background-color: #5a5ac8;\n  width: 100%;\n  height: 67%;\n  position: absolute;\n}\n\n.NEWSYNTH[_ngcontent-%COMP%] {\n  width: 100%;\n  height: 67%;\n  position: absolute;\n  top: 17%;\n}\n\n.autopan[_ngcontent-%COMP%] {\n  background-color: white;\n  position: relative;\n}\n\n.waveshaper[_ngcontent-%COMP%] {\n  background-color: white;\n  position: relative;\n}\n\n.chainFxContainer[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 0;\n  right: 20%;\n}\n\ninput[_ngcontent-%COMP%] {\n  width: 50px;\n}\n\n.intestazioneNEWSYNTH[_ngcontent-%COMP%] {\n  background-color: #64c8c8;\n  height: 38px;\n  line-height: 38px;\n  top: 74%;\n  width: 100%;\n  z-index: 99;\n}\n\n.intestazioneSAMPLER[_ngcontent-%COMP%] {\n  background-color: #6496c8;\n  height: 38px;\n  line-height: 38px;\n  top: 74%;\n  width: 100%;\n  z-index: 99;\n}\n\n.intestazioneMONOOSC[_ngcontent-%COMP%] {\n  background-color: #5ac85a;\n  height: 38px;\n  line-height: 38px;\n  top: 74%;\n  width: 100%;\n  z-index: 99;\n}\n\n.a[_ngcontent-%COMP%] {\n  border: 1px solid white;\n}\n\ntable[_ngcontent-%COMP%] {\n  height: 100%;\n  width: 100%;\n}\n\n.mainContainer[_ngcontent-%COMP%] {\n  width: 100%;\n  position: fixed;\n  bottom: 0%;\n  height: 50%;\n  overflow-y: auto;\n  overflow-x: auto;\n}\n\n.esternaInstrument[_ngcontent-%COMP%] {\n  position: absolute;\n}\n\n.esternaInstrumentPianoRoll[_ngcontent-%COMP%] {\n  position: absolute;\n}\n\n.mainContainer[_ngcontent-%COMP%] {\n  overflow: hidden;\n  height: 650px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uXFwuLlxcaW5zdHJ1bWVudC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGtCQUFBO0FBQ0o7O0FBQ0E7RUFDSSx5QkFBQTtFQUNBLFdBQUE7RUFDQSxXQUFBO0VBQ0Esa0JBQUE7QUFFSjs7QUFBQTtFQUNJLHlCQUFBO0VBQ0EsV0FBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtBQUdKOztBQURBO0VBQ0kseUJBQUE7RUFDQSxXQUFBO0VBQ0EsV0FBQTtFQUNBLGtCQUFBO0FBSUo7O0FBRkE7RUFFSSxXQUFBO0VBQ0EsV0FBQTtFQUNBLGtCQUFBO0VBQ0EsUUFBQTtBQUlKOztBQURBO0VBQ0ksdUJBQUE7RUFDQSxrQkFBQTtBQUlKOztBQUZBO0VBQ0ksdUJBQUE7RUFDQSxrQkFBQTtBQUtKOztBQUhBO0VBQ0ksa0JBQUE7RUFDQSxNQUFBO0VBQ0EsVUFBQTtBQU1KOztBQUhBO0VBQ0ksV0FBQTtBQU1KOztBQUpBO0VBQ0kseUJBQUE7RUFDQSxZQUFBO0VBQ0EsaUJBQUE7RUFDQSxRQUFBO0VBQ0EsV0FBQTtFQUNBLFdBQUE7QUFPSjs7QUFMQTtFQUNJLHlCQUFBO0VBQ0EsWUFBQTtFQUNBLGlCQUFBO0VBQ0EsUUFBQTtFQUNBLFdBQUE7RUFDQSxXQUFBO0FBUUo7O0FBTkE7RUFDSSx5QkFBQTtFQUNBLFlBQUE7RUFDQSxpQkFBQTtFQUNBLFFBQUE7RUFDQSxXQUFBO0VBQ0EsV0FBQTtBQVNKOztBQVBBO0VBQ0ksdUJBQUE7QUFVSjs7QUFSQTtFQUNJLFlBQUE7RUFDQSxXQUFBO0FBV0o7O0FBUkE7RUFFSSxXQUFBO0VBQ0EsZUFBQTtFQUNBLFVBQUE7RUFDQSxXQUFBO0VBQ0EsZ0JBQUE7RUFDQSxnQkFBQTtBQVVKOztBQVJBO0VBQ0ksa0JBQUE7QUFXSjs7QUFUQTtFQUVJLGtCQUFBO0FBV0o7O0FBVEE7RUFDSSxnQkFBQTtFQUNBLGFBQUE7QUFZSiIsImZpbGUiOiJpbnN0cnVtZW50LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLmludGVzdGF6aW9uZSB7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbn1cclxuLkRPVUJMRU9PU0Mge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgyMDAsIDkwLCA5MCwgMSk7XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIGhlaWdodDogNjclO1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG59XHJcbi5NT05PT1NDIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHJnYmEoOTAsIDIwMCwgOTAsIDEpO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBoZWlnaHQ6IDY3JTtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxufVxyXG4uU0FNUExFUiB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDkwLCA5MCwgMjAwLCAxKTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgaGVpZ2h0OiA2NyU7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbn1cclxuLk5FV1NZTlRIIHtcclxuICAgIC8vYmFja2dyb3VuZC1jb2xvcjojZjVmNWY1O1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBoZWlnaHQ6IDY3JTtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIHRvcDogMTclO1xyXG59XHJcblxyXG4uYXV0b3BhbiB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcclxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxufVxyXG4ud2F2ZXNoYXBlciB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcclxuICAgIHBvc2l0aW9uOiByZWxhdGl2ZTtcclxufVxyXG4uY2hhaW5GeENvbnRhaW5lciB7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgICB0b3A6IDA7XHJcbiAgICByaWdodDogMjAlO1xyXG59XHJcblxyXG5pbnB1dCB7XHJcbiAgICB3aWR0aDogNTBweDtcclxufVxyXG4uaW50ZXN0YXppb25lTkVXU1lOVEgge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgxMDAsIDIwMCwgMjAwLCAxKTtcclxuICAgIGhlaWdodDogMzhweDtcclxuICAgIGxpbmUtaGVpZ2h0OiAzOHB4O1xyXG4gICAgdG9wOiA3NCU7XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIHotaW5kZXg6IDk5O1xyXG59XHJcbi5pbnRlc3RhemlvbmVTQU1QTEVSIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6cmdiYSgxMDAsIDE1MCwgMjAwLCAxKTtcclxuICAgIGhlaWdodDogMzhweDtcclxuICAgIGxpbmUtaGVpZ2h0OiAzOHB4O1xyXG4gICAgdG9wOiA3NCU7XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIHotaW5kZXg6IDk5O1xyXG59XHJcbi5pbnRlc3RhemlvbmVNT05PT1NDIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHJnYmEoOTAsIDIwMCwgOTAsIDEpO1xyXG4gICAgaGVpZ2h0OiAzOHB4O1xyXG4gICAgbGluZS1oZWlnaHQ6IDM4cHg7XHJcbiAgICB0b3A6IDc0JTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgei1pbmRleDogOTk7XHJcbn1cclxuLmEge1xyXG4gICAgYm9yZGVyOiAxcHggc29saWQgd2hpdGU7XHJcbn1cclxudGFibGUge1xyXG4gICAgaGVpZ2h0OiAxMDAlO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbn1cclxuXHJcbi5tYWluQ29udGFpbmVyIHtcclxuICAgXHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIHBvc2l0aW9uOiBmaXhlZDtcclxuICAgIGJvdHRvbTogMCU7XHJcbiAgICBoZWlnaHQ6IDUwJTtcclxuICAgIG92ZXJmbG93LXk6IGF1dG87XHJcbiAgICBvdmVyZmxvdy14OiBhdXRvO1xyXG59XHJcbi5lc3Rlcm5hSW5zdHJ1bWVudCB7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbn1cclxuLmVzdGVybmFJbnN0cnVtZW50UGlhbm9Sb2xse1xyXG4gICAgXHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbn1cclxuLm1haW5Db250YWluZXJ7XHJcbiAgICBvdmVyZmxvdzogaGlkZGVuO1xyXG4gICAgaGVpZ2h0OiA2NTBweDtcclxuICAgXHJcblxyXG59XHJcbiJdfQ== */"] });
+    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_10__["NumberValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["NgModel"], _angular_common__WEBPACK_IMPORTED_MODULE_11__["NgIf"], _core_graphic_piano_roll_canvas_based_piano_roll_canvas_based_component__WEBPACK_IMPORTED_MODULE_12__["PianoRollCanvasBasedComponent"], _synth_control_synth_control_component__WEBPACK_IMPORTED_MODULE_13__["SynthControlComponent"], _audio_components_osc_osc_component__WEBPACK_IMPORTED_MODULE_14__["OscComponent"], _audio_components_gain_gain_component__WEBPACK_IMPORTED_MODULE_15__["GainComponent"], _audio_components_stereo_panner_stereo_panner_component__WEBPACK_IMPORTED_MODULE_16__["StereoPannerComponent"], _angular_common__WEBPACK_IMPORTED_MODULE_11__["NgForOf"], _audio_components_filter_filter_component__WEBPACK_IMPORTED_MODULE_17__["FilterComponent"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__["CheckboxControlValueAccessor"]], styles: [".intestazione[_ngcontent-%COMP%] {\n  position: absolute;\n}\n\n.DOUBLEOOSC[_ngcontent-%COMP%] {\n  background-color: #c85a5a;\n  width: 100%;\n  height: 67%;\n  position: absolute;\n}\n\n.MONOOSC[_ngcontent-%COMP%] {\n  background-color: #5ac85a;\n  width: 100%;\n  height: 67%;\n  position: absolute;\n}\n\n.SAMPLER[_ngcontent-%COMP%] {\n  background-color: #5a5ac8;\n  width: 100%;\n  height: 67%;\n  position: absolute;\n}\n\n.NEWSYNTH[_ngcontent-%COMP%] {\n  width: 100%;\n  height: 67%;\n  position: absolute;\n  top: 17%;\n}\n\n.autopan[_ngcontent-%COMP%] {\n  background-color: white;\n  position: relative;\n}\n\n.waveshaper[_ngcontent-%COMP%] {\n  background-color: white;\n  position: relative;\n}\n\n.chainFxContainer[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 0;\n  right: 20%;\n}\n\ninput[_ngcontent-%COMP%] {\n  width: 50px;\n}\n\n.intestazioneNEWSYNTH[_ngcontent-%COMP%] {\n  background-color: #64c8c8;\n  height: 38px;\n  line-height: 38px;\n  top: 74%;\n  width: 100%;\n  z-index: 99;\n}\n\n.intestazioneSAMPLER[_ngcontent-%COMP%] {\n  background-color: #6496c8;\n  height: 38px;\n  line-height: 38px;\n  top: 74%;\n  width: 100%;\n  z-index: 99;\n}\n\n.intestazioneMONOOSC[_ngcontent-%COMP%] {\n  background-color: #5ac85a;\n  height: 38px;\n  line-height: 38px;\n  top: 74%;\n  width: 100%;\n  z-index: 99;\n}\n\n.a[_ngcontent-%COMP%] {\n  border: 1px solid white;\n}\n\n.on[_ngcontent-%COMP%] {\n  background-color: red;\n  border-radius: 10%;\n  border: 3px solid black;\n}\n\n.off[_ngcontent-%COMP%] {\n  background-color: gray;\n  border-radius: 10%;\n  border: 3px solid #1b1b1b;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uXFwuLlxcaW5zdHJ1bWVudC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGtCQUFBO0FBQ0o7O0FBQ0E7RUFDSSx5QkFBQTtFQUNBLFdBQUE7RUFDQSxXQUFBO0VBQ0Esa0JBQUE7QUFFSjs7QUFBQTtFQUNJLHlCQUFBO0VBQ0EsV0FBQTtFQUNBLFdBQUE7RUFDQSxrQkFBQTtBQUdKOztBQURBO0VBQ0kseUJBQUE7RUFDQSxXQUFBO0VBQ0EsV0FBQTtFQUNBLGtCQUFBO0FBSUo7O0FBRkE7RUFFSSxXQUFBO0VBQ0EsV0FBQTtFQUNBLGtCQUFBO0VBQ0EsUUFBQTtBQUlKOztBQURBO0VBQ0ksdUJBQUE7RUFDQSxrQkFBQTtBQUlKOztBQUZBO0VBQ0ksdUJBQUE7RUFDQSxrQkFBQTtBQUtKOztBQUhBO0VBQ0ksa0JBQUE7RUFDQSxNQUFBO0VBQ0EsVUFBQTtBQU1KOztBQUhBO0VBQ0ksV0FBQTtBQU1KOztBQUpBO0VBQ0kseUJBQUE7RUFDQSxZQUFBO0VBQ0EsaUJBQUE7RUFDQSxRQUFBO0VBQ0EsV0FBQTtFQUNBLFdBQUE7QUFPSjs7QUFMQTtFQUNJLHlCQUFBO0VBQ0EsWUFBQTtFQUNBLGlCQUFBO0VBQ0EsUUFBQTtFQUNBLFdBQUE7RUFDQSxXQUFBO0FBUUo7O0FBTkE7RUFDSSx5QkFBQTtFQUNBLFlBQUE7RUFDQSxpQkFBQTtFQUNBLFFBQUE7RUFDQSxXQUFBO0VBQ0EsV0FBQTtBQVNKOztBQVBBO0VBQ0ksdUJBQUE7QUFVSjs7QUFQQTtFQUNJLHFCQUFBO0VBQ0Esa0JBQUE7RUFDQSx1QkFBQTtBQVVKOztBQVJBO0VBQ0ksc0JBQUE7RUFDQSxrQkFBQTtFQUNBLHlCQUFBO0FBV0oiLCJmaWxlIjoiaW5zdHJ1bWVudC5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIi5pbnRlc3RhemlvbmUge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG59XHJcbi5ET1VCTEVPT1NDIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMjAwLCA5MCwgOTAsIDEpO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBoZWlnaHQ6IDY3JTtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxufVxyXG4uTU9OT09TQyB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDkwLCAyMDAsIDkwLCAxKTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgaGVpZ2h0OiA2NyU7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbn1cclxuLlNBTVBMRVIge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSg5MCwgOTAsIDIwMCwgMSk7XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIGhlaWdodDogNjclO1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG59XHJcbi5ORVdTWU5USCB7XHJcbiAgICAvL2JhY2tncm91bmQtY29sb3I6I2Y1ZjVmNTtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gICAgaGVpZ2h0OiA2NyU7XHJcbiAgICBwb3NpdGlvbjogYWJzb2x1dGU7XHJcbiAgICB0b3A6IDE3JTtcclxufVxyXG5cclxuLmF1dG9wYW4ge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbn1cclxuLndhdmVzaGFwZXIge1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogd2hpdGU7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbn1cclxuLmNoYWluRnhDb250YWluZXIge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgdG9wOiAwO1xyXG4gICAgcmlnaHQ6IDIwJTtcclxufVxyXG5cclxuaW5wdXQge1xyXG4gICAgd2lkdGg6IDUwcHg7XHJcbn1cclxuLmludGVzdGF6aW9uZU5FV1NZTlRIIHtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMTAwLCAyMDAsIDIwMCwgMSk7XHJcbiAgICBoZWlnaHQ6IDM4cHg7XHJcbiAgICBsaW5lLWhlaWdodDogMzhweDtcclxuICAgIHRvcDogNzQlO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICB6LWluZGV4OiA5OTtcclxufVxyXG4uaW50ZXN0YXppb25lU0FNUExFUiB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOnJnYmEoMTAwLCAxNTAsIDIwMCwgMSk7XHJcbiAgICBoZWlnaHQ6IDM4cHg7XHJcbiAgICBsaW5lLWhlaWdodDogMzhweDtcclxuICAgIHRvcDogNzQlO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICB6LWluZGV4OiA5OTtcclxufVxyXG4uaW50ZXN0YXppb25lTU9OT09TQyB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDkwLCAyMDAsIDkwLCAxKTtcclxuICAgIGhlaWdodDogMzhweDtcclxuICAgIGxpbmUtaGVpZ2h0OiAzOHB4O1xyXG4gICAgdG9wOiA3NCU7XHJcbiAgICB3aWR0aDogMTAwJTtcclxuICAgIHotaW5kZXg6IDk5O1xyXG59XHJcbi5hIHtcclxuICAgIGJvcmRlcjogMXB4IHNvbGlkIHdoaXRlO1xyXG59XHJcblxyXG4ub257XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZWQ7XHJcbiAgICBib3JkZXItcmFkaXVzOiAxMCU7XHJcbiAgICBib3JkZXI6IDNweCBzb2xpZCBibGFjaztcclxufVxyXG4ub2Zme1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogZ3JheTtcclxuICAgIGJvcmRlci1yYWRpdXM6IDEwJTtcclxuICAgIGJvcmRlcjogM3B4IHNvbGlkIHJnYigyNywgMjcsIDI3KTtcclxufVxyXG5cclxuXHJcblxyXG5cclxuXHJcbiJdfQ== */"] });
 
 
 /***/ }),
@@ -3193,111 +3089,6 @@ StereoPannerComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵde
 
 /***/ }),
 
-/***/ "Z1aY":
-/*!***************************************************!*\
-  !*** ./src/audio-components/lfo/lfo.component.ts ***!
-  \***************************************************/
-/*! exports provided: LfoComponent */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LfoComponent", function() { return LfoComponent; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var src_services_timer_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/services/timer.service */ "IqJH");
-/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "3Pt+");
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "ofXK");
-/* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/material/input */ "qFsG");
-
-
-
-
-
-function LfoComponent_option_8_Template(rf, ctx) { if (rf & 1) {
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "option", 4);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-} if (rf & 2) {
-    const wave_r1 = ctx.$implicit;
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("value", wave_r1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate1"](" ", wave_r1, "");
-} }
-class LfoComponent {
-    constructor(myTimer) {
-        this.myTimer = myTimer;
-        //Provo a fare un pseudo lfo sfruttando il gain
-        //e i metodi tipo setValueAtTime per creare una funzione 
-        //che possa sostituire un oscillatore(generatore di funzioni)
-        //da cosa è alimentato il gain? dalla frequenza del filtro
-        //forse non c'è bisongno del gain basta modulare il parametro
-        this.gainOsc = this.myTimer.audioContext.createGain();
-        this.waveforms = ['square', 'sine', 'sawtooth', 'triangle', 'noise'];
-        this.multipler = 2;
-        this.center = 10000;
-        this.rate = 2;
-        this.tempo = 120;
-        this.shape = 'sine';
-        this.tempo = this.myTimer.speed;
-    }
-    ngOnInit() {
-    }
-    tick() {
-        this.gainOsc.gain.value = this.center; // set oscillation centre value
-        this.gainOsc.connect(this.modulationOut);
-    }
-    changed() {
-    }
-}
-LfoComponent.ɵfac = function LfoComponent_Factory(t) { return new (t || LfoComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_services_timer_service__WEBPACK_IMPORTED_MODULE_1__["TimerService"])); };
-LfoComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: LfoComponent, selectors: [["app-lfo"]], inputs: { param: "param", modulationOut: "modulationOut" }, decls: 16, vars: 5, consts: [["type", "number", 3, "ngModel", "ngModelChange", "change"], [3, "ngModel", "ngModelChange"], [3, "value", 4, "ngFor", "ngForOf"], ["matInput", "", "type", "number", 3, "ngModel", "ngModelChange", "change"], [3, "value"]], template: function LfoComponent_Template(rf, ctx) { if (rf & 1) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](0, "One shot LFO\n");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "table");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "tr");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "td");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](4, " center frequency");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "input", 0);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function LfoComponent_Template_input_ngModelChange_5_listener($event) { return ctx.center = $event; })("change", function LfoComponent_Template_input_change_5_listener() { return ctx.changed(); });
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "td");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "select", 1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function LfoComponent_Template_select_ngModelChange_7_listener($event) { return ctx.shape = $event; });
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](8, LfoComponent_option_8_Template, 2, 2, "option", 2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "tr");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "td");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](11, " rate");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "input", 3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function LfoComponent_Template_input_ngModelChange_12_listener($event) { return ctx.rate = $event; })("change", function LfoComponent_Template_input_change_12_listener() { return ctx.changed(); });
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "td");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14, " bpm ");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](15, "input", 3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("ngModelChange", function LfoComponent_Template_input_ngModelChange_15_listener($event) { return ctx.tempo = $event; })("change", function LfoComponent_Template_input_change_15_listener() { return ctx.changed(); });
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    } if (rf & 2) {
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](5);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx.center);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx.shape);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.waveforms);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](4);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx.rate);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngModel", ctx.tempo);
-    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["NumberValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["NgModel"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["SelectControlValueAccessor"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgForOf"], _angular_material_input__WEBPACK_IMPORTED_MODULE_4__["MatInput"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["NgSelectOption"], _angular_forms__WEBPACK_IMPORTED_MODULE_2__["ɵangular_packages_forms_forms_z"]], styles: ["input[_ngcontent-%COMP%] {\n  width: 100px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uXFwuLlxcLi5cXGxmby5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLFlBQUE7QUFDSiIsImZpbGUiOiJsZm8uY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJpbnB1dHtcclxuICAgIHdpZHRoOiAxMDBweDs7XHJcbn0iXX0= */"], changeDetection: 0 });
-
-
-/***/ }),
-
 /***/ "ZAI4":
 /*!*******************************!*\
   !*** ./src/app/app.module.ts ***!
@@ -3326,21 +3117,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _audio_components_stereo_panner_stereo_panner_component__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../audio-components/stereo-panner/stereo-panner.component */ "Wohp");
 /* harmony import */ var _audio_components_filter_filter_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../audio-components/filter/filter.component */ "6+A9");
 /* harmony import */ var _angular_material_icon__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @angular/material/icon */ "NFeN");
-/* harmony import */ var _angular_material_toolbar__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @angular/material/toolbar */ "/t3+");
-/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @angular/material/button */ "bTqV");
-/* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @angular/material/input */ "qFsG");
-/* harmony import */ var _angular_material_list__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @angular/material/list */ "MutI");
-/* harmony import */ var _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/material/tooltip */ "Qu3c");
-/* harmony import */ var _angular_material_menu__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @angular/material/menu */ "STbY");
-/* harmony import */ var _angular_material_grid_list__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @angular/material/grid-list */ "zkoq");
-/* harmony import */ var _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @angular/material/sidenav */ "XhcP");
-/* harmony import */ var src_audio_components_lfo_lfo_component__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! src/audio-components/lfo/lfo.component */ "Z1aY");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! @angular/core */ "fXoL");
-
-
-
-
-
+/* harmony import */ var _angular_material_button__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @angular/material/button */ "bTqV");
+/* harmony import */ var _angular_material_input__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @angular/material/input */ "qFsG");
+/* harmony import */ var _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! @angular/material/tooltip */ "Qu3c");
+/* harmony import */ var _angular_material_menu__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! @angular/material/menu */ "STbY");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! @angular/core */ "fXoL");
 
 
 
@@ -3367,23 +3148,19 @@ __webpack_require__.r(__webpack_exports__);
 class AppModule {
 }
 AppModule.ɵfac = function AppModule_Factory(t) { return new (t || AppModule)(); };
-AppModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_27__["ɵɵdefineNgModule"]({ type: AppModule, bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_1__["AppComponent"]] });
-AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_27__["ɵɵdefineInjector"]({ providers: [_services_timer_service__WEBPACK_IMPORTED_MODULE_2__["TimerService"], AudioContext, _services_samples_library_service__WEBPACK_IMPORTED_MODULE_9__["SamplesLibraryService"]], imports: [[
+AppModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_22__["ɵɵdefineNgModule"]({ type: AppModule, bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_1__["AppComponent"]] });
+AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_22__["ɵɵdefineInjector"]({ providers: [_services_timer_service__WEBPACK_IMPORTED_MODULE_2__["TimerService"], AudioContext, _services_samples_library_service__WEBPACK_IMPORTED_MODULE_9__["SamplesLibraryService"]], imports: [[
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
             _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
             _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpClientModule"],
             _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_11__["BrowserAnimationsModule"],
             _angular_material_icon__WEBPACK_IMPORTED_MODULE_17__["MatIconModule"],
-            _angular_material_toolbar__WEBPACK_IMPORTED_MODULE_18__["MatToolbarModule"],
-            _angular_material_button__WEBPACK_IMPORTED_MODULE_19__["MatButtonModule"],
-            _angular_material_input__WEBPACK_IMPORTED_MODULE_20__["MatInputModule"],
-            _angular_material_grid_list__WEBPACK_IMPORTED_MODULE_24__["MatGridListModule"],
-            _angular_material_menu__WEBPACK_IMPORTED_MODULE_23__["MatMenuModule"],
-            _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_22__["MatTooltipModule"],
-            _angular_material_list__WEBPACK_IMPORTED_MODULE_21__["MatListModule"],
-            _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_25__["MatSidenavModule"]
+            _angular_material_button__WEBPACK_IMPORTED_MODULE_18__["MatButtonModule"],
+            _angular_material_input__WEBPACK_IMPORTED_MODULE_19__["MatInputModule"],
+            _angular_material_menu__WEBPACK_IMPORTED_MODULE_21__["MatMenuModule"],
+            _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_20__["MatTooltipModule"]
         ]] });
-(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_27__["ɵɵsetNgModuleScope"](AppModule, { declarations: [_app_component__WEBPACK_IMPORTED_MODULE_1__["AppComponent"],
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_22__["ɵɵsetNgModuleScope"](AppModule, { declarations: [_app_component__WEBPACK_IMPORTED_MODULE_1__["AppComponent"],
         _start_stop_start_stop_component__WEBPACK_IMPORTED_MODULE_4__["StartStopComponent"],
         _timer_control_timer_control_component__WEBPACK_IMPORTED_MODULE_7__["TimerControlComponent"],
         _synth_control_synth_control_component__WEBPACK_IMPORTED_MODULE_8__["SynthControlComponent"],
@@ -3393,20 +3170,15 @@ AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_27__["ɵɵdefineInjecto
         _audio_components_gain_gain_component__WEBPACK_IMPORTED_MODULE_14__["GainComponent"],
         _audio_components_stereo_panner_stereo_panner_component__WEBPACK_IMPORTED_MODULE_15__["StereoPannerComponent"],
         _audio_components_filter_filter_component__WEBPACK_IMPORTED_MODULE_16__["FilterComponent"],
-        _core_graphic_piano_roll_canvas_based_piano_roll_canvas_based_component__WEBPACK_IMPORTED_MODULE_6__["PianoRollCanvasBasedComponent"],
-        src_audio_components_lfo_lfo_component__WEBPACK_IMPORTED_MODULE_26__["LfoComponent"]], imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
+        _core_graphic_piano_roll_canvas_based_piano_roll_canvas_based_component__WEBPACK_IMPORTED_MODULE_6__["PianoRollCanvasBasedComponent"]], imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
         _angular_forms__WEBPACK_IMPORTED_MODULE_3__["FormsModule"],
         _angular_common_http__WEBPACK_IMPORTED_MODULE_5__["HttpClientModule"],
         _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_11__["BrowserAnimationsModule"],
         _angular_material_icon__WEBPACK_IMPORTED_MODULE_17__["MatIconModule"],
-        _angular_material_toolbar__WEBPACK_IMPORTED_MODULE_18__["MatToolbarModule"],
-        _angular_material_button__WEBPACK_IMPORTED_MODULE_19__["MatButtonModule"],
-        _angular_material_input__WEBPACK_IMPORTED_MODULE_20__["MatInputModule"],
-        _angular_material_grid_list__WEBPACK_IMPORTED_MODULE_24__["MatGridListModule"],
-        _angular_material_menu__WEBPACK_IMPORTED_MODULE_23__["MatMenuModule"],
-        _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_22__["MatTooltipModule"],
-        _angular_material_list__WEBPACK_IMPORTED_MODULE_21__["MatListModule"],
-        _angular_material_sidenav__WEBPACK_IMPORTED_MODULE_25__["MatSidenavModule"]] }); })();
+        _angular_material_button__WEBPACK_IMPORTED_MODULE_18__["MatButtonModule"],
+        _angular_material_input__WEBPACK_IMPORTED_MODULE_19__["MatInputModule"],
+        _angular_material_menu__WEBPACK_IMPORTED_MODULE_21__["MatMenuModule"],
+        _angular_material_tooltip__WEBPACK_IMPORTED_MODULE_20__["MatTooltipModule"]] }); })();
 
 
 /***/ }),
@@ -3866,7 +3638,7 @@ PianoRollCanvasBasedComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate"]("width", ctx.getExternalDimension());
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpropertyInterpolate"]("width", ctx.getExternalDimension());
-    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_9__["NumberValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__["NgModel"], _angular_material_button__WEBPACK_IMPORTED_MODULE_10__["MatButton"], _angular_material_icon__WEBPACK_IMPORTED_MODULE_11__["MatIcon"]], styles: ["canvas[_ngcontent-%COMP%] {\n  position: absolute;\n}\n\n.cnvsContainer[_ngcontent-%COMP%] {\n  width: 100%;\n  height: 344px;\n  position: absolute;\n  overflow: scroll;\n  left: 0px;\n  z-index: 2;\n}\n\n.velocity-layer[_ngcontent-%COMP%] {\n  float: left;\n  align-content: center;\n  background-color: burlywood;\n  overflow: auto;\n  top: 383px;\n  border: 1px solid grey;\n  z-index: 0;\n}\n\n.pianoRollToolbar[_ngcontent-%COMP%] {\n  position: relative;\n  background-color: lightgray;\n  height: 38px;\n  line-height: 38px;\n}\n\n.example-spacer[_ngcontent-%COMP%] {\n  flex: 1 3 auto;\n}\n\n.allCanvas[_ngcontent-%COMP%] {\n  height: 4px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uXFwuLlxcLi5cXC4uXFxwaWFuby1yb2xsLWNhbnZhcy1iYXNlZC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGtCQUFBO0FBQ0o7O0FBRUE7RUFDSSxXQUFBO0VBQ0EsYUFBQTtFQUNBLGtCQUFBO0VBQ0EsZ0JBQUE7RUFDQSxTQUFBO0VBQ0EsVUFBQTtBQUNKOztBQUVBO0VBQ0ksV0FBQTtFQUNBLHFCQUFBO0VBQ0EsMkJBQUE7RUFDQSxjQUFBO0VBQ0EsVUFBQTtFQUNBLHNCQUFBO0VBQ0EsVUFBQTtBQUNKOztBQUVBO0VBQ0ksa0JBQUE7RUFDQSwyQkFBQTtFQUNBLFlBQUE7RUFDQSxpQkFBQTtBQUNKOztBQUVBO0VBQ0ksY0FBQTtBQUNKOztBQUNBO0VBQ0ksV0FBQTtBQUVKIiwiZmlsZSI6InBpYW5vLXJvbGwtY2FudmFzLWJhc2VkLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiY2FudmFzIHtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxufVxyXG5cclxuLmNudnNDb250YWluZXIge1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBoZWlnaHQ6IDM0NHB4O1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgb3ZlcmZsb3c6IHNjcm9sbDtcclxuICAgIGxlZnQ6IDBweDtcclxuICAgIHotaW5kZXg6IDI7XHJcbn1cclxuXHJcbi52ZWxvY2l0eS1sYXllciB7XHJcbiAgICBmbG9hdDogbGVmdDtcclxuICAgIGFsaWduLWNvbnRlbnQ6IGNlbnRlcjtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IGJ1cmx5d29vZDtcclxuICAgIG92ZXJmbG93OiBhdXRvO1xyXG4gICAgdG9wOiAzODNweDtcclxuICAgIGJvcmRlcjogMXB4IHNvbGlkIGdyZXk7XHJcbiAgICB6LWluZGV4OiAwO1xyXG59XHJcblxyXG4ucGlhbm9Sb2xsVG9vbGJhciB7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiBsaWdodGdyYXk7XHJcbiAgICBoZWlnaHQ6IDM4cHg7XHJcbiAgICBsaW5lLWhlaWdodDogMzhweDtcclxufVxyXG5cclxuLmV4YW1wbGUtc3BhY2VyIHtcclxuICAgIGZsZXg6IDEgMyBhdXRvO1xyXG59XHJcbi5hbGxDYW52YXMge1xyXG4gICAgaGVpZ2h0OiA0cHg7XHJcbn1cclxuIl19 */"], changeDetection: 0 });
+    } }, directives: [_angular_forms__WEBPACK_IMPORTED_MODULE_9__["NumberValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__["DefaultValueAccessor"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__["NgControlStatus"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__["NgModel"], _angular_material_button__WEBPACK_IMPORTED_MODULE_10__["MatButton"], _angular_material_icon__WEBPACK_IMPORTED_MODULE_11__["MatIcon"]], styles: ["canvas[_ngcontent-%COMP%] {\n  position: absolute;\n}\n\n.cnvsContainer[_ngcontent-%COMP%] {\n  width: 100%;\n  height: 344px;\n  position: absolute;\n  overflow: scroll;\n  left: 0px;\n  z-index: 2;\n}\n\n.velocity-layer[_ngcontent-%COMP%] {\n  float: left;\n  align-content: center;\n  background-color: burlywood;\n  overflow: auto;\n  top: 383px;\n  border: 1px solid grey;\n  z-index: 0;\n}\n\n.pianoRollToolbar[_ngcontent-%COMP%] {\n  position: relative;\n  background-color: #bd0000;\n  height: 38px;\n  line-height: 38px;\n}\n\n.example-spacer[_ngcontent-%COMP%] {\n  flex: 1 3 auto;\n}\n\n.allCanvas[_ngcontent-%COMP%] {\n  height: 4px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uXFwuLlxcLi5cXC4uXFxwaWFuby1yb2xsLWNhbnZhcy1iYXNlZC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGtCQUFBO0FBQ0o7O0FBRUE7RUFDSSxXQUFBO0VBQ0EsYUFBQTtFQUNBLGtCQUFBO0VBQ0EsZ0JBQUE7RUFDQSxTQUFBO0VBQ0EsVUFBQTtBQUNKOztBQUVBO0VBQ0ksV0FBQTtFQUNBLHFCQUFBO0VBQ0EsMkJBQUE7RUFDQSxjQUFBO0VBQ0EsVUFBQTtFQUNBLHNCQUFBO0VBQ0EsVUFBQTtBQUNKOztBQUVBO0VBQ0ksa0JBQUE7RUFDQSx5QkFBQTtFQUNBLFlBQUE7RUFDQSxpQkFBQTtBQUNKOztBQUVBO0VBQ0ksY0FBQTtBQUNKOztBQUNBO0VBQ0ksV0FBQTtBQUVKIiwiZmlsZSI6InBpYW5vLXJvbGwtY2FudmFzLWJhc2VkLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiY2FudmFzIHtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxufVxyXG5cclxuLmNudnNDb250YWluZXIge1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBoZWlnaHQ6IDM0NHB4O1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgb3ZlcmZsb3c6IHNjcm9sbDtcclxuICAgIGxlZnQ6IDBweDtcclxuICAgIHotaW5kZXg6IDI7XHJcbn1cclxuXHJcbi52ZWxvY2l0eS1sYXllciB7XHJcbiAgICBmbG9hdDogbGVmdDtcclxuICAgIGFsaWduLWNvbnRlbnQ6IGNlbnRlcjtcclxuICAgIGJhY2tncm91bmQtY29sb3I6IGJ1cmx5d29vZDtcclxuICAgIG92ZXJmbG93OiBhdXRvO1xyXG4gICAgdG9wOiAzODNweDtcclxuICAgIGJvcmRlcjogMXB4IHNvbGlkIGdyZXk7XHJcbiAgICB6LWluZGV4OiAwO1xyXG59XHJcblxyXG4ucGlhbm9Sb2xsVG9vbGJhciB7XHJcbiAgICBwb3NpdGlvbjogcmVsYXRpdmU7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2IoMTg5LCAwLCAwKTtcclxuICAgIGhlaWdodDogMzhweDtcclxuICAgIGxpbmUtaGVpZ2h0OiAzOHB4O1xyXG59XHJcblxyXG4uZXhhbXBsZS1zcGFjZXIge1xyXG4gICAgZmxleDogMSAzIGF1dG87XHJcbn1cclxuLmFsbENhbnZhcyB7XHJcbiAgICBoZWlnaHQ6IDRweDtcclxufVxyXG4iXX0= */"], changeDetection: 0 });
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/worker-plugin/dist/loader.js?name=0!./helper.worker */ "OKqC")))
 

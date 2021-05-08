@@ -19,16 +19,10 @@ import { StereoPannerComponent } from '../audio-components/stereo-panner/stereo-
 import { FilterComponent } from '../audio-components/filter/filter.component';
 
 import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatGridListModule } from '@angular/material/grid-list';
-import{MatSidenavModule}from '@angular/material/sidenav';
-import { LfoComponent } from 'src/audio-components/lfo/lfo.component';
-import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -42,8 +36,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     GainComponent,
     StereoPannerComponent,
     FilterComponent,
-    PianoRollCanvasBasedComponent,
-    LfoComponent
+    PianoRollCanvasBasedComponent
   ],
   imports: [
     BrowserModule,
@@ -51,14 +44,10 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     HttpClientModule,
     BrowserAnimationsModule,
     MatIconModule,
-    MatToolbarModule,
     MatButtonModule,
     MatInputModule,
-    MatGridListModule,
     MatMenuModule,
-    MatTooltipModule,
-    MatListModule,
-    MatSidenavModule
+    MatTooltipModule
   ],
   providers: [TimerService, AudioContext, SamplesLibraryService],
   bootstrap: [AppComponent],

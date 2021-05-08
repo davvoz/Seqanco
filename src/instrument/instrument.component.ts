@@ -131,8 +131,8 @@ export class InstrumentComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
+      
       this.stepper = res.timePosition;
-
       if (this.type === 'NEWSYNTH' && typeof this.mainOscillator1.oscWk !== 'undefined') {
         if (this.modulations[4].modulation) {
           this.mainOscillator1.oscWk.frequency.setValueAtTime((this.mainOscillator1.oscWk.frequency.value + this.modulations[4].min), this.modulations[4].max);
@@ -156,17 +156,17 @@ export class InstrumentComponent implements AfterViewInit {
         }
         if (this.modulations[2].modulation) {
           switch (res.timePosition) {
-            case 0: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 20); break;
-            case 1: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 20); break;
-            case 2:  this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime, this.myTimer.steps * 20); break;
-            case 3: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[2].min, this.myTimer.audioContext.currentTime, this.myTimer.steps / 20); break;
+            case 0: this.filter.filterNode.frequency.setValueAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime ); break;
+            case 1:  break;
+            case 2:  break;
+            case 3:this.filter.filterNode.frequency.setValueAtTime(this.modulations[2].min, this.myTimer.audioContext.currentTime  );  break;
           }
         }
         if (this.modulations[3].modulation) {
           switch (res.timePosition) {
             case 0: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[3].max, this.myTimer.audioContext.currentTime, this.myTimer.steps); break;
             case 1: this.filter.filterNode.frequency.setValueAtTime(this.modulations[3].min, this.myTimer.audioContext.currentTime); break;
-            case 2: this.filter.filterNode.frequency.setValueAtTime(this.modulations[3].min, this.myTimer.audioContext.currentTime); break;
+            case 2:  break;
             case 3: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[3].max, this.myTimer.audioContext.currentTime, this.myTimer.steps); break;
           }
         }
@@ -196,14 +196,6 @@ export class InstrumentComponent implements AfterViewInit {
         this.myDoubleosc.volume.connect(this.myTimer.merger);
         break;
       case 'NEWSYNTH':
-
-        // this.osc2.setAudioNodeIn(this.gainOsc2.gainNode);
-        // this.gainOsc2.connectToAudioParam(this.filter.filterNode.frequency);
-        // this.lfo.setAudioNodeIn(this.gainLfo.gainNode);
-        // this.oscillator2.setAudioNodeIn(this.gain.gainAdsr)
-        // this.osc.setAudioNodeIn(this.gain.gainAdsr);
-        // this.gain.connectToAudioNode(this.filter.filterNode);
-
 
         this.filterLfoGain.connectToAudioParam(this.filter.filterNode.frequency);
 

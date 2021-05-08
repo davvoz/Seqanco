@@ -1,11 +1,11 @@
 <div  style=" width: 100%;top: 380px;position: absolute;" >
     
     <div>
-        {{name}}-{{index}}
-        <button (click)="setAutopan()" [style.background-color]="getActiveButton(autopanSpenta)">autopan</button>
+        {{name}}-{{index}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button (click)="setAutopan()"  [class]="!autopanSpenta ? 'on':'off'">autopan</button>
         rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />
-        drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />
-        <button (click)="setWaveshaper()" [style.background-color]="getActiveButton(waveshaperSpenta)">waveshaper</button>
+        drywet<input type="number" [(ngModel)]="adrywet" min="0" max="100" step="0.01" (change)="setAdrywet()" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button (click)="setWaveshaper()" [class]="!waveshaperSpenta ? 'on':'off'">waveshaper</button>
     </div>
 
     <div *ngIf="type !== 'NEWSYNTH'" >
@@ -46,7 +46,7 @@
                         </thead>
                         <tr *ngFor="let mod of modulations;let i = index">
                             <td>
-                                <button (click)="enableMod(i)" [style.background-color]="mod.modulation ? 'red':'grey'">V</button>
+                                <button (click)="enableMod(i)"  [class]="mod.modulation ? 'on':'off'">V</button>
                             </td>
                             <td>
                                 <input type="number" [(ngModel)]="mod.min" />
@@ -63,8 +63,7 @@
                     <app-osc #mainOscillator2 [nome]="'Main oscillator 2'"></app-osc>
                 </td>
                 <td class="a">
-<app-gain [envelope]="false" [nome]="'Gain osc 2'" #mainGain2></app-gain>
-
+                    <app-gain [envelope]="false" [nome]="'Gain osc 2'" #mainGain2></app-gain>
                 <td class="a">
                     <app-filter [envelope]="true" [nome]="'FILTER'" #filter></app-filter>
                 </td>

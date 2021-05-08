@@ -59,7 +59,7 @@ export class TimerService {
   }
   play() {
     this.isPlayed = true;
-    
+
     // this.scheduleNote();
     this.playingStateSource.next(true);
 
@@ -76,7 +76,7 @@ export class TimerService {
 
   }
   stop() {
-   // this.audioContext.suspend();
+    // this.audioContext.suspend();
     this.steps = 0;
     this.isPlayed = false;
     //clearTimeout(this.timer);
@@ -84,34 +84,12 @@ export class TimerService {
     this.accurateStop();
   }
   pause() {
-   // this.audioContext.suspend();
+    // this.audioContext.suspend();
     this.isPlayed = false;
     this.accurateStop();
     //clearTimeout(this.timer);
   }
-  private scheduleNote() {
-    // let contextPlayTime;
-    // let currentTime: number;
-    // if (typeof this.audioContext !== 'undefined') {
-    //   currentTime = this.audioContext.currentTime
-    //   currentTime -= this.startTime;
-    //   while (this.noteTime < currentTime + 0.2) {
-    //     contextPlayTime = this.noteTime + this.startTime;
-    //     this.changeStateTrack(contextPlayTime);
-    //     this.nextNote();
-    //   }
-    // }
-    // this._ngZone.runOutsideAngular(() => {
-    //  this.timer = setTimeout(this.scheduleNote.bind(this), 0);
-    //   this.accurateTimer(() => { console.log('it runs') }, 500, console.log('error'));
-    // });
-  }
-  private nextNote() {
-    // let secondsPerBeat = 60.0 / this.speed;
-    // // 0.25 because each square is a 16th note
-    // this.noteTime += 0.25 * secondsPerBeat;
-    // secondsPerBeat = 0;
-  }
+
   private changeStateTrack(pt: number) {
 
     this.trackStateSource.next({
@@ -127,18 +105,18 @@ export class TimerService {
   }
 
   async loadWorklet() {
-    const tempUrl = this.createUrl();
+    //const tempUrl = this.createUrl();
     this.audioContext = new AudioContext();
-    return await this.audioContext.audioWorklet.addModule(tempUrl).then(() => {
-      this.startTime = this.audioContext.currentTime + 0.005;
-      this.isPlayed = false;
-      this.step = false;
-      this.steps = 0;
-      this.speed = 120;
-      this.merger = this.audioContext.createGain();
-      this.merger.gain.setValueAtTime(this.gain, this.audioContext.currentTime);
-      this.merger.connect(this.audioContext.destination);
-    })
+    //const aw = this.audioContext.audioWorklet;
+    this.startTime = this.audioContext.currentTime + 0.005;
+    this.isPlayed = false;
+    this.step = false;
+    this.steps = 0;
+    this.speed = 120;
+    this.merger = this.audioContext.createGain();
+    this.merger.gain.setValueAtTime(this.gain, this.audioContext.currentTime);
+    this.merger.connect(this.audioContext.destination);
+
   }
 
   private createUrl() {

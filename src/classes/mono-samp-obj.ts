@@ -22,37 +22,38 @@ export class MonoSampObj extends AbstractMonoosc {
 
   constructor(public audioContext: BaseAudioContext, private library: SamplesLibraryService) {
     super(audioContext);
-
     this.born();
   }
   play(freq: number, synthControlIndex: number, velocity: number): void {
-    if (!this.getAllSynthControl()[synthControlIndex].isMuted) {
-      this.castOscWaveform(this.getAllSynthControl()[synthControlIndex].lfoWaveSelected, this.lfoOsc);
-      this.castFilterWave(synthControlIndex, this.biquadFilter);
-      this.volume.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
-      this.gainVelo.gain.setValueAtTime(velocity, this.audioContext.currentTime);
-      this.lfoOsc.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoRate, this.audioContext.currentTime);
-      this.lfoGain.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoAmplitude, this.audioContext.currentTime);
-      this.gainNode.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
-      this.biquadFilter.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterCutoff, this.audioContext.currentTime);
-      this.biquadFilter.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterReso, this.audioContext.currentTime);
-      let source = this.audioContext.createBufferSource();
-      this.setAdsr(this.gainNode.gain, this.getAllSynthControl()[synthControlIndex].adsr, this.audioContext.currentTime);
+    if (typeof this.getAllSynthControl()[synthControlIndex] !== 'undefined') {
+      if (!this.getAllSynthControl()[synthControlIndex].isMuted) {
+        this.castOscWaveform(this.getAllSynthControl()[synthControlIndex].lfoWaveSelected, this.lfoOsc);
+        this.castFilterWave(synthControlIndex, this.biquadFilter);
+        this.volume.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
+        this.gainVelo.gain.setValueAtTime(velocity, this.audioContext.currentTime);
+        this.lfoOsc.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoRate, this.audioContext.currentTime);
+        this.lfoGain.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].lfoAmplitude, this.audioContext.currentTime);
+        this.gainNode.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].gain, this.audioContext.currentTime);
+        this.biquadFilter.frequency.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterCutoff, this.audioContext.currentTime);
+        this.biquadFilter.gain.setValueAtTime(this.getAllSynthControl()[synthControlIndex].filterReso, this.audioContext.currentTime);
+        let source = this.audioContext.createBufferSource();
+        this.setAdsr(this.gainNode.gain, this.getAllSynthControl()[synthControlIndex].adsr, this.audioContext.currentTime);
+
+        source.connect(this.biquadFilter);
+        source.buffer = this.library.buffers[this.getAllSynthControl()[synthControlIndex].libIndex];
+        source.playbackRate.setTargetAtTime(freq / 100, this.audioContext.currentTime, 0);
+        source.playbackRate.linearRampToValueAtTime
+          (freq / 100 + this.getAllSynthControl()[synthControlIndex].pitchEnvelope.frequency, this.audioContext.currentTime +//
+            this.getAllSynthControl()[synthControlIndex].pitchEnvelope.end);
+        source.start(this.audioContext.currentTime);
 
 
-      source.connect(this.biquadFilter);
-      source.buffer = this.library.buffers[this.getAllSynthControl()[synthControlIndex].libIndex];
-      source.playbackRate.setTargetAtTime(freq / 100, this.audioContext.currentTime, 0);
-      source.playbackRate.linearRampToValueAtTime
-        (freq / 100 + this.getAllSynthControl()[synthControlIndex].pitchEnvelope.frequency, this.audioContext.currentTime +//
-          this.getAllSynthControl()[synthControlIndex].pitchEnvelope.end);
-      source.start(this.audioContext.currentTime);
-     
-      
-     // source.disconnect();
-       // @ts-ignore*
-     // source = null;
+        // source.disconnect();
+        // @ts-ignore*
+        // source = null;
+      }
     }
+
   }
 
   born() {
@@ -73,7 +74,6 @@ export class MonoSampObj extends AbstractMonoosc {
 
     this.lfoOsc.start();
     this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-
   }
   kill() {
     //this.source.stop();

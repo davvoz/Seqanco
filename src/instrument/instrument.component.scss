@@ -71,30 +71,19 @@ input {
 .a {
     border: 1px solid white;
 }
-table {
-    height: 100%;
-    width: 100%;
+
+.on{
+    background-color: red;
+    border-radius: 10%;
+    border: 3px solid black;
+}
+.off{
+    background-color: gray;
+    border-radius: 10%;
+    border: 3px solid rgb(27, 27, 27);
 }
 
-.mainContainer {
-   
-    width: 100%;
-    position: fixed;
-    bottom: 0%;
-    height: 50%;
-    overflow-y: auto;
-    overflow-x: auto;
-}
-.esternaInstrument {
-    position: absolute;
-}
-.esternaInstrumentPianoRoll{
-    
-    position: absolute;
-}
-.mainContainer{
-    overflow: hidden;
-    height: 650px;
-   
 
-}
+
+
+
