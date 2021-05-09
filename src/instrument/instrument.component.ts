@@ -10,7 +10,7 @@ import { MonooscObj } from '../classes/mono-osc-obj';
 import { MonoSampObj } from '../classes/mono-samp-obj';
 import { Waveshaper } from '../classes/waveshaper';
 import { PianoRollCanvasBasedComponent } from '../core/graphic/piano-roll-canvas-based/piano-roll-canvas-based.component';
-import { Nota, SyntControl } from '../interfaces/interfaces';
+import { Modulation, Nota, SyntControl } from '../interfaces/interfaces';
 import { SamplesLibraryService } from '../services/samples-library.service';
 import { TimerService } from '../services/timer.service';
 import { Utilities } from 'src/classes/utilities';
@@ -81,62 +81,65 @@ export class InstrumentComponent implements AfterViewInit {
   subscription: any;
   stepper = 0;
   isPianoRollVisible = false;
- 
-  modulations = [
+
+  modulations: Modulation[] = [
     {
       modulation: false,
       min: 100,
-      max: 3000
+      max: 3000,
+      connectTo: 'filter'
     }, {
       modulation: false,
       min: 100,
-      max: 3000
+      max: 3000,
+      connectTo: 'filter'
     }, {
       modulation: false,
       min: 100,
-      max: 3000
+      max: 3000,
+      connectTo: 'filter'
     }, {
       modulation: false,
       min: 100,
-      max: 3000
+      max: 3000,
+      connectTo: 'filter'
     }, {
       modulation: false,
       min: 100,
-      max: 3000
+      max: 3000,
+      connectTo: 'filter'
     }];
-  
+  notaNow: Nota = { libIndex: 0, notaDaSuonare: 0, velocity: 0 };
   constructor(public myTimer: TimerService, private library: SamplesLibraryService) { }
-  getState(){
 
-  }
-  getBackground(){
-    let a = Utilities.getRandomInt(300,1);
-    return 'repeating-radial-gradient(#d28f8f, transparent '+a+'px)';
-  }
-  getHeight(bol: boolean) {
-    return bol ? '1250' : '20';
-  }
-  getDisplay(bol: boolean) {
-    return bol ? 0.0 : 1;
-  }
-  getZindex(bol: boolean) {
-    return bol ? 0 : 9999;
-  }
-  toggle(){
-    this.isPianoRollVisible ? this.isPianoRollVisible = false : this.isPianoRollVisible = true;
-  }
   enableMod(modIndex: number) {
     this.modulations[modIndex].modulation ? this.modulations[modIndex].modulation = false : this.modulations[modIndex].modulation = true;
   }
 
   ngAfterViewInit(): void {
     this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
-      
+
       this.stepper = res.timePosition;
+
       if (this.type === 'NEWSYNTH' && typeof this.mainOscillator1.oscWk !== 'undefined') {
+
         if (this.modulations[4].modulation) {
-          this.mainOscillator1.oscWk.frequency.setValueAtTime((this.mainOscillator1.oscWk.frequency.value + this.modulations[4].min), this.modulations[4].max);
-          this.mainOscillator2.oscWk.frequency.setValueAtTime((this.mainOscillator2.oscWk.frequency.value + this.modulations[4].min), this.modulations[4].max);
+          switch (res.timePosition) {
+            case 0:
+              this.mainOscillator1.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare + this.modulations[4].max, this.myTimer.audioContext.currentTime, this.myTimer.steps);
+              this.mainOscillator2.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare +this.modulations[4].max, this.myTimer.audioContext.currentTime, this.myTimer.steps);
+              break;
+            case 1:
+              break;
+            case 2:
+              this.mainOscillator1.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare +this.modulations[4].min, this.myTimer.audioContext.currentTime, this.myTimer.steps);
+              this.mainOscillator2.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare +this.modulations[4].min, this.myTimer.audioContext.currentTime, this.myTimer.steps);
+              break;
+            case 3:
+              break;
+          }
+
+
         }
         if (this.modulations[0].modulation) {
           switch (res.timePosition) {
@@ -156,17 +159,17 @@ export class InstrumentComponent implements AfterViewInit {
         }
         if (this.modulations[2].modulation) {
           switch (res.timePosition) {
-            case 0: this.filter.filterNode.frequency.setValueAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime ); break;
-            case 1:  break;
-            case 2:  break;
-            case 3:this.filter.filterNode.frequency.setValueAtTime(this.modulations[2].min, this.myTimer.audioContext.currentTime  );  break;
+            case 0: this.filter.filterNode.frequency.setValueAtTime(this.modulations[2].max, this.myTimer.audioContext.currentTime); break;
+            case 1: break;
+            case 2: break;
+            case 3: this.filter.filterNode.frequency.setValueAtTime(this.modulations[2].min, this.myTimer.audioContext.currentTime); break;
           }
         }
         if (this.modulations[3].modulation) {
           switch (res.timePosition) {
             case 0: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[3].max, this.myTimer.audioContext.currentTime, this.myTimer.steps); break;
             case 1: this.filter.filterNode.frequency.setValueAtTime(this.modulations[3].min, this.myTimer.audioContext.currentTime); break;
-            case 2:  break;
+            case 2: break;
             case 3: this.filter.filterNode.frequency.setTargetAtTime(this.modulations[3].max, this.myTimer.audioContext.currentTime, this.myTimer.steps); break;
           }
         }
@@ -199,15 +202,15 @@ export class InstrumentComponent implements AfterViewInit {
 
         this.filterLfoGain.connectToAudioParam(this.filter.filterNode.frequency);
 
-        this.lfoFrequencyFilter.setAudioNodeIn(this.filterLfoGain.gainNode);  
+        this.lfoFrequencyFilter.setAudioNodeIn(this.filterLfoGain.gainNode);
         this.lfoFrequencyOscillator.setAudioNodeIn(this.freqOscLfoGain.gainNode);
-        
+
         this.mainOscillator1.setAudioNodeIn(this.mainGain1.gainNode);
         this.mainOscillator2.setAudioNodeIn(this.mainGain2.gainNode)
 
         this.mainGain1.connectToAudioNode(this.mainGain.gainAdsr)
         this.mainGain2.connectToAudioNode(this.mainGain.gainAdsr)
-      
+
         this.mainGain.connectToAudioNode(this.filter.filterNode);
         this.filter.connectToAudioNode(this.pan.stereoPannerNode);
         this.pan.connectToAudioNode(this.myTimer.merger);
@@ -386,10 +389,9 @@ export class InstrumentComponent implements AfterViewInit {
       this.lfoConOsciJustCon2 = true;
     }
   }
- 
+
   play($event: Nota, instrumentType: string) {
-    // @ts-ignore*/
- 
+    this.notaNow = $event;
     if (!this.muted) {
       switch (instrumentType) {
         case 'DRUM':

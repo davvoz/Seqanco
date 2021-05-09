@@ -82,7 +82,7 @@ export interface SyntControl {
   duration: number;
   type: string;
   pitchEnvelope: PithEnvelope;
-  isDistorted:boolean;
+  isDistorted: boolean;
 }
 
 export interface Instrument {
@@ -92,9 +92,9 @@ export interface Instrument {
   index: number;
   pianoRollDimension: number;
   isCollapsed: boolean;
-  clipPlaying:number;
-  clips:Clip[];
-  isMuted:boolean;
+  clipPlaying: number;
+  clips: Clip[];
+  isMuted: boolean;
 }
 
 export interface PithEnvelope {
@@ -108,7 +108,7 @@ export interface Playable {
 export interface Nota {
   notaDaSuonare: number;
   velocity: number;
-  libIndex:number;
+  libIndex: number;
 }
 export interface DialogDataNewTrack {
   name: string;
@@ -117,12 +117,12 @@ export interface DialogDataNewTrack {
   instrument: Instrument;
 }
 
-export interface Clip{
-  index:number,
-  isActive:boolean;
-  color:string;
-  trakNumber:number;
-  fakeMode:boolean;
+export interface Clip {
+  index: number,
+  isActive: boolean;
+  color: string;
+  trakNumber: number;
+  fakeMode: boolean;
 }
 export interface AudioWorkletProcessor {
   readonly port: MessagePort;
@@ -135,6 +135,12 @@ export interface AudioWorkletProcessor {
 
 declare var AudioWorkletProcessor: {
   prototype: AudioWorkletProcessor;
-  new (options?: any): AudioWorkletProcessor;
+  new(options?: any): AudioWorkletProcessor;
 };
+export interface Modulation {
+  modulation: boolean;
+  min: number;
+  max: number;
+  connectTo: String;
+}
 
