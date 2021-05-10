@@ -1,15 +1,12 @@
 		<div class="raw1" style="background-color: chartreuse;">
-			<!-- <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle();">
-				<mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-			</button> -->
-			<span>ED - Easy Drop</span><app-start-stop></app-start-stop>
+			<span>Easy Drop</span><app-start-stop></app-start-stop>
 			<span class="example-spacer"></span>Bpm<app-timer-control></app-timer-control>
 				Volume 
 					<input type="number" [(ngModel)]="masterGain" (change)="onChangeMaster()" min="0.01" max="1" step="0.01"/>
-				Add instrument<button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Add instrument">
+				Add instrument<button  [matMenuTriggerFor]="menu" matTooltip="Add instrument">
 					<mat-icon>add_circle_outline</mat-icon>
 				</button>
-		Keyboard control <button  mat-icon-button (click)="activeKeyboardControl()"
+		Keyboard control <button   (click)="activeKeyboardControl()"
 					matTooltip="Enable keyboard control click or press CTRL"
 					[style.background-color]="getActiveColor(isActiveKeyboardControl)">
 					<mat-icon>keyboard</mat-icon>
@@ -23,23 +20,23 @@
 		</div>
 	<div class="example-sidenav-content">
 		<div class="row1" >
-			<div *ngFor="let instrument of instruments;let i =index;" class="instrument" >
+			<div *ngFor="let instrument of instruments;let i = index;" class="instrument" >
 				<div class="instrumentToolbar" [style.border]="getSelectedTrakBorderStyle(instrument.isCollapsed)" >
 					<div [style.background-color]="getInstrumentColor(instrument.type)" class="instHeader">
 						<div class="row4">
-							<button mat-icon-button (click)="collassaInstrument(i)">
-								<mat-icon>settings</mat-icon>
+							<button  (click)="collassaInstrument(i)">
+								<mat-icon>tune</mat-icon>
 							</button>
-							<button mat-icon-button (click)="remove(i)">
+							<button  (click)="remove(i)">
 								<mat-icon>delete</mat-icon>
 							</button>
-							<button mat-icon-button
+							<button 
 								(click)="instrument.isMuted ? instrument.isMuted = false: instrument.isMuted=true"
 								[style.background-color]="getActiveColor(instrument.isMuted)">
 								<mat-icon>volume_off</mat-icon>
 							</button>
-							<button mat-icon-button>
-								<span style="font-size: 145%;">
+							<button >
+								<span style="font-size: 145%;" (click)="solo(i)" [class]="instrument.isSolo?'on':'off'">
 									<strong>S</strong></span>
 							</button>
 						</div>
@@ -49,7 +46,7 @@
 				</div>
 				<div class="clipsContiner">
 					<div *ngFor="let clip of instrument.clips" class="clip" [style.background-color]="clip.color">
-						<button mat-icon-button (click)="setClip(i,clip.index)">
+						<button  (click)="setClip(i,clip.index)">
 							<mat-icon>play_arrow</mat-icon>
 						</button>
 					</div>
@@ -59,16 +56,16 @@
 				<div class="instrumentToolbar">
 					<div class="instHeader" style="background-color: chocolate;">
 						<div class="row4">
-							<button mat-icon-button disabled>
-								<mat-icon>settings</mat-icon>
+							<button  disabled>
+								<mat-icon>tune</mat-icon>
 							</button>
-							<button mat-icon-button disabled>
+							<button  disabled>
 								<mat-icon>play_arrow</mat-icon>
 							</button>
-							<button disabled mat-icon-button>
+							<button disabled >
 								<mat-icon>volume_off</mat-icon>
 							</button>
-							<button mat-icon-button disabled>
+							<button  disabled>
 								<span style="font-size: 145%;">
 									<strong>S</strong></span>
 							</button>
@@ -79,7 +76,7 @@
 				<div class="clipsContiner">
 					<div *ngFor="let clip of clipsMaster;let i=index" class="clip"
 						[style.background-color]="clip.color">
-						<button mat-icon-button (click)="setClipMassive(i)">
+						<button  (click)="setClipMassive(i)">
 							<mat-icon>play_arrow</mat-icon>
 						</button>
 					</div>

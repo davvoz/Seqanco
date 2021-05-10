@@ -118,28 +118,23 @@ export class InstrumentComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
-
       this.stepper = res.timePosition;
-
       if (this.type === 'NEWSYNTH' && typeof this.mainOscillator1.oscWk !== 'undefined') {
-
         if (this.modulations[4].modulation) {
           switch (res.timePosition) {
             case 0:
               this.mainOscillator1.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare + this.modulations[4].max, this.myTimer.audioContext.currentTime, this.myTimer.steps);
-              this.mainOscillator2.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare +this.modulations[4].max, this.myTimer.audioContext.currentTime, this.myTimer.steps);
+              this.mainOscillator2.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare + this.modulations[4].max, this.myTimer.audioContext.currentTime, this.myTimer.steps);
               break;
             case 1:
               break;
             case 2:
-              this.mainOscillator1.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare +this.modulations[4].min, this.myTimer.audioContext.currentTime, this.myTimer.steps);
-              this.mainOscillator2.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare +this.modulations[4].min, this.myTimer.audioContext.currentTime, this.myTimer.steps);
+              this.mainOscillator1.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare + this.modulations[4].min, this.myTimer.audioContext.currentTime, this.myTimer.steps);
+              this.mainOscillator2.oscWk.frequency.setTargetAtTime(this.notaNow.notaDaSuonare + this.modulations[4].min, this.myTimer.audioContext.currentTime, this.myTimer.steps);
               break;
             case 3:
               break;
           }
-
-
         }
         if (this.modulations[0].modulation) {
           switch (res.timePosition) {

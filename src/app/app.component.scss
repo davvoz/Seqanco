@@ -128,13 +128,6 @@ mat-toolbar {
 .clip {
     border-top: 1px solid white;
 }
-.stage {
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    height: 100%;
-}
 
 .toolbar {
     position: fixed;
@@ -153,16 +146,7 @@ mat-toolbar {
 .instHeader {
     width: 200px;
 }
-.example-card {
-    max-width: 500px;
-    float: left;
-}
-h3 {
-    font-family: "Press Start 2P";
-}
-.daw {
-    width: 100%;
-}
+
 .tracksContainer{
     width: 100%;
 }
@@ -185,4 +169,14 @@ h3 {
     grid-template-columns: repeat(4, 1fr);
     background-color: gray;
     border: 1px solid black;
+}
+.on{
+    background-color: red;
+    border-radius: 10%;
+    border: 3px solid black;
+}
+.off{
+    background-color: gray;
+    border-radius: 10%;
+    border: 3px solid rgb(27, 27, 27);
 }

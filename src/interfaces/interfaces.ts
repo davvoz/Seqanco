@@ -95,6 +95,7 @@ export interface Instrument {
   clipPlaying: number;
   clips: Clip[];
   isMuted: boolean;
+  isSolo:boolean;
 }
 
 export interface PithEnvelope {

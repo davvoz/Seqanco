@@ -1,6 +1,6 @@
 <div  style=" width: 100%;top: 380px;position: absolute;" >
     
-    <div>
+    <div class="fx">
         {{name}}-{{index}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <button (click)="setAutopan()"  [class]="!autopanSpenta ? 'on':'off'">autopan</button>
         rate<input type="number" [(ngModel)]="arate" min="0" max="60" step="0.01" (change)="setAdrywet()" />

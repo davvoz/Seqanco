@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { HostListener } from '@angular/core';
-import { AfterViewInit, Component, QueryList, ViewChildren, } from '@angular/core';
+import { Component, QueryList, ViewChildren, } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { inputById } from '@ng-web-apis/midi';
 import { InstrumentComponent } from '../instrument/instrument.component';
 import { Clip, Instrument } from '../interfaces/interfaces';
 import { TimerService } from '../services/timer.service';
@@ -12,11 +13,10 @@ import { TimerService } from '../services/timer.service';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent {
 
   isActiveKeyboardControl = false;
-  showFiller = false;
-  @HostListener('document:keyup', ['$event'])
+  @HostListener('document:keydown', ['$event'])
   onKeyDown(ev: KeyboardEvent) {
     if (ev.key === 'Control') {
       this.isActiveKeyboardControl ? this.isActiveKeyboardControl = false : this.isActiveKeyboardControl = true;
@@ -67,13 +67,8 @@ export class AppComponent implements AfterViewInit {
   samplerClipColor: string = 'rgba(90, 90, 200, 0.2)';
   bianco: string = 'rgb(215, 215, 215)';
   verde: string = '#00d600';
-  panelOpenState = false;
 
-  clipsMaster: Clip[] = [
-    { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },
-    { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },
-    { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false },
-    { color: this.bianco, index: 0, isActive: false, trakNumber: 0, fakeMode: false }];
+  clipsMaster: Clip[] = this.instantiateClipsArray(this.bianco);
 
   constructor(public myTimer: TimerService) {
     this.connectMaster = this.myTimer.merger;
@@ -103,8 +98,6 @@ export class AppComponent implements AfterViewInit {
   getActiveColor(boolProp: boolean) {
     return boolProp ? '#dfff2d' : null;
   }
-
-  ngAfterViewInit(): void { }
 
   getSelectedTrakBorderStyle(isCollapsed: boolean): string {
     return isCollapsed ? '1px solid white' : '1px solid red';
@@ -144,11 +137,23 @@ export class AppComponent implements AfterViewInit {
   }
 
   solo(instrumenIndex: number) {
-    for (let i = 0; i > this.instruments.length; i++) {
-      if (i !== instrumenIndex) {
-        this.instruments[i].isMuted;
+    if (this.instruments[instrumenIndex].isSolo) {
+      for (let i = 0; i < this.instruments.length; i++) {
+        if (i !== instrumenIndex) {
+          this.instruments[i].isMuted = true;
+        }
       }
+      this.instruments[instrumenIndex].isSolo = false;
+    } else {
+      for (let i = 0; i < this.instruments.length; i++) {
+        if (i !== instrumenIndex) {
+          this.instruments[i].isMuted = false;
+        }
+      }
+      this.instruments[instrumenIndex].isSolo = true;
     }
+
+    console.log(this.instruments);
   }
 
   setClip(instrumenIndex: number, clipIndex: number) {
@@ -169,11 +174,6 @@ export class AppComponent implements AfterViewInit {
         this.changeColorClipRoutine(this.instruments[instrumenIndex].clips, clipIndex, this.verde, this.newsynthClipColor);
         break;
     }
-    
-    if (this.instruments[instrumenIndex].isCollapsed) {
-
-    }
-
     this.instrumentsViews.toArray()[instrumenIndex].setClip(clipIndex);
   }
 
@@ -188,7 +188,8 @@ export class AppComponent implements AfterViewInit {
       type: 'DRUM',
       clipPlaying: 0,
       clips: clips,
-      isMuted: false
+      isMuted: false,
+      isSolo: false
     });
     this.collassaInstrument(this.instruments.length - 1);
   }
@@ -204,7 +205,8 @@ export class AppComponent implements AfterViewInit {
       type: 'MONOOSC',
       clipPlaying: 0,
       clips: clips,
-      isMuted: false
+      isMuted: false,
+      isSolo: false
     });
     this.collassaInstrument(this.instruments.length - 1);
   }
@@ -220,7 +222,8 @@ export class AppComponent implements AfterViewInit {
       type: 'NEWSYNTH',
       clipPlaying: 0,
       clips: clips,
-      isMuted: false
+      isMuted: false,
+      isSolo: false
     });
     this.collassaInstrument(this.instruments.length - 1);
   }
@@ -236,7 +239,8 @@ export class AppComponent implements AfterViewInit {
       type: 'SAMPLER',
       clipPlaying: 0,
       clips: clips,
-      isMuted: false
+      isMuted: false,
+      isSolo: false
     });
     this.collassaInstrument(this.instruments.length - 1);
   }
@@ -281,14 +285,6 @@ export class AppComponent implements AfterViewInit {
     instrument.isCollapsed ? instrument.isCollapsed = false : instrument.isCollapsed = true;
   }
 
-  displayNewTrackConfiguration() {
-    this.notThis(this.showNewTrackConfiguration);
-  }
-
-  private notThis(bol: boolean) {
-    bol = !bol;
-  }
-
   getDisplay(bol: boolean) {
     return bol ? 'none' : 'block';
   }
@@ -303,7 +299,7 @@ export class AppComponent implements AfterViewInit {
 
   getInstrumentColor(instrumentType: string) {
     switch (instrumentType) {
-      case 'SYNTH':break;
+      case 'SYNTH': break;
       case 'SAMPLER':
         return 'rgba(90, 90, 200, 0.4)';
       case 'MONOOSC':

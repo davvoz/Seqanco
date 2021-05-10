@@ -4,16 +4,9 @@
             Loop start :<input type="number" [(ngModel)]="startLoop" min="0" (change)="setStartLopper()" />
             length :    <input type="number" [(ngModel)]="endLoop" (change)="setStartLopper()" />
         </span>
-        <span style="float:right">
-            <button mat-stroked-button (click)="clear()">
-                <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-stroked-button (click)="random()">random</button>
-        </span>
     </div>
     <div class="allCanvas" >
         <div class="cnvsContainer" style="z-index: 2;">
-            <!-- <canvas #canvasLine width="{{getExternalDimension()}}" height="960" class="line-layer" style="display: none;"></canvas> -->
             <canvas #canvasGui    width="{{getExternalDimension()}}"   height="960" class="bg-layer" (click)="handleChange($event)" style="z-index: 0;"></canvas>
             <canvas #canvas       width="{{getExternalDimension()}}"   height="960" class="game-layer" (click)="handleChange($event)" style="z-index: 4;" ></canvas>
             <canvas #canvasProva  width="{{getExternalDimension()}}"   height="960" class="game-layer"></canvas>
