@@ -11,5 +11,21 @@ export class Utilities {
         }
         return result;
     }
+    static  getInstrumentColor(instrumentType: string) {
+    switch (instrumentType) {
+      case 'SYNTH': break;
+      case 'SAMPLER':
+        return 'rgba(90, 90, 200, 0.4)';
+      case 'MONOOSC':
+        return 'rgba(90, 200, 90, 0.4)';
+      case 'DOUBLEOOSC':
+        return 'rgba(200, 90, 90, 0.4)';
+      case 'NEWSYNTH':
+        return 'rgba(100, 200, 200, 0.4)';
+      default: return 'rgba(200, 200, 200, 0.4)'; break;
+    }
+    return null;
+  }
+  
     
 }

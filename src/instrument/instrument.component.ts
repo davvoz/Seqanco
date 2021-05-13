@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, ViewChild } from '@angular/core';
 import { MonoDrummachineObj } from 'src/classes/mono-drummachine-obj';
 import { FilterComponent } from '../audio-components/filter/filter.component';
 import { GainComponent } from '../audio-components/gain/gain.component';
@@ -13,14 +13,13 @@ import { PianoRollCanvasBasedComponent } from '../core/graphic/piano-roll-canvas
 import { Modulation, Nota, SyntControl } from '../interfaces/interfaces';
 import { SamplesLibraryService } from '../services/samples-library.service';
 import { TimerService } from '../services/timer.service';
-import { Utilities } from 'src/classes/utilities';
 
 @Component({
   selector: 'app-instrument',
   templateUrl: './instrument.component.html',
   styleUrls: ['./instrument.component.scss']
 })
-export class InstrumentComponent implements AfterViewInit {
+export class InstrumentComponent implements AfterViewInit, OnDestroy {
   @Input() clipIndex: number = 0;
   @Input()
   name!: string;
@@ -81,7 +80,7 @@ export class InstrumentComponent implements AfterViewInit {
   subscription: any;
   stepper = 0;
   isPianoRollVisible = false;
-
+  canvasClipDimension = 203;
   modulations: Modulation[] = [
     {
       modulation: false,
@@ -111,6 +110,41 @@ export class InstrumentComponent implements AfterViewInit {
     }];
   notaNow: Nota = { libIndex: 0, notaDaSuonare: 0, velocity: 0 };
   constructor(public myTimer: TimerService, private library: SamplesLibraryService) { }
+  ngOnDestroy(): void {
+    console.log('destroyed');
+    switch (this.type) {
+      case 'DRUM':
+        this.myDrumachine.kill();
+        break;
+      case 'SAMPLER':
+        this.myMonosamp.kill();
+        break;
+      case 'MONOOSC':
+        this.myMonoosc.kill();
+        break;
+      case 'DOUBLEOOSC':
+        this.myDoubleosc.kill();
+        break;
+      case 'NEWSYNTH':
+
+        this.filterLfoGain.connectToAudioParam(this.filter.filterNode.frequency);
+
+        this.lfoFrequencyFilter.setAudioNodeIn(this.filterLfoGain.gainNode);
+        this.lfoFrequencyOscillator.setAudioNodeIn(this.freqOscLfoGain.gainNode);
+
+        this.mainOscillator1.setAudioNodeIn(this.mainGain1.gainNode);
+        this.mainOscillator2.setAudioNodeIn(this.mainGain2.gainNode)
+
+        this.mainGain1.connectToAudioNode(this.mainGain.gainAdsr)
+        this.mainGain2.connectToAudioNode(this.mainGain.gainAdsr)
+
+        this.mainGain.connectToAudioNode(this.filter.filterNode);
+        this.filter.connectToAudioNode(this.pan.stereoPannerNode);
+        this.pan.connectToAudioNode(this.myTimer.merger);
+        //this.pan.connectToAudioNode(this.nodeOut);
+        break;
+    }
+  }
 
   enableMod(modIndex: number) {
     this.modulations[modIndex].modulation ? this.modulations[modIndex].modulation = false : this.modulations[modIndex].modulation = true;
@@ -209,7 +243,7 @@ export class InstrumentComponent implements AfterViewInit {
         this.mainGain.connectToAudioNode(this.filter.filterNode);
         this.filter.connectToAudioNode(this.pan.stereoPannerNode);
         this.pan.connectToAudioNode(this.myTimer.merger);
-
+        //this.pan.connectToAudioNode(this.nodeOut);
         break;
     }
   }
@@ -351,15 +385,31 @@ export class InstrumentComponent implements AfterViewInit {
   onSetSoundParams(params: SyntControl, instrumentType: string) {
     switch (instrumentType) {
       case 'DRUM':
-        this.myDrumachine.setParams(params, this.index);
+        if(typeof this.myDrumachine === 'undefined'){
+          this.myDrumachine = new MonoDrummachineObj(this.myTimer.audioContext, this.library);
+          this.myDrumachine.volume.connect(this.myTimer.merger);
+        }  
+      this.myDrumachine.setParams(params, this.index);
         break;
       case 'SAMPLER':
+        if(typeof this.myMonosamp === 'undefined'){
+          this.myMonosamp = new MonoSampObj(this.myTimer.audioContext, this.library);
+          this.myMonosamp.volume.connect(this.myTimer.merger);
+        }
         this.myMonosamp.setParams(params, this.index);
         break;
       case 'MONOOSC':
+        if(typeof this.myMonoosc === 'undefined'){
+          this.myMonoosc = new MonooscObj(this.myTimer.audioContext);
+          this.myMonoosc.volume.connect(this.myTimer.merger);
+        }
         this.myMonoosc.setParams(params, this.index);
         break;
       case 'DOUBLEOOSC':
+        if(typeof this.myDoubleosc === 'undefined'){
+          this.myDoubleosc = new DubleoscObj(this.myTimer.audioContext);
+          this.myDoubleosc.volume.connect(this.myTimer.merger);
+        }
         this.myDoubleosc.setParams(params, this.index);
         break;
     }

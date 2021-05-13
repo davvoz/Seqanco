@@ -1,4 +1,4 @@
-		<div class="raw1" style="background-color: chartreuse;">
+		<div  style="background-color: chartreuse;">
 			<span>Easy Drop</span><app-start-stop></app-start-stop>
 			<span class="example-spacer"></span>Bpm<app-timer-control></app-timer-control>
 				Volume 
@@ -17,6 +17,7 @@
 				<button mat-menu-item color="basic" (click)="addMonoosc()">Add Monoosc</button>
 				<button mat-menu-item color="basic" (click)="addDrummachine()">Add Drum</button>
 			</mat-menu>
+
 		</div>
 	<div class="example-sidenav-content">
 		<div class="row1" >
@@ -50,9 +51,12 @@
 							<mat-icon>play_arrow</mat-icon>
 						</button>
 					</div>
+					<div class="clip">
+
+					</div>
 				</div>
 			</div>
-			<div class="instrument" [style.display]="getDisplay(!showMixer)">
+			<div class="instrument" >
 				<div class="instrumentToolbar">
 					<div class="instHeader" style="background-color: chocolate;">
 						<div class="row4">

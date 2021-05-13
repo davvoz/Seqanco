@@ -12,8 +12,8 @@ export class SamplesLibraryService {
         this.loadSounds('../../assets/wav/HAT2alfa.wav');
         this.loadSounds('../../assets/wav/a_1d.wav');
         this.loadSounds('../../assets/wav/MD4_CouldntBeEasier.wav');
-        this.loadSounds('../../assets/wav/frperc.wav');//C:\Progetti\AngularProjects\seq2021Ng11\src\assets\wav\MD4_CouldntBeEasier.wav
-        this.loadSounds('../../assets/wav/xcrash.wav');//C:\Progetti\AngularProjects\seq2021\sequencer\src\assets\wav\36105__erh__roswell.wav
+        this.loadSounds('../../assets/wav/frperc.wav');
+        this.loadSounds('../../assets/wav/xcrash.wav');
     }
 
     private loadSounds(path: string): void {
@@ -31,7 +31,6 @@ export class SamplesLibraryService {
                     }
                     // @ts-ignore*/
                     this.buffers.push(buffer);
-                   // console.log(this.buffers);
                 },
                 error => {
                     console.error('decodeAudioData error', error);

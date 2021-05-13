@@ -2,13 +2,31 @@ import { SyntControl, Playable, Adsr, PithEnvelope } from "../interfaces/interfa
 
 export class AbstractMonoosc implements SyntControl, Playable {
 
-    private allSynthControl: SyntControl[] = [];
+  
     isMuted: number = 0;
     gain: number = 0;
-    waveSelected: string = "";
-    filterSelected: string = "";
-    adsr: Adsr = { attack: 0, decay: 0, sustain: 0, sustainVal: 0, release: 0 }
+    waveSelected: string = "sine";
+    filterSelected: string = "allpass";
+    adsr: Adsr = { attack: 0.01, decay: 1, sustain: 0, sustainVal: 1, release: 0 }
     adsrP: Adsr = { attack: 0, decay: 0, sustain: 0, sustainVal: 0, release: 0 }
+    private allSynthControl: SyntControl[] = [{
+        isMuted: 0,
+        gain: 0.5,
+        adsr: this.adsr,
+        waveSelected: this.waveSelected,
+        filterSelected: this.filterSelected,
+        filterCutoff: 0,
+        filterReso: 0,
+        lfoWaveSelected: 'sine',
+        lfoAmplitude: 0,
+        lfoRate: 0,
+        libIndex: 0,
+        duration: 0,
+        type: '',
+        adsrPitch: this.adsrP,
+        pitchEnvelope: { frequency: 0, end: 0},
+        isDistorted: false
+    }];
     filterCutoff: number = 0;
     filterReso: number = 0;
     lfoWaveSelected: string = "";

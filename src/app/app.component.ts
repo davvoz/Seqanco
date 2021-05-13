@@ -1,8 +1,5 @@
-import { ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { HostListener } from '@angular/core';
-import { Component, QueryList, ViewChildren, } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
-import { inputById } from '@ng-web-apis/midi';
+import { HostListener, Component, QueryList, ViewChildren, ChangeDetectionStrategy, NgZone, ViewChild, ElementRef } from '@angular/core';
+import { Utilities } from 'src/classes/utilities';
 import { InstrumentComponent } from '../instrument/instrument.component';
 import { Clip, Instrument } from '../interfaces/interfaces';
 import { TimerService } from '../services/timer.service';
@@ -13,9 +10,12 @@ import { TimerService } from '../services/timer.service';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class AppComponent {
 
   isActiveKeyboardControl = false;
+  private readonly pianorolldimension = 1280 * 2;
+
   @HostListener('document:keydown', ['$event'])
   onKeyDown(ev: KeyboardEvent) {
     if (ev.key === 'Control') {
@@ -42,24 +42,14 @@ export class AppComponent {
         this.setClipMassive(3)
       }
     }
-
   }
   selectedTrackIndex!: number;
   clips: Clip[] = [];
   @ViewChildren('instrumentsViews')
   instrumentsViews!: QueryList<InstrumentComponent>;
   title = 'sequencer';
-  selectedInstrumentName = '';
-  pianoRolls = [];
-  steppers = [];
   instruments: Instrument[] = [];
   pianoRollDimension = 640;
-  showNewTrackConfiguration: boolean = true;
-  showMixer = true;
-  synthInstrument!: Instrument;
-  samplerInstrument!: Instrument;
-  res!: string;
-  topPositionDaw: any;
   masterGain: number = 1;
   connectMaster: AudioNode;
   monooscClipColor: string = 'rgba(90, 200, 90, 0.2)';
@@ -69,19 +59,8 @@ export class AppComponent {
   verde: string = '#00d600';
 
   clipsMaster: Clip[] = this.instantiateClipsArray(this.bianco);
-
-  constructor(public myTimer: TimerService) {
+  constructor(public myTimer: TimerService, private _ngZone: NgZone) {
     this.connectMaster = this.myTimer.merger;
-  }
-
-  @ViewChild('sidenav') sidenav!: MatSidenav;
-
-  close() {
-    if (this.sidenav.opened) {
-      this.sidenav.close();
-    } else {
-      this.sidenav.open()
-    }
   }
 
   onChangeMaster() {
@@ -152,8 +131,6 @@ export class AppComponent {
       }
       this.instruments[instrumenIndex].isSolo = true;
     }
-
-    console.log(this.instruments);
   }
 
   setClip(instrumenIndex: number, clipIndex: number) {
@@ -183,13 +160,13 @@ export class AppComponent {
       name: 'Drum' + this.instruments.length,
       index: this.instruments.length,
       isCollapsed: true,
-      pianoRollDimension: 1280 * 2,
+      pianoRollDimension: this.pianorolldimension,
       params: [],
       type: 'DRUM',
       clipPlaying: 0,
       clips: clips,
       isMuted: false,
-      isSolo: false
+      isSolo: false,
     });
     this.collassaInstrument(this.instruments.length - 1);
   }
@@ -200,7 +177,7 @@ export class AppComponent {
       name: 'Monoos' + this.instruments.length,
       index: this.instruments.length,
       isCollapsed: true,
-      pianoRollDimension: 1280 * 2,
+      pianoRollDimension: this.pianorolldimension,
       params: [],
       type: 'MONOOSC',
       clipPlaying: 0,
@@ -217,7 +194,7 @@ export class AppComponent {
       name: 'Synth' + this.instruments.length,
       index: this.instruments.length,
       isCollapsed: true,
-      pianoRollDimension: 1280 * 2,
+      pianoRollDimension: this.pianorolldimension,
       params: [],
       type: 'NEWSYNTH',
       clipPlaying: 0,
@@ -234,7 +211,7 @@ export class AppComponent {
       name: 'Sampl' + this.instruments.length,
       index: this.instruments.length,
       isCollapsed: true,
-      pianoRollDimension: 1280 * 2,
+      pianoRollDimension: this.pianorolldimension,
       params: [],
       type: 'SAMPLER',
       clipPlaying: 0,
@@ -253,7 +230,6 @@ export class AppComponent {
     }
     this.instruments[instrumentIndex].isCollapsed === true ? this.instruments[instrumentIndex].isCollapsed = false : this.instruments[instrumentIndex].isCollapsed = true;
   }
-
 
   private instantiateClipsArray(color: string): Clip[] {
     let clips: Clip[] = [];
@@ -289,27 +265,8 @@ export class AppComponent {
     return bol ? 'none' : 'block';
   }
 
-  show() {
-    if (this.showMixer) {
-      this.showMixer = false;
-    } else {
-      this.showMixer = true;
-    }
+  getInstrumentColor(instrumentType: string) {
+    return Utilities.getInstrumentColor(instrumentType);
   }
 
-  getInstrumentColor(instrumentType: string) {
-    switch (instrumentType) {
-      case 'SYNTH': break;
-      case 'SAMPLER':
-        return 'rgba(90, 90, 200, 0.4)';
-      case 'MONOOSC':
-        return 'rgba(90, 200, 90, 0.4)';
-      case 'DOUBLEOOSC':
-        return 'rgba(200, 90, 90, 0.4)';
-      case 'NEWSYNTH':
-        return 'rgba(100, 200, 200, 0.4)';
-      default: return 'rgba(200, 200, 200, 0.4)'; break;
-    }
-    return null;
-  }
 }

@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
-import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Adsr, SyntControl } from '../interfaces/interfaces';
 
 @Component({
   selector: 'app-synth-control',
   templateUrl: './synth-control.component.html',
-  styleUrls: ['./synth-control.component.scss']
+  styleUrls: ['./synth-control.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SynthControlComponent implements AfterViewInit {
 
@@ -67,7 +67,7 @@ export class SynthControlComponent implements AfterViewInit {
   lfoWaveSelected = 'square';
   lfoAmplitude: number = 0;
   lfoRate: number = 0;
-  libIndex: number = 1;
+  libIndex: number = 0;
   duration: number = 1;
   type: string = '';
   pitchEnvFreq: number = 0;
@@ -87,7 +87,7 @@ export class SynthControlComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.syntControl = {
       isMuted: 0,
-      gain: 0,
+      gain: 0.5,
       adsr: this.adsrVolume,
       waveSelected: this.waveSelected,
       filterSelected: this.filterSelected,
@@ -104,6 +104,8 @@ export class SynthControlComponent implements AfterViewInit {
       isDistorted: false
 
     };
+    this.changed();
+  
   }
   getBgDistorsion() {
     if (this.distorsion) {
@@ -139,14 +141,5 @@ export class SynthControlComponent implements AfterViewInit {
     this.syntControl.adsr = adsr;
     this.changed();
   }
-
-  getColor() {
-    if (this.isMuted) {
-      return 'red';
-    } else {
-      return 'green';
-    }
-  }
-
 
 }

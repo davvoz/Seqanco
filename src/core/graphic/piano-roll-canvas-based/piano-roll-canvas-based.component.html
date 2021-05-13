@@ -1,3 +1,4 @@
+
 <div class="esterna" style=" position: absolute;width: 100%;height: 342px;">
     <div class="pianoRollToolbar" [style.background-color]="getInstrumentColor()">
         <span>
@@ -7,11 +8,11 @@
     </div>
     <div class="allCanvas" >
         <div class="cnvsContainer" style="z-index: 2;">
-            <canvas #canvasGui    width="{{getExternalDimension()}}"   height="960" class="bg-layer" (click)="handleChange($event)" style="z-index: 0;"></canvas>
-            <canvas #canvas       width="{{getExternalDimension()}}"   height="960" class="game-layer" (click)="handleChange($event)" style="z-index: 4;" ></canvas>
-            <canvas #canvasProva  width="{{getExternalDimension()}}"   height="960" class="game-layer"></canvas>
-            <canvas #canvasVelo   width="{{getExternalDimension()}}"   height="60"  class="velocity-layer"  (click)="handleChangeVelo($event)" style="display: none;" ></canvas>       
-            <canvas #canvasLooper width="{{getExternalDimension()}}"   height="4"   class="looper-layer" style="z-index: 2;"></canvas>
+            <canvas #canvasGui    width="{{pianoRollDimensionIn}}"   height="{{canvasHeight}}" class="bg-layer" (click)="handleChange($event)" style="z-index: 0;"></canvas>
+            <canvas #canvas       width="{{pianoRollDimensionIn}}"   height="{{canvasHeight}}" class="game-layer" (click)="handleChange($event)" style="z-index: 4;" ></canvas>
+            <canvas #canvasProva  width="{{pianoRollDimensionIn}}"   height="{{canvasHeight}}" class="game-layer"></canvas>
+            <canvas #canvasVelo   width="{{pianoRollDimensionIn}}"   height="60"  class="velocity-layer"  (click)="handleChangeVelo($event)" style="display: none;" ></canvas>       
+            <canvas #canvasLooper width="{{pianoRollDimensionIn}}"   height="4"   class="looper-layer" style="z-index: 2;"></canvas>
         </div>
         
     </div>

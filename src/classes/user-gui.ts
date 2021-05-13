@@ -4,6 +4,7 @@ export class UserGui {
   collisions: number;
   ctxGui: CanvasRenderingContext2D;
   lato;
+  type:string="";
   private readonly lightGrey = "rgb(240,240,240)";
 
   private readonly grey = "rgb(220,220,220)";
@@ -27,7 +28,11 @@ export class UserGui {
     }
   }
   draw() {
-    for (let y = 0; y < this.ctxGui.canvas.height; y = y + this.lato) {
+    let height =this.ctxGui.canvas.height;
+    if(this.type === 'DRUM'){
+      height = 8 * this.lato;
+    }
+    for (let y = 0; y < height; y = y + this.lato) {
       for (let x = 0; x < this.ctxGui.canvas.width; x = x + this.lato) {
         this.ctxGui.lineWidth = 1;
         this.ctxGui.strokeStyle = "white";

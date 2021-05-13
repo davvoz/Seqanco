@@ -1,4 +1,5 @@
-<div  style=" width: 100%;top: 380px;position: absolute;" >
+
+<div  style=" width: 100%;top: 400px;position: absolute;" >
     
     <div class="fx">
         {{name}}-{{index}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -92,7 +93,7 @@
 <div style="position: relative;">
     <div style="width: 100%;">
         <app-piano-roll-canvas-based #pianoRoll [clipIndex]="clipIndex" (notaDaSuonare)="play($event,type)"
-            [instrumentType]="type" [la]="selectedHrtz" [pianoRollDimensionIn]="pianoRollDimension">
+            [instrumentType]="type" [la]="selectedHrtz" [pianoRollDimensionIn]="pianoRollDimension" >
         </app-piano-roll-canvas-based>
     </div>
 </div>

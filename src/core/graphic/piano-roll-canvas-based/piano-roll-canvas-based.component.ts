@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, NgZone, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Utilities } from 'src/classes/utilities';
 import { LineOfSquares } from '../../../classes/line-of-squares';
@@ -6,11 +6,10 @@ import { Octave } from '../../../classes/octave';
 import { Square } from '../../../classes/square';
 import { UserGui } from '../../../classes/user-gui';
 import { VelocityGui } from '../../../classes/velocity-gui';
-import {  Coordinates, Nota } from '../../../interfaces/interfaces';
+import { Coordinates, Nota } from '../../../interfaces/interfaces';
 import { TimerService } from '../../../services/timer.service';
 import { Loopper } from '../../../classes/loopper';
 
-declare var ResizeObserver: new (arg0: (entries: any) => void) => any;
 export interface Notes {
   notesObject: Square[];
   notesValue: number[];
@@ -35,8 +34,6 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   canvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild("canvasGui", { static: false })
   canvasGui!: ElementRef<HTMLCanvasElement>;
-  // @ViewChild("canvasLine", { static: false })
-  // canvasLine!: ElementRef<HTMLCanvasElement>;
   @ViewChild("canvasLooper", { static: false })
   canvasLooper!: ElementRef<HTMLCanvasElement>;
   @ViewChild("canvasVelo", { static: false })
@@ -46,82 +43,63 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
   ctxGui!: CanvasRenderingContext2D;
   ctx!: CanvasRenderingContext2D;
-  ctxEnemiesNew!: CanvasRenderingContext2D;
-  //ctxLine!: CanvasRenderingContext2D;
   ctxLoopper!: CanvasRenderingContext2D;
   ctxVelo!: CanvasRenderingContext2D;
-  ctxProva!: CanvasRenderingContext2D;
+
   lato = 0;
   subscription!: Subscription;
   subscriptionStartStop!: Subscription;
   key: any;
   isPlayed!: boolean;
-  isMuted = 0;
+
   pianoRollDimension: number = 0;
   notes: Notes = {
     notesObject: [],
     notesValue: []
   };
   freq: number[] = [];
-  coord: Coordinates = { x: 0, y: 0 };
   userGui!: UserGui;
   myVelocity!: VelocityGui;
-  myBeatGui!: UserGui;
+
   logicTimeMarker!: LineOfSquares;
-  visualizzazione = 'normale';
   startLoop: number = 0;
   endLoop: number = 16;
   clips: Notes[] = [];
   selectedClipIndex: number = 0;
-  worker = new Worker('./helper.worker', { type: 'module' });
+  worker = new Worker('./helper.worker', { type: 'module', name: 'worker-two' });
   wka!: OffscreenCanvas;
-  observer: any;
-  htmlCanvas: any;
   offscreen: any;
+  canvasHeight = 960;
+
+
   constructor(public myTimer: TimerService) { }
 
   getInstrumentColor() {
-    switch (this.instrumentType) {
-      case 'SYNTH':
-        break;
-      case 'SAMPLER':
-        return 'rgba(90, 90, 200, 0.4)';
-      case 'MONOOSC':
-        return 'rgba(90, 200, 90, 0.4)';
-      case 'DOUBLEOOSC':
-        return 'rgba(200, 90, 90, 0.4)';
-      case 'NEWSYNTH':
-        return 'rgba(100, 200, 200, 0.4)';
-      default: return 'rgba(200, 200, 200, 0.4)';
-    }
-    return null;
+    return Utilities.getInstrumentColor(this.instrumentType);
   }
 
   ngAfterViewInit(): void {
-
-    // @ts-ignore*/
-    //this.ctxProva = this.canvasProva.nativeElement.getContext("2d");
-    this.htmlCanvas = this.canvasProva.nativeElement;
-    this.offscreen = this.htmlCanvas.transferControlToOffscreen();
+    let htmlCanvas: any;
+    htmlCanvas = this.canvasProva.nativeElement;
+    this.offscreen = htmlCanvas.transferControlToOffscreen();
     // @ts-ignore*/
     this.lato = this.canvasGui.nativeElement.getContext("2d")?.canvas.width / 128;
     this.worker.postMessage({ canvas: this.offscreen }, [this.offscreen]);
-
+    
     this.createScale(this.la);
     // @ts-ignore*/
     this.ctxGui = this.canvasGui.nativeElement.getContext("2d");
     // @ts-ignore*/
     this.ctx = this.canvas.nativeElement.getContext("2d");
-
     // @ts-ignore*/
     this.ctxVelo = this.canvasVelo.nativeElement.getContext("2d");
     // @ts-ignore*/
     this.ctxLoopper = this.canvasLooper.nativeElement.getContext("2d");
 
-    this.myBeatGui = new UserGui(this.lato, 0, this.ctxGui, { x: 0, y: 0 }, 0, "0,0,0", this.lato);
     this.myVelocity = new VelocityGui(0, 0, this.ctxVelo, { x: 0, y: 0 }, 0, "0,0,0", this.lato);
     this.logicTimeMarker = new LineOfSquares(this.lato, -this.lato, 0, "0,0,0", 100, 58, "VERTICALE", 0);
     this.userGui = new UserGui(this.lato, 0, this.ctxGui, { x: 0, y: 0 }, 0, "0,0,0", this.lato);
+    this.userGui.type = this.instrumentType;
     this.setStartLopper();
     this.logicTimeMarker.standUp();
     this.notes.notesObject = this.populateEnemiesArray();
@@ -129,11 +107,9 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     for (let i = 0; i < this.notes.notesObject.length; i++) {
       this.notes.notesValue.push(0);
     }
-
     this.myVelocity.draw();
     this.userGui.draw();
     this.intitializeClips();
-
     this.subscription = this.myTimer.trackStateItem$.subscribe(res => {
       if (res.traksAreOn) {
         if (res.isStarted) {
@@ -152,12 +128,10 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
   intitializeClips() {
     for (let i = 0; i < 4; i++) {
-      this.clips.push(
-        {
-          notesObject: [],
-          notesValue: []
-        }
-      );
+      this.clips.push({
+        notesObject: [],
+        notesValue: []
+      });
       this.clips[i].notesObject = this.populateEnemiesArray();
       for (let j = 0; j < this.notes.notesObject.length; j++) {
         this.clips[i].notesObject[j].kill();
@@ -201,9 +175,8 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
 
   tick() {
 
-    this.coord = { x: this.logicTimeMarker.getX(), y: 0 };
     let range = this.startLoop + this.endLoop;
-    this.worker.postMessage({ lato: this.lato, end: range, pos: (this.logicTimeMarker.getX() * this.lato )+this.lato});
+    this.worker.postMessage({ lato: this.lato, end: range, pos: (this.logicTimeMarker.getX() * this.lato) + this.lato });
     if (this.logicTimeMarker.getX() == (range - 1) || this.logicTimeMarker.getX() == (this.pianoRollDimensionIn / this.lato - 1)) {
       this.logicTimeMarker.setX(this.startLoop);
       if (this.notes.notesObject[this.logicTimeMarker.getX()].isStanding()) {
@@ -233,7 +206,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     this.freq = this.freq.sort(function (a, b) { return a > b ? -1 : 1 });
   }
 
-  public playStep(index: number) {
+  playStep(index: number) {
     this.notaDaSuonare.emit({
       notaDaSuonare: this.notes.notesObject[index].getTune(),
       velocity: this.notes.notesObject[index].velocity,
@@ -252,7 +225,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     return notes
   }
 
-  public random() {
+  random() {
     this.clear();
     for (let i = 0; i < this.notes.notesObject.length; i++) {
       let tonoRandom = Utilities.getRandomInt(this.freq.length, 0);
@@ -281,11 +254,11 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     }
   }
 
-  public setClip(index: number) {
+  setClip(index: number) {
     this.runClip1(index);
   }
 
-  public clear(): void {
+  clear(): void {
     for (let i = 0; i < this.notes.notesObject.length; i++) {
       this.notes.notesObject[i].kill();
       //this.clips[this.selectedClipIndex].notesObject[i].kill();
@@ -293,28 +266,21 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
     }
   }
 
-  public start() {
+  start() {
     this.isPlayed = true;
     this.myTimer.play();
   }
 
-  public stop() {
+  stop() {
     this.isPlayed = false;
     this.myTimer.stop();
   }
 
-  public pause() {
+  pause() {
     this.isPlayed = false;
     this.myTimer.pause();
   }
 
-  getColor() {
-    if (this.isMuted) {
-      return "red";
-    } else {
-      return "green";
-    }
-  }
   // @ts-ignore*/
   private getMousePos(evt, canvas: HTMLCanvasElement) {
     let rect = canvas.getBoundingClientRect();
@@ -360,7 +326,10 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
       }
     }
   }
+
   getExternalDimension(): number {
     return this.pianoRollDimensionIn
   }
+
 }
+
