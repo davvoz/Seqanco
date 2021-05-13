@@ -31,7 +31,7 @@ export class SamplesLibraryService {
                     }
                     // @ts-ignore*/
                     this.buffers.push(buffer);
-                    console.log(this.buffers);
+                   // console.log(this.buffers);
                 },
                 error => {
                     console.error('decodeAudioData error', error);
