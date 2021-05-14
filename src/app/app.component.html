@@ -14,7 +14,7 @@
 			<mat-menu #menu="matMenu">
 				<button mat-menu-item color="basic" (click)="addSampler()">Add sampler</button>
 				<button mat-menu-item color="basic" (click)="addSynth()">Add Synth</button>
-				<button mat-menu-item color="basic" (click)="addMonoosc()">Add Monoosc</button>
+				<!-- <button mat-menu-item color="basic" (click)="addMonoosc()">Add Monoosc</button> -->
 				<button mat-menu-item color="basic" (click)="addDrummachine()">Add Drum</button>
 			</mat-menu>
 
@@ -42,17 +42,13 @@
 							</button>
 						</div>
 					</div>
-					<div class="trakTitle">{{ (instrument.name.length>5) ? (instrument.name
-						|slice:0:5)+'..':(instrument.name) | uppercase}} TRACK N° {{i+1}} </div>
+					<div class="trakTitle">{{ (instrument.name.length > 5 ) ? ( instrument.name | slice : 0:5) + '..' : (instrument.name) | uppercase}} TRACK N° {{i+1}} </div>
 				</div>
 				<div class="clipsContiner">
 					<div *ngFor="let clip of instrument.clips" class="clip" [style.background-color]="clip.color">
 						<button  (click)="setClip(i,clip.index)">
 							<mat-icon>play_arrow</mat-icon>
 						</button>
-					</div>
-					<div class="clip">
-
 					</div>
 				</div>
 			</div>
@@ -80,8 +76,10 @@
 				<div class="clipsContiner">
 					<div *ngFor="let clip of clipsMaster;let i=index" class="clip"
 						[style.background-color]="clip.color">
-						<button  (click)="setClipMassive(i)">
+						<button  (click)="setClipMassive(i)" [style.background-color]="clip.color">
 							<mat-icon>play_arrow</mat-icon>
+							<mat-icon *ngIf="isActiveKeyboardControl">keyboard</mat-icon>
+							<span *ngIf="isActiveKeyboardControl">{{i + 1}}</span>
 						</button>
 					</div>
 				</div>

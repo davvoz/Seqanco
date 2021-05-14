@@ -47,7 +47,6 @@ export class AppComponent {
   clips: Clip[] = [];
   @ViewChildren('instrumentsViews')
   instrumentsViews!: QueryList<InstrumentComponent>;
-  title = 'sequencer';
   instruments: Instrument[] = [];
   pianoRollDimension = 640;
   masterGain: number = 1;
@@ -59,7 +58,7 @@ export class AppComponent {
   verde: string = '#00d600';
 
   clipsMaster: Clip[] = this.instantiateClipsArray(this.bianco);
-  constructor(public myTimer: TimerService, private _ngZone: NgZone) {
+  constructor(public myTimer: TimerService) {
     this.connectMaster = this.myTimer.merger;
   }
 
