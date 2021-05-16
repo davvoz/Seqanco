@@ -1,7 +1,6 @@
 import { Injectable, NgZone } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { TickResponse } from "../interfaces/interfaces";
-import * as workerTimers from 'worker-timers';
 @Injectable()
 export class TimerService {
   numberOfTraks = 0;
@@ -23,11 +22,12 @@ export class TimerService {
   timeInterval: number = 0;
   start: any;
   expected: any;
-  timeout: any;
   round: any;
   accurateStop: any;
+  worker = new Worker('./time.worker', { type: 'module', name: 'worker-time' });
+
   private trackStateModel: TickResponse = {
-    traksAreOn: [],
+    traksAreOn: [] = [],
     timePosition: 0,
     isStarted: true,
     audioContextTime: 0
@@ -38,11 +38,23 @@ export class TimerService {
   private playingStateSource = new BehaviorSubject<boolean>(
     false
   );
+
   playingStateItem$ = this.playingStateSource.asObservable();
   trackStateItem$ = this.trackStateSource.asObservable();
   public audioContext!: BaseAudioContext;
 
-  constructor(private _ngZone: NgZone) {
+  constructor() {
+    this.worker.addEventListener('message', () => {
+      this.trackStateSource.next({
+        traksAreOn: this.trackStateModel.traksAreOn,
+        timePosition: this.steps,
+        isStarted: this.isPlayed,
+        audioContextTime: 0
+      });
+      this.steps >= 3
+        ? ((this.step = true), (this.steps = 0))
+        : ((this.step = true), this.steps++);
+    });
     this.loadWorklet();
   }
 
@@ -55,48 +67,39 @@ export class TimerService {
   removeTrack(index: number) {
     this.numberOfTraks--;
     this.numberOfTraksSource.next(index);
-    //  this.trackStateSource.next({ soundOn: this.trackStateModel.soundOn, trackIndex: this.steps })
   }
   play() {
     this.isPlayed = true;
-
-    // this.scheduleNote();
     this.playingStateSource.next(true);
 
-
-
-
-
-    this._ngZone.runOutsideAngular(() => {
-      //this.timer = setTimeout(this.scheduleNote.bind(this), 0);
-      this.accurateTimer(() => { this.changeStateTrack(this.audioContext.currentTime) }, this.speed, console.log('error'));
-      this.start();
-    });
-
-
+    if (typeof (Worker) !== 'undefined') {
+      this.worker.postMessage({
+        speed: this.speed,
+        command: 'start'
+      });    
+    }
   }
+
   stop() {
-    // this.audioContext.suspend();
     this.steps = 0;
     this.isPlayed = false;
-    //clearTimeout(this.timer);
+    this.worker.postMessage({
+      command: 'stop'
+    });
     this.playingStateSource.next(false);
-    this.accurateStop();
   }
   pause() {
-    // this.audioContext.suspend();
     this.isPlayed = false;
     this.accurateStop();
-    //clearTimeout(this.timer);
   }
 
   private changeStateTrack(pt: number) {
-
+    console.log('changed')
     this.trackStateSource.next({
       traksAreOn: this.trackStateModel.traksAreOn,
       timePosition: this.steps,
       isStarted: this.isPlayed,
-      audioContextTime: pt
+      audioContextTime: 0
     });
     this.steps >= 3
       ? ((this.step = true), (this.steps = 0))
@@ -119,82 +122,8 @@ export class TimerService {
 
   }
 
-  private createUrl() {
-    //const nomeProcesso = 'bypass-processor';
-    let myWk;
-    myWk = this.createWorklet.toString();
-    myWk = `function ${myWk}`;
-    myWk = myWk.replace('Fake', 'AudioWorkletProcessor');
-    const blob = new Blob([`(${myWk})()`], {
-      type: "application/javascript"
-    });
-    return URL.createObjectURL(blob);
-  }
 
-  createWorklet() {
-    class BypassProcessor extends Fake {
-      isPlaying: boolean;
-      port: any;
-
-      constructor() {
-        super();
-        this.isPlaying = true;
-        this.port.onmessage = this.onmessage.bind(this)
-      }
-
-      onmessage(event: { data: any; }) {
-        const { data } = event;
-        this.isPlaying = data;
-      }
-
-      process(inputs: any[], outputs: any[]) {
-        if (!this.isPlaying) {
-          return;
-        }
-
-        const input = inputs[0];
-        const output = outputs[0];
-
-        for (let channel = 0; channel < output.length; ++channel) {
-          output[channel].set(input[channel]);
-        }
-
-        return this.isPlaying;
-      }
-    }
-
-    registerProcessor('bypass-processor', BypassProcessor);
-  }
-
-  accurateTimer(callback: any, timeInterval: number, errorCallback: any) {
-    this.speed = timeInterval;
-
-    this.start = () => {
-      this.expected = Date.now() + this.speed;
-      this.timeout = workerTimers.setTimeout(this.round, this.speed)
-      console.log('started');
-    }
-    this.accurateStop = () => {
-      workerTimers.clearTimeout(this.timeout);
-      console.log('started');
-    }
-    this.round = () => {
-      let drift = Date.now() - this.expected;
-      if (drift > this.speed) {
-        if (errorCallback) {
-          errorCallback();
-        }
-      }
-      callback();
-      this.expected += this.speed;
-      this.timeout = workerTimers.setTimeout(this.round, this.speed - drift);
-    }
-  }
 }
 
-class Fake { }
-function registerProcessor(arg0: string, arg1: any) {
-  throw new Error("Function not implemented.");
-}
 
 

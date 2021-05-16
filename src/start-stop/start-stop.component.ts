@@ -29,7 +29,7 @@ export class StartStopComponent implements OnInit {
     this.myTimer.pause()
   }
   getActiveColor(){
-    return  this.myTimer.isPlayed  ? '#00d600':null;
+    return  this.myTimer.isPlayed  ? 'orangered':null;
   }
 
 }

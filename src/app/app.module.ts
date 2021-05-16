@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { StartStopComponent } from '../start-stop/start-stop.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PianoRollCanvasBasedComponent } from '../core/graphic/piano-roll-canvas-based/piano-roll-canvas-based.component';
-import { AnalizerComponent } from '../core/graphic/analizer/analizer.component';
 import { TimerControlComponent } from '../timer-control/timer-control.component';
 import { SynthControlComponent } from '../synth-control/synth-control.component';
 import { SamplesLibraryService } from '../services/samples-library.service';
@@ -37,8 +36,7 @@ import { MatMenuModule } from '@angular/material/menu';
     GainComponent,
     StereoPannerComponent,
     FilterComponent,
-    PianoRollCanvasBasedComponent,
-    AnalizerComponent
+    PianoRollCanvasBasedComponent
   ],
   imports: [
     BrowserModule,
