@@ -165,7 +165,7 @@ export class AppComponent {
       clipPlaying: 0,
       clips: clips,
       isMuted: false,
-      isSolo: false,
+      isSolo: true,
     });
     this.collassaInstrument(this.instruments.length - 1);
   }
@@ -182,7 +182,7 @@ export class AppComponent {
       clipPlaying: 0,
       clips: clips,
       isMuted: false,
-      isSolo: false
+      isSolo: true
     });
     this.collassaInstrument(this.instruments.length - 1);
   }
@@ -199,7 +199,7 @@ export class AppComponent {
       clipPlaying: 0,
       clips: clips,
       isMuted: false,
-      isSolo: false
+      isSolo: true
     });
     this.collassaInstrument(this.instruments.length - 1);
   }
@@ -216,7 +216,7 @@ export class AppComponent {
       clipPlaying: 0,
       clips: clips,
       isMuted: false,
-      isSolo: false
+      isSolo: true
     });
     this.collassaInstrument(this.instruments.length - 1);
   }
