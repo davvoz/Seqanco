@@ -5,6 +5,7 @@ let start: any;
 let accurateStop: any;
 let round: any;
 let timeout: any;
+let expected = 0;
 
 ctx.addEventListener('message', (e) => {
     let speed = e.data.speed;
@@ -13,14 +14,13 @@ ctx.addEventListener('message', (e) => {
     accurateTimer( speed, console.log('error'));
     if (command === 'start') {
         start();
-    } else {
+    } else if(command === 'stop'){
         accurateStop();
     }
 })
 
 function accurateTimer( timeInterval: number,errorCallback: any) {
     let speed = timeInterval;
-    let expected = 0;
 
     start = () => {
         expected = Date.now() + speed;

@@ -1,6 +1,7 @@
 		<div  style="background-color: chartreuse;height: 50px;
 		line-height: 50px;">
-			<span style="font-size:150% ;">Easy Drop</span><app-start-stop></app-start-stop>
+			<span style="font-size:150% ;">Easy Drop</span>
+			<app-start-stop></app-start-stop>
 			<span class="example-spacer"></span>Bpm<app-timer-control></app-timer-control>
 				Volume 
 					<input type="number" [(ngModel)]="masterGain" (change)="onChangeMaster()" min="0.01" max="1" step="0.01"/>
@@ -15,15 +16,14 @@
 			<mat-menu #menu="matMenu">
 				<button mat-menu-item color="basic" (click)="addSampler()">Add sampler</button>
 				<button mat-menu-item color="basic" (click)="addSynth()">Add Synth</button>
-				<!-- <button mat-menu-item color="basic" (click)="addMonoosc()">Add Monoosc</button> -->
 				<button mat-menu-item color="basic" (click)="addDrummachine()">Add Drum</button>
 			</mat-menu>
 
 		</div>
 	<div class="example-sidenav-content">
 		<div class="row1" >
-			<div *ngFor="let instrument of instruments;let i = index;" class="instrument" >
-				<div class="instrumentToolbar" [style.border]="getSelectedTrakBorderStyle(instrument.isCollapsed)" >
+			<div *ngFor="let instrument of instruments;let i = index;" class="instrument" [style.border]="getSelectedTrakBorderStyle(instrument.isCollapsed)" (click)="collassaInstrument(i)">
+				<div class="instrumentToolbar" >
 					<div [style.background-color]="getInstrumentColor(instrument.type)" class="instHeader">
 						<div class="row4">
 							<button  (click)="collassaInstrument(i)">
@@ -55,7 +55,7 @@
 			</div>
 			<div class="instrument" >
 				<div class="instrumentToolbar">
-					<div class="instHeader" style="background-color: chocolate;">
+					<div class="instHeader" style="background-color: chocolate;" style="border:9px solid grey">
 						<div class="row4">
 							<button  disabled>
 								<mat-icon>tune</mat-icon>

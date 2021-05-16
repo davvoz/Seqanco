@@ -25,7 +25,7 @@ export class FilterComponent implements OnInit {
   detune: number = 0;
   q: number = 0;
   selectedWaveView: string = 'allpass';
-
+  filterGainMultiplicator = 100;
   waveforms = [
     'lowpass',
     'highpass',

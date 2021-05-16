@@ -9,8 +9,10 @@
             <td> 
                 <div class = "row4" >
                     <div *ngFor="let wave of waveforms" >
-                        <button style="font-family: monospace;" (click)="selectedWaveView = wave ;changeWave()" [class]="selectedWaveView === wave?'on':'off'">
-                            {{wave  | slice : 0:3}}
+                        <button style="font-family: monospace;"   (click)="selectedWaveView = wave ;changeWave()" [class]="selectedWaveView === wave ? 'on' : 'off'">
+                          <div [class]="wave">
+                          
+                          </div> 
                         </button>
                     </div>
                 </div>

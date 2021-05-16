@@ -1,37 +1,80 @@
 {{nome}}
-    <table>
-        <tr>
-            <th>Filter type</th>
-            <th>Frequency</th>
-            <th>Gain</th>
-            <th>Detune</th>
-            <th>Q</th>
-        </tr>
-        <tr>
-            <td>
-                <div class = "row4">
-                    <div *ngFor="let wave of waveforms" >
-                        <button style="font-family: monospace;" (click)="selectedWaveView = wave ;changeWave()" [class]="selectedWaveView === wave?'on':'off'">
-                            {{wave  | slice : 0:4}}
-                        </button>
-                    </div>
+<table>
+    <tr>
+        <th>Filter type</th>
+        <th>Frequency</th>
+        <th>Gain</th>
+        <th>Detune</th>
+        <th>Q</th>
+    </tr>
+    <tr>
+        <td>
+            <div class="row4">
+                <div *ngFor="let wave of waveforms">
+                    <button style="font-family: monospace;" (click)="selectedWaveView = wave ;changeWave()"
+                        [class]="selectedWaveView === wave?'on':'off'">
+                        {{wave | slice : 0:4}}
+                    </button>
                 </div>
-               
-            </td>
-            <td>
-                <input matInput type="number" [(ngModel)]="frequency" (change)="changeFilterFrequency()" min="0" max="20000" step="10"/>
-            </td>
-            <td>
-                <input matInput type="number" [(ngModel)]="gain" (change)="changeFilterGain()" min="0" max="1000" step="1"/>
-            </td>
-            <td>
-                <input matInput type="number" [(ngModel)]="detune" (change)="changeFilterDetune()" min="0" max="10" step="0.01"/>
-            </td>
-            <td>
-                <input matInput  type="number" [(ngModel)]="q" (change)="changeFilterQ()" min="-10" max="10" step="0.01"/>
-            </td>
-        </tr>
-    </table>
-    <app-adsr *ngIf="envelope" #adsr (adsrEmitter)="changeAdsr($event)" [adsr]="adsrVolume"></app-adsr>
+            </div>
+
+        </td>
+        <td>
+            <table style="background-color: hotpink;">
+                <tr >
+                    <td colspan="3" >
+                        <button (click)="filterGainMultiplicator = 100"
+                            [class]="filterGainMultiplicator === 100 ?'on':'off'">
+                            X10^2
+                        </button>
+                        <button (click)="filterGainMultiplicator = 1000"
+                            [class]="filterGainMultiplicator === 1000 ?'on':'off'">
+                            X10^4
+                        </button>
+                        <button (click)="filterGainMultiplicator = 10000"
+                            [class]="filterGainMultiplicator === 10000 ?'on':'off'">
+                            X10^5
+                        </button>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        <button (click)="frequency = frequency - (0.01 * filterGainMultiplicator) ">
+                            -
+                        </button>
+                    </td>
+                    <td>
+                        <input type="number" [(ngModel)]="frequency" (change)="changeFilterFrequency()" min="0"
+                            max="20000" step="10"  style="width: 75px;" step="{{filterGainMultiplicator/100}}"/>
+                    </td>
+                    <td>
+                        <button (click)="frequency = frequency + ( 0.01 * filterGainMultiplicator )">
+                            +
+                        </button>
+                    </td>
+                </tr>
+                <tr >
+                    <td colspan="3"> 
+                        <input type="range" [(ngModel)]="frequency" max ="20000" min=""/>
+
+                    </td>
+                </tr>
+            </table>
 
 
+        </td>
+        <td>
+            <input matInput type="number" [(ngModel)]="gain" (change)="changeFilterGain()" min="0" max="1000"
+                step="1" />
+        </td>
+        <td>
+            <input matInput type="number" [(ngModel)]="detune" (change)="changeFilterDetune()" min="0" max="10"
+                step="0.01" />
+        </td>
+        <td>
+            <input matInput type="number" [(ngModel)]="q" (change)="changeFilterQ()" min="-10" max="10" step="0.01" />
+        </td>
+    </tr>
+</table>
+<app-adsr *ngIf="envelope" #adsr (adsrEmitter)="changeAdsr($event)" [adsr]="adsrVolume"></app-adsr>

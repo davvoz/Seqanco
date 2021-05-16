@@ -78,7 +78,7 @@ export class AppComponent {
   }
 
   getSelectedTrakBorderStyle(isCollapsed: boolean): string {
-    return isCollapsed ? '1px solid white' : '1px solid red';
+    return isCollapsed ? '9px solid white' : '9px solid red';
   }
 
   setClipMassive(clipIndex: number) {
@@ -224,10 +224,12 @@ export class AppComponent {
   collassaInstrument(instrumentIndex: number) {
     for (let i = 0; i < this.instruments.length; i++) {
       if (i !== instrumentIndex) {
-        this.instruments[i].isCollapsed = true
+        this.instruments[i].isCollapsed = true;
+      }else{
+        this.instruments[i].isCollapsed = false;
       }
     }
-    this.instruments[instrumentIndex].isCollapsed === true ? this.instruments[instrumentIndex].isCollapsed = false : this.instruments[instrumentIndex].isCollapsed = true;
+   // this.instruments[instrumentIndex].isCollapsed === true ? this.instruments[instrumentIndex].isCollapsed = false : this.instruments[instrumentIndex].isCollapsed = true;
   }
 
   private instantiateClipsArray(color: string): Clip[] {

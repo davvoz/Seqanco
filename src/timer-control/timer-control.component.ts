@@ -16,7 +16,12 @@ export class TimerControlComponent implements OnInit {
     this.myTimer.speed = 120;
   }
   changeTime() {
-    this.myTimer.speed = (60000 / this.speed) / 4;
+    this.myTimer.speed =  (60000 / this.speed) / 4;
+    if (typeof (Worker) !== 'undefined') {
+      this.myTimer.worker.postMessage({
+        speed:  (60000 / this.speed) / 4
+      });    
+    }
   }
 
 }

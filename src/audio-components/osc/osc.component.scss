@@ -3,13 +3,48 @@
     grid-template-columns: repeat(4, 1fr);
     background-color: gray;
 }
-.on{
+.on {
     background-color: red;
     border-radius: 10%;
     border: 3px solid black;
 }
-.off{
+.off {
     background-color: green;
     border-radius: 10%;
     border: 3px solid rgb(27, 27, 27);
+}
+.square {
+    background-image: url("C:/Progetti/AngularProjects/BoSeq11/Seqanco/src/assets/png/square.png");
+    width: 30px;
+    height: 20px;
+    background-size: 30px 20px;
+    background-repeat: no-repeat;
+    margin:0;
+    line-height: 30px;
+}
+.sine {
+    background-image: url("C:/Progetti/AngularProjects/BoSeq11/Seqanco/src/assets/png/sine.png");
+    width: 30px;
+    height: 20px;
+    background-size: 30px 20px;
+    background-repeat: no-repeat;
+    margin:0;
+    line-height: 30px;
+}
+.sawtooth {
+    background-image: url("C:/Progetti/AngularProjects/BoSeq11/Seqanco/src/assets/png/saw.png");
+    width: 30px;
+    height: 20px;
+    background-size: 30px 20px;
+    background-repeat: no-repeat;
+    margin:0;
+}
+.triangle {
+    background-image: url("C:/Progetti/AngularProjects/BoSeq11/Seqanco/src/assets/png//tri.png");
+    width: 30px;
+    height: 20px;
+    background-size: 30px 20px;
+    background-repeat: no-repeat;
+    margin:0;
+    line-height: 30px;
 }

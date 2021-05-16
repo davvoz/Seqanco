@@ -84,6 +84,7 @@ export class TimerService {
     this.steps = 0;
     this.isPlayed = false;
     this.worker.postMessage({
+      speed: this.speed,
       command: 'stop'
     });
     this.playingStateSource.next(false);
@@ -91,20 +92,6 @@ export class TimerService {
   pause() {
     this.isPlayed = false;
     this.accurateStop();
-  }
-
-  private changeStateTrack(pt: number) {
-    console.log('changed')
-    this.trackStateSource.next({
-      traksAreOn: this.trackStateModel.traksAreOn,
-      timePosition: this.steps,
-      isStarted: this.isPlayed,
-      audioContextTime: 0
-    });
-    this.steps >= 3
-      ? ((this.step = true), (this.steps = 0))
-      : ((this.step = true), this.steps++);
-
   }
 
   async loadWorklet() {
