@@ -1,5 +1,6 @@
-		<div  style="background-color: chartreuse;">
-			<span>Easy Drop</span><app-start-stop></app-start-stop>
+		<div  style="background-color: chartreuse;height: 50px;
+		line-height: 50px;">
+			<span style="font-size:150% ;">Easy Drop</span><app-start-stop></app-start-stop>
 			<span class="example-spacer"></span>Bpm<app-timer-control></app-timer-control>
 				Volume 
 					<input type="number" [(ngModel)]="masterGain" (change)="onChangeMaster()" min="0.01" max="1" step="0.01"/>

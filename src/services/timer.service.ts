@@ -108,9 +108,7 @@ export class TimerService {
   }
 
   async loadWorklet() {
-    //const tempUrl = this.createUrl();
     this.audioContext = new AudioContext();
-    //const aw = this.audioContext.audioWorklet;
     this.startTime = this.audioContext.currentTime + 0.005;
     this.isPlayed = false;
     this.step = false;

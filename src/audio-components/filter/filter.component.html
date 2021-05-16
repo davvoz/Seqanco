@@ -9,9 +9,14 @@
         </tr>
         <tr>
             <td>
-                <select [(ngModel)]="selectedWaveView" (change)="changeWave()">
-                    <option *ngFor="let wave of waveforms" [value]="wave"> {{wave}}</option>
-                </select>
+                <div class = "row4">
+                    <div *ngFor="let wave of waveforms" >
+                        <button style="font-family: monospace;" (click)="selectedWaveView = wave ;changeWave()" [class]="selectedWaveView === wave?'on':'off'">
+                            {{wave  | slice : 0:4}}
+                        </button>
+                    </div>
+                </div>
+               
             </td>
             <td>
                 <input matInput type="number" [(ngModel)]="frequency" (change)="changeFilterFrequency()" min="0" max="20000" step="10"/>

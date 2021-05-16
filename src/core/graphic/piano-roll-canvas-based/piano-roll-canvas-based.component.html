@@ -2,8 +2,8 @@
 <div class="esterna" style=" position: absolute;width: 100%;height: 342px;">
     <div class="pianoRollToolbar" [style.background-color]="getInstrumentColor()">
         <span>
-            Loop start :<input type="number" [(ngModel)]="startLoop" min="0" (change)="setStartLopper()" />
-            length :    <input type="number" [(ngModel)]="endLoop" (change)="setStartLopper()" />
+            Loop start :<input type="number" [(ngModel)]="startLoop" min="0" (change)="setStartLopper()" style="width: 50px;"/>
+            length :    <input type="number" [(ngModel)]="endLoop" (change)="setStartLopper()" style="width: 50px;"/>
         </span>
     </div>
     <div class="allCanvas" >

@@ -1,0 +1,15 @@
+.row4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background-color: gray;
+}
+.on{
+    background-color: red;
+    border-radius: 10%;
+    border: 3px solid black;
+}
+.off{
+    background-color: green;
+    border-radius: 10%;
+    border: 3px solid rgb(27, 27, 27);
+}
