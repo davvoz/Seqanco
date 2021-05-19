@@ -15,3 +15,4 @@ onmessage = function (evt) {
   gl.fillRect(pos, y, w, 1000);
 
 };
+

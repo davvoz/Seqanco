@@ -1,4 +1,4 @@
-//ty to https://www.youtube.com/watch?v=x8PBWobv6NY&t=2774s
+
 
 const ctx: Worker = self as any;
 let start: any;
@@ -20,6 +20,7 @@ ctx.addEventListener('message', (e) => {
 })
 
 function accurateTimer( timeInterval: number,errorCallback: any) {
+    //ty to https://www.youtube.com/watch?v=x8PBWobv6NY&t=2774s
     let speed = timeInterval;
 
     start = () => {

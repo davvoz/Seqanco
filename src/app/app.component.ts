@@ -1,4 +1,4 @@
-import { HostListener, Component, QueryList, ViewChildren, ChangeDetectionStrategy, NgZone, ViewChild, ElementRef } from '@angular/core';
+import { HostListener, Component, QueryList, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
 import { Utilities } from 'src/classes/utilities';
 import { InstrumentComponent } from '../instrument/instrument.component';
 import { Clip, Instrument } from '../interfaces/interfaces';
@@ -59,6 +59,7 @@ export class AppComponent {
 
   clipsMaster: Clip[] = this.instantiateClipsArray(this.bianco);
   constructor(public myTimer: TimerService) {
+    
     this.connectMaster = this.myTimer.merger;
   }
 

@@ -1,7 +1,4 @@
 
-mat-sidenav-content {
-    overflow: hidden;
-}
 .example-container {
     position: absolute;
     top: 0;
@@ -31,7 +28,6 @@ mat-sidenav-content {
     text-overflow: ellipsis;
     overflow: hidden;
     margin-left: 1px;
-    border: 1px solid white;
 }
 .example-spacer {
     flex: 1 3 auto;
@@ -101,10 +97,7 @@ mat-sidenav-content {
     position: absolute;
     right: 3px;
 }
-mat-toolbar {
-    position: fixed;
-    z-index: 99999;
-}
+
 .instrument {
     position: relative;
     float: left;
@@ -143,9 +136,7 @@ mat-toolbar {
 .trakTitleSecondLine {
     text-align: end;
 }
-.instHeader {
-    width: 200px;
-}
+
 
 .tracksContainer{
     width: 100%;

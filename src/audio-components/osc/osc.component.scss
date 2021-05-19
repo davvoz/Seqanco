@@ -4,17 +4,17 @@
     background-color: gray;
 }
 .on {
-    background-color: red;
+    background-color: grey;
     border-radius: 10%;
     border: 3px solid black;
 }
 .off {
-    background-color: green;
+    background-color: white;
     border-radius: 10%;
     border: 3px solid rgb(27, 27, 27);
 }
 .square {
-    background-image: url("C:/Progetti/AngularProjects/BoSeq11/Seqanco/src/assets/png/square.png");
+    background-image: url("../../assets/png/square.jpeg");
     width: 30px;
     height: 20px;
     background-size: 30px 20px;
@@ -23,7 +23,7 @@
     line-height: 30px;
 }
 .sine {
-    background-image: url("C:/Progetti/AngularProjects/BoSeq11/Seqanco/src/assets/png/sine.png");
+    background-image: url("../../assets/png/sine.jpeg");
     width: 30px;
     height: 20px;
     background-size: 30px 20px;
@@ -32,7 +32,7 @@
     line-height: 30px;
 }
 .sawtooth {
-    background-image: url("C:/Progetti/AngularProjects/BoSeq11/Seqanco/src/assets/png/saw.png");
+    background-image: url("../../assets/png/saw.jpeg");
     width: 30px;
     height: 20px;
     background-size: 30px 20px;
@@ -40,7 +40,7 @@
     margin:0;
 }
 .triangle {
-    background-image: url("C:/Progetti/AngularProjects/BoSeq11/Seqanco/src/assets/png//tri.png");
+    background-image: url("../../assets/png//tri.jpeg");
     width: 30px;
     height: 20px;
     background-size: 30px 20px;
