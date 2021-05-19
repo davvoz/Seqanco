@@ -66,7 +66,7 @@ export class PianoRollCanvasBasedComponent implements AfterViewInit {
   endLoop: number = 16;
   clips: Notes[] = [];
   selectedClipIndex: number = 0;
-  worker = new Worker('./helper.worker', { type: 'module', name: 'worker-two' });
+  worker = new Worker(new URL('./helper.worker', import.meta.url), { type: 'module', name: 'worker-two' });
   wka!: OffscreenCanvas;
   offscreen: any;
   canvasHeight = 960;

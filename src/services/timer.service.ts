@@ -24,7 +24,7 @@ export class TimerService {
   expected: any;
   round: any;
   accurateStop: any;
-  worker = new Worker('./time.worker', { type: 'module', name: 'worker-time' });
+  worker = new Worker(new URL('./time.worker', import.meta.url), { type: 'module', name: 'worker-time' });
 
   private trackStateModel: TickResponse = {
     traksAreOn: [] = [],
